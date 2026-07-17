@@ -150,14 +150,14 @@ const drillTransition = {
 
 const TypewriterTitle = () => {
   return (
-    <div className="w-full text-center pt-2 pb-6 select-none px-4" id="rotating-title-container">
+    <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="rotating-title-container">
       <h1 
         className="text-[28px] sm:text-[34px] font-semibold text-gray-800 tracking-tight leading-tight font-geist"
       >
-        Obtén tu cesto gratis
+        Obtén tu cesto hoy
       </h1>
-      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '0px' }}>
-        Paga solo al lavar
+      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
+        Paga cuando laves
       </p>
     </div>
   );
