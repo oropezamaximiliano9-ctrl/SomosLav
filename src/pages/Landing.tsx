@@ -150,16 +150,13 @@ const drillTransition = {
 
 const TypewriterTitle = () => {
   return (
-    <div className="w-full text-center pt-2 pb-2 select-none px-4" id="rotating-title-container">
+    <div className="w-full text-center pt-2 pb-6 select-none px-4" id="rotating-title-container">
       <h1 
         className="text-[28px] sm:text-[34px] font-semibold text-gray-800 tracking-tight leading-tight font-geist"
        
       >
-        Tu ropa limpia
+        Ahorra tiempo
       </h1>
-      <p className="text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold font-geist mt-[5px]">
-        A un precio fijo
-      </p>
     </div>
   );
 };
@@ -1148,7 +1145,7 @@ export default function Landing() {
                       <Check className="w-3.5 h-3.5 text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight">
-                      Entrega a domicilio al día siguiente
+                      Entrega a domicilio en 24 horas
                     </span>
                   </div>
                 </div>
