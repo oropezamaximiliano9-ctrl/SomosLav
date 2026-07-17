@@ -1100,7 +1100,7 @@ export default function Landing() {
                 {/* Texto superior del cesto */}
                 <div className="py-2.5 px-3.5 select-none shrink-0">
                   <span className="font-geist text-[#6A6A6A] text-[16px] font-medium text-center block w-full" style={{ lineHeight: '1.5' }}>
-                    Todo lo que quepa por <span className="text-[#0f55d8] font-bold">$95</span>
+                    <span className="text-[#0f55d8] font-bold">$95</span> por toda la ropa que metas
                   </span>
                 </div>
 
@@ -1131,7 +1131,7 @@ export default function Landing() {
                       <Check className="w-3.5 h-3.5 text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight">
-                      Espacio para tu carga semanal
+                      Lavado, secado y doblado
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1139,7 +1139,7 @@ export default function Landing() {
                       <Check className="w-3.5 h-3.5 text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight">
-                      Lavado, secado y doblado
+                      Espacio para tu carga semanal
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
