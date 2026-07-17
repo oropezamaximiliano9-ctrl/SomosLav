@@ -1,0 +1,11 @@
+{
+  "name": "SOMOS 1",
+  "description": "Una web app para la lavandería SOMOS bajo el modelo Pick-Up, Drop-Off",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

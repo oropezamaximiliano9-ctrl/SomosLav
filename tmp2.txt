@@ -1,0 +1,36 @@
+               
+                id="location-cta-navigation-button"
+              >
+                {isNavigatingGPS ? (
+                  <span>Conectando...</span>
+                ) : (
+                  <span>¿Cómo llegar?</span>
+                )}
+              </button>
+
+              {/* Información rápida en una sola línea */}
+              <div className="w-full flex flex-row items-center justify-between mt-3.5 px-1 select-none text-[15px] sm:text-[16px] font-geist text-[#6A6A6A] font-medium leading-snug" id="quick-info-container">
+                {/* Horario */}
+                <div id="quick-info-horario">
+                  Horario: 9 am - 6 pm
+                </div>
+
+                {/* Contacto */}
+                <div className="flex items-center gap-1" id="quick-info-contacto">
+                  Contacto:{" "}
+                  <a 
+                    href="https://wa.me/529212393938?text=Hola%2C%20tengo%20una%20duda%20sobre%20SOMOS%20lavander%C3%ADa."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#6A6A6A] underline hover:no-underline font-bold  inline-block"
+                    id="row-whatsapp-contact"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {isNavigatingGPS && gpsLoadingStep && (
+              <div className="w-full p-3 bg-blue-50/60 border border-blue-100 rounded-2xl text-center text-[12px] text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
+                <span className="w-2 h-2 rounded-full bg-[#0f55d8]" />

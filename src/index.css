@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Unbounded:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-inter: "Inter", ui-sans-serif, sans-serif;
+  --font-unbounded: "Unbounded", system-ui, sans-serif;
+  --font-geist: "Geist", system-ui, sans-serif;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+  
+  h1 {
+    font-size: 32px;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+html, body, #root {
+  font-family: var(--font-sans);
+  background-color: #f6eedd !important;
+  color: #1a1a1a;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Ocultar barra de desplazamiento globalmente */
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+* {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 56px;
+}
+
+@layer utilities {
+  .card {
+    background: white;
+    border-radius: 0px;
+
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    15%, 45%, 75% { transform: translateX(-6px); }
+    30%, 60%, 90% { transform: translateX(6px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+  }
+
+  @keyframes softGlow {
+    0%, 100% { 
+
+      transform: scale(1);
+    }
+    50% { 
+
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-soft-glow {
+    animation: softGlow 3s ease-in-out infinite;
+  }
+
+}
+
+/* Custom High-Performance Bottom Sheet Form Transitions */
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 280ms linear, visibility 280ms linear;
+}
+
+.form-overlay[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.form-bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  width: 100%;
+  max-width: 440px; /* elegant size */
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  max-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(100%);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 280ms cubic-bezier(0.32, 0.94, 0.6, 1), visibility 280ms cubic-bezier(0.32, 0.94, 0.6, 1);
+  will-change: transform;
+}
+
+.form-bottom-sheet[data-open="true"] {
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.form-content-inner {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 280ms ease, transform 280ms ease;
+  transition-delay: 0ms;
+}
+
+.form-bottom-sheet[data-open="true"] .form-content-inner {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 50ms;
+}

@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User customer profile for the laundry service",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "deliveryPreference": { "type": "string" },
+        "addressColonia": { "type": "string" },
+        "addressCalle": { "type": "string" },
+        "addressNumero": { "type": "string" },
+        "preferredTime": { "type": "string" },
+        "addressReferences": { "type": "string" },
+        "credits": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "phone"]
+    },
+    "Bag": {
+      "title": "Bag",
+      "description": "Laundry bag object",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "status": { "type": "string", "enum": ["unassigned", "assigned"] }
+      },
+      "required": ["id", "status"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Laundry service order mapping users, bags, status, and delivery type",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bagId": { "type": "string" },
+        "userId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "processing", "completed"] },
+        "deliveryType": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "bagId", "userId", "status"]
+    },
+    "Location": {
+      "title": "Location",
+      "description": "Branch locations of the laundry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" }
+      },
+      "required": ["id", "name"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "System settings key-value pair",
+      "type": "object",
+      "properties": {
+        "key": { "type": "string" },
+        "value": { "type": "string" }
+      },
+      "required": ["key", "value"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": "User",
+      "description": "Collection of laundry customers"
+    },
+    "bags": {
+      "schema": "Bag",
+      "description": "Collection of trackable QR bags"
+    },
+    "orders": {
+      "schema": "Order",
+      "description": "Collection of service orders"
+    },
+    "locations": {
+      "schema": "Location",
+      "description": "Available laundry branches"
+    },
+    "settings": {
+      "schema": "Setting",
+      "description": "System configuration parameters"
+    }
+  }
+}
