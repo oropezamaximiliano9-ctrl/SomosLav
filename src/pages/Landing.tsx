@@ -157,7 +157,7 @@ const TypewriterTitle = () => {
         Obtén tu cesto hoy
       </h1>
       <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
-        Paga cuando laves
+        Paga cuando lo uses
       </p>
     </div>
   );
