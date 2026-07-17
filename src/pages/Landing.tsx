@@ -1121,7 +1121,7 @@ export default function Landing() {
               </div>
 
               {/* Tarjeta de beneficios */}
-              <div className="pt-2 pb-4 px-4 w-full border-t border-gray-100/50">
+              <div className="pt-2 pb-0 px-4 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left">
                   <span className="font-geist text-[#6A6A6A] text-[16px] font-medium ml-3 mb-0.5">
@@ -1155,7 +1155,7 @@ export default function Landing() {
                 
                 <button 
                   onClick={openBottomSheet}
-                  className="w-full h-[40px] bg-[#0f55d8] text-white rounded-2xl font-bold text-lg font-geist flex items-center justify-center gap-2 select-none disabled:opacity-85 hover:brightness-110 mt-8"
+                  className="w-full h-[50px] bg-[#0f55d8] text-white rounded-2xl font-bold text-lg font-geist flex items-center justify-center gap-2 select-none disabled:opacity-85 hover:brightness-110 mt-8"
                 >
                   <div className="flex items-center space-x-2">
                     <span>Quiero mi cesto</span>
