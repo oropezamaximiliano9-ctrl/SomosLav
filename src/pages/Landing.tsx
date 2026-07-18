@@ -152,12 +152,12 @@ const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="rotating-title-container">
       <h1 
-        className="text-[28px] sm:text-[34px] font-semibold text-gray-800 tracking-tight leading-tight font-geist"
+        className="text-center text-[28px] sm:text-[34px] font-semibold text-gray-800 tracking-tight leading-tight font-geist"
       >
-        Cesto gratis
+        Lavandería a precio fijo
       </h1>
-      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist" style={{ marginTop: '1px' }}>
-        Lavado a precio fijo
+      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold font-geist" style={{ marginTop: '1px' }}>
+        Toda la ropa de tu cesto a <span className="text-[#0f55d8] font-bold">$95</span>
       </p>
     </div>
   );
@@ -1100,7 +1100,7 @@ export default function Landing() {
                 {/* Texto superior del cesto */}
                 <div className="py-2.5 px-3.5 select-none shrink-0">
                   <span className="font-geist text-[#6A6A6A] text-[16px] font-medium text-center block w-full" style={{ lineHeight: '1.5' }}>
-                    <span className="text-[#0f55d8] font-bold">$95</span> por toda la ropa que quepa
+                    &nbsp;
                   </span>
                 </div>
 
