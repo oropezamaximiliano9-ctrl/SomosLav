@@ -154,7 +154,7 @@ const TypewriterTitle = () => {
       <h1 
         className="text-[28px] sm:text-[34px] font-semibold text-gray-800 tracking-tight leading-tight font-geist"
       >
-        Obtén tu cesto hoy
+        Cesto gratis
       </h1>
       <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
         Paga solo al usarlo
@@ -1175,7 +1175,7 @@ export default function Landing() {
           {/* Título de la sección */}
           <div className="w-full pb-4">
             <h2 className="text-center text-[28px] sm:text-[34px] font-semibold tracking-tight text-gray-800 leading-tight px-4 font-geist">
-              Empieza hoy
+              Empieza
             </h2>
             <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
               Sin salir de casa
