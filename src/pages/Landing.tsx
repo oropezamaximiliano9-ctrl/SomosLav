@@ -156,8 +156,8 @@ const TypewriterTitle = () => {
       >
         Cesto gratis
       </h1>
-      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
-        Paga solo al usarlo
+      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '1px' }}>
+        Pago por servicio
       </p>
     </div>
   );
@@ -1100,7 +1100,7 @@ export default function Landing() {
                 {/* Texto superior del cesto */}
                 <div className="py-2.5 px-3.5 select-none shrink-0">
                   <span className="font-geist text-[#6A6A6A] text-[16px] font-medium text-center block w-full" style={{ lineHeight: '1.5' }}>
-                    <span className="text-[#0f55d8] font-bold">$95</span> por toda la ropa que metas
+                    <span className="text-[#0f55d8] font-bold">$95</span> por toda la ropa que quepa
                   </span>
                 </div>
 
@@ -1122,8 +1122,8 @@ export default function Landing() {
               {/* Tarjeta de beneficios */}
               <div className="pt-2 pb-2 px-4 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
-                <div className="flex flex-col gap-2 select-none text-left">
-                  <span className="font-geist text-[#6A6A6A] text-[16px] font-medium ml-3 mb-0.5">
+                <div className="flex flex-col gap-2 select-none text-left pt-2">
+                  <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight ml-2 mb-1">
                     Incluye:
                   </span>
                   <div className="flex items-center gap-2">
@@ -1175,7 +1175,7 @@ export default function Landing() {
           {/* Título de la sección */}
           <div className="w-full pb-4">
             <h2 className="text-center text-[28px] sm:text-[34px] font-semibold tracking-tight text-gray-800 leading-tight px-4 font-geist">
-              Empieza
+              Empieza hoy
             </h2>
             <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
               Sin salir de casa
