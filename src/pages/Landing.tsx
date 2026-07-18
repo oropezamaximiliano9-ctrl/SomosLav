@@ -156,8 +156,8 @@ const TypewriterTitle = () => {
       >
         Cesto gratis
       </h1>
-      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '1px' }}>
-        Pago por servicio
+      <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist" style={{ marginTop: '1px' }}>
+        Lavado a precio fijo
       </p>
     </div>
   );
@@ -1516,6 +1516,47 @@ export default function Landing() {
 
           </div>
 
+
+        </div>
+      </section>
+
+
+      <section className="w-full px-4 pt-12 pb-12 flex flex-col justify-start snap-start snap-always" id="showcase-cards-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+        <div className="w-full max-w-5xl mx-auto flex flex-col gap-3">
+          
+          {/* Card 1 */}
+          <div className="bg-[#f8f9fa] rounded-lg p-6 sm:p-8 flex flex-col relative overflow-hidden h-[250px]">
+            <div className="z-10 relative max-w-3xl">
+              <h3 className="font-geist text-[20px] sm:text-[24px] font-bold text-[#181818] leading-tight inline">
+                Título principal de la función.
+              </h3>
+              <span className="font-geist text-[20px] sm:text-[24px] text-[#6A6A6A] leading-tight inline ml-2 font-medium">
+                Descripción secundaria que explica el beneficio detalladamente.
+              </span>
+            </div>
+            
+            {/* Empty space for image */}
+            <div className="mt-6 flex-1 relative w-full h-full min-h-[100px] flex items-end justify-center">
+              {/* Placeholder for diagram/image */}
+            </div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-[#f8f9fa] rounded-lg p-6 sm:p-8 flex flex-col relative overflow-hidden h-[250px]">
+            <div className="z-10 relative max-w-3xl">
+              <h3 className="font-geist text-[20px] sm:text-[24px] font-bold text-[#181818] leading-tight inline">
+                Otro título principal.
+              </h3>
+              <span className="font-geist text-[20px] sm:text-[24px] text-[#6A6A6A] leading-tight inline ml-2 font-medium">
+                Otra descripción secundaria para la segunda tarjeta.
+              </span>
+            </div>
+            
+            {/* Empty space for image */}
+            <div className="mt-6 flex-1 relative w-full h-full min-h-[100px] flex items-end justify-center">
+              {/* Placeholder for diagram/image */}
+            </div>
+          </div>
 
         </div>
       </section>
