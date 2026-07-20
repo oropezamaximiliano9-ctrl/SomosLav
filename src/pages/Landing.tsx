@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, ShoppingBag, Sparkles, Truck, User, X, Banknote, ArrowRight, Building, Wrench, Shirt, Package } from "lucide-react";
+import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, ShoppingBag, Sparkles, Truck, User, X, Banknote, ArrowRight, Building, Wrench, Shirt, Package, Gift } from "lucide-react";
 import { useState, useContext, useRef, FormEvent, useEffect } from "react";
 import { RoleContext } from "../App";
 import canvasLaundryBag from "../assets/images/IMG_8321.jpg";
@@ -154,10 +154,10 @@ const TypewriterTitle = () => {
       <h1 
         className="text-center text-[28px] sm:text-[34px] font-semibold text-gray-800 tracking-tight leading-tight font-geist"
       >
-        Un precio fijo
+        Un solo precio
       </h1>
       <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold font-geist" style={{ marginTop: '1px' }}>
-        Toda la ropa de tu cesto a <span className="text-[#0f55d8] font-bold">$95</span>
+        Tu ropa limpia por <span className="text-[#0f55d8] font-bold">$95</span>
       </p>
     </div>
   );
@@ -371,9 +371,9 @@ const asyncGetColoniaDistance = async (coloniaName: string, coords?: { lat: numb
 };
 
 const FloatingBadge = ({ text }: { text: string }) => (
-  <div className="absolute top-[12px] left-[8px] sm:left-[12px] z-10 -rotate-[8deg] pointer-events-none">
-    <div className="bg-white border-2 border-solid border-black rounded-full px-2.5 py-1 flex items-center justify-center shadow-md">
-      <span className="font-geist font-semibold text-[#1A1519] text-[14px] sm:text-[15px] tracking-tight whitespace-nowrap">
+  <div className="absolute top-[2px] -left-[2px] sm:left-[0px] z-20 -rotate-[8deg] pointer-events-none">
+    <div className="bg-[#F3E8FF] border-2 border-dashed border-[#3B0764] rounded-full w-[124px] h-[34px] flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+      <span className="font-geist font-semibold text-[#1A1519] text-[15px] tracking-tight whitespace-nowrap">
         {text}
       </span>
     </div>
@@ -1104,11 +1104,10 @@ export default function Landing() {
           <TypewriterTitle />
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
-          <div className="px-0 sm:px-0 mt-3 mb-6 w-full">
+          <div className="px-0 sm:px-0 mt-3 mb-6 w-full relative">
+            <FloatingBadge text="Cesto Gratis" />
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
-                <FloatingBadge text="Cesto gratis" />
-
                 {/* Imagen del cesto */}
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-3">
                   <img 
@@ -1129,14 +1128,14 @@ export default function Landing() {
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
                   <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight ml-2 mb-1">
-                    Incluye:
+                    Toda la ropa de tu cesto:
                   </span>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-3.5 h-3.5 text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight">
-                      Lavado, secado y doblado
+                      Lavada y doblada
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1144,7 +1143,7 @@ export default function Landing() {
                       <Check className="w-3.5 h-3.5 text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight">
-                      Espacio para tu carga semanal
+                      Lista en 24 horas
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1152,7 +1151,7 @@ export default function Landing() {
                       <Check className="w-3.5 h-3.5 text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight">
-                      Entrega a domicilio en 24 horas
+                      Con entrega a domicilio
                     </span>
                   </div>
                 </div>
