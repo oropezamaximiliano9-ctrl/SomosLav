@@ -372,8 +372,8 @@ const asyncGetColoniaDistance = async (coloniaName: string, coords?: { lat: numb
 
 const FloatingBadge = ({ text }: { text: string }) => (
   <div className="absolute top-[2px] -left-[2px] sm:left-[0px] z-20 -rotate-[8deg] pointer-events-none">
-    <div className="bg-white border-2 border-dashed border-black rounded-full w-[124px] h-[34px] flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
-      <span className="font-geist font-semibold text-[#1A1519] text-[16px] tracking-tight whitespace-nowrap">
+    <div className="bg-white border-2 border-dashed border-[#333333] rounded-full w-[124px] h-[34px] flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+      <span className="font-geist font-semibold text-[#333333] text-[16px] tracking-tight whitespace-nowrap">
         {text}
       </span>
     </div>
