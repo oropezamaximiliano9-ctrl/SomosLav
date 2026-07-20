@@ -152,9 +152,9 @@ const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="rotating-title-container">
       <h1 
-        className="text-center text-[28px] sm:text-[34px] font-semibold text-gray-800 tracking-tight leading-tight font-geist"
+        className="text-center text-[28px] sm:text-[34px] font-semibold text-[#333333] tracking-tight leading-tight font-geist"
       >
-        Un solo precio
+        Libérate
       </h1>
       <p className="text-center text-[19px] sm:text-[21px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
         Tu ropa limpia por <span className="text-[#0f55d8] font-bold">$95</span>
