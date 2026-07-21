@@ -80,8 +80,8 @@ function MainLayout() {
         <div className="max-w-sm mx-auto px-4 h-14 flex items-center justify-between">
           <span 
             onClick={handleClick}
-            className="text-[22px] leading-none font-unbounded font-normal tracking-tight text-gray-900 select-none cursor-pointer relative -top-[7px]"
-            style={{ WebkitTouchCallout: 'none' }}
+            className="text-[22px] leading-none font-unbounded font-normal text-gray-900 select-none cursor-pointer"
+            style={{ WebkitTouchCallout: 'none', letterSpacing: '-0.04em' }}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUpOrLeave}
             onPointerLeave={handlePointerUpOrLeave}

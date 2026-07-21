@@ -1180,16 +1180,60 @@ export default function Landing() {
 
 
 
+      {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
+      <section className="w-full pt-6 sm:pt-8 pb-12 flex flex-col justify-start bg-transparent snap-start snap-always" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+        <div className="relative z-10 w-full max-w-sm mx-auto font-sans">
+          {/* Tarjeta de Servicio a Domicilio - Blanca y englobando el título 'Empieza hoy' */}
+          <div className="px-0 sm:px-0 w-full">
+            <div 
+              className="w-full rounded-lg border-none shadow-none overflow-hidden bg-white flex flex-col pt-4 pb-1" 
+              id="empty-green-landing-card"
+            >
+              {/* Título de la sección dentro de la tarjeta */}
+              <div className="w-full text-left pb-2 select-none px-6" id="empieza-hoy-title-container">
+                <h1 className="text-left text-[28px] sm:text-[34px] font-semibold text-[#333333] tracking-tight leading-tight font-geist">
+                  Empieza hoy
+                </h1>
+                <p className="text-left text-[19px] sm:text-[21px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
+                  Recibe tu cesto <span className="text-[#0f55d8]">gratis</span>
+                </p>
+              </div>
+
+              {/* Imagen exactamente del mismo tamaño que la imagen del cesto */}
+              <div className="w-full h-[270px] flex flex-col">
+                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-3">
+                  <img 
+                    src="https://i.ibb.co/sdyNTT4D/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png" 
+                    alt="Servicio a domicilio SOMOS" 
+                    className="w-full h-full object-cover object-center pointer-events-none select-none rounded-md"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://i.ibb.co/NdZJ00qk/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png";
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Texto explicativo debajo de la imagen */}
+              <div className="flex-1 min-h-[125px] pt-4 pb-[18px] px-6 w-full text-left">
+                <p className="text-[16px] sm:text-[17px] text-[#333333] font-medium font-geist leading-relaxed">
+                  Úsalo para guardar tu ropa sucia y cuando esté lleno déjalo en nuestro punto de recolección.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Sección Exclusiva: El cesto SOMOS */}
       <section className="w-full pt-4 pb-12 flex flex-col justify-start bg-transparent snap-start snap-always" id="conoce-tu-cesto-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans ">
           {/* Título de la sección */}
-          <div className="w-full pb-4">
+          <div className="w-full pb-4" id="conoce-tu-cesto-title-container">
             <h2 className="text-center text-[28px] sm:text-[34px] font-semibold tracking-tight text-gray-800 leading-tight px-4 font-geist">
-              Empieza hoy
+              Conoce tu cesto
             </h2>
             <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
-              Sin salir de casa
+              El primer paso es tuyo
             </p>
           </div>
 
@@ -1531,46 +1575,6 @@ export default function Landing() {
         </div>
       </section>
 
-
-      <section className="w-full px-4 pt-12 pb-12 flex flex-col justify-start snap-start snap-always" id="showcase-cards-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="w-full max-w-5xl mx-auto flex flex-col gap-3">
-          
-          {/* Card 1 */}
-          <div className="bg-[#f8f9fa] rounded-lg p-6 sm:p-8 flex flex-col relative overflow-hidden h-[250px]">
-            <div className="z-10 relative max-w-3xl">
-              <h3 className="font-geist text-[20px] sm:text-[24px] font-bold text-[#181818] leading-tight inline">
-                Título principal de la función.
-              </h3>
-              <span className="font-geist text-[20px] sm:text-[24px] text-[#6A6A6A] leading-tight inline ml-2 font-medium">
-                Descripción secundaria que explica el beneficio detalladamente.
-              </span>
-            </div>
-            
-            {/* Empty space for image */}
-            <div className="mt-6 flex-1 relative w-full h-full min-h-[100px] flex items-end justify-center">
-              {/* Placeholder for diagram/image */}
-            </div>
-          </div>
-
-          {/* Card 2 */}
-          <div className="bg-[#f8f9fa] rounded-lg p-6 sm:p-8 flex flex-col relative overflow-hidden h-[250px]">
-            <div className="z-10 relative max-w-3xl">
-              <h3 className="font-geist text-[20px] sm:text-[24px] font-bold text-[#181818] leading-tight inline">
-                Otro título principal.
-              </h3>
-              <span className="font-geist text-[20px] sm:text-[24px] text-[#6A6A6A] leading-tight inline ml-2 font-medium">
-                Otra descripción secundaria para la segunda tarjeta.
-              </span>
-            </div>
-            
-            {/* Empty space for image */}
-            <div className="mt-6 flex-1 relative w-full h-full min-h-[100px] flex items-end justify-center">
-              {/* Placeholder for diagram/image */}
-            </div>
-          </div>
-
-        </div>
-      </section>
 
       {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}
       <div 
