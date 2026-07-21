@@ -1124,7 +1124,7 @@ export default function Landing() {
               </div>
 
               {/* Tarjeta de beneficios */}
-              <div className="pt-2 pb-2 px-4 w-full border-t border-gray-100/50">
+              <div className="pt-2 pb-[18px] px-4 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
                   <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight ml-2 mb-1">
@@ -1156,15 +1156,22 @@ export default function Landing() {
                   </div>
                 </div>
                 
-                <button 
-                  onClick={openBottomSheet}
-                  className="w-full h-[50px] bg-[#0f55d8] text-white rounded-2xl font-bold text-lg font-geist flex items-center justify-center gap-2 select-none disabled:opacity-85 hover:brightness-110 mt-8"
-                >
-                  <div className="flex items-center space-x-2">
+                <div className="flex gap-2.5 mt-[27px] w-full max-w-[310px] justify-start">
+                  <button 
+                     onClick={openBottomSheet}
+                    className="h-[45px] w-[170px] shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85"
+                  >
                     <span>Quiero mi cesto</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </div>
-                </button>
+                  </button>
+                  <a 
+                    href="https://wa.me/529212393938?text=Hola%2C%20tengo%20una%20duda%20sobre%20SOMOS%20lavander%C3%ADa."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="h-[45px] w-[120px] shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none"
+                  >
+                    <span>Escríbenos</span>
+                  </a>
+                </div>
               </div>
           </div>
         </div>
