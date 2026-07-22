@@ -1216,7 +1216,9 @@ export default function Landing() {
               {/* Texto explicativo debajo de la imagen */}
               <div className="flex-1 min-h-[125px] pt-4 pb-[18px] px-6 w-full text-left">
                 <p className="text-[16px] sm:text-[17px] text-[#333333] font-medium font-geist leading-relaxed">
-                  Úsalo para guardar tu ropa sucia y cuando esté lleno déjalo en nuestro punto de recolección.
+                  Llénalo a tu propio ritmo.
+                  <br />
+                  Déjalo en nuestro punto de recolección cuando esté listo.
                 </p>
               </div>
             </div>
