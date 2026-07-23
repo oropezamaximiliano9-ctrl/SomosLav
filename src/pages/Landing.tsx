@@ -156,7 +156,7 @@ const TypewriterTitle = () => {
       >
         Libérate
       </h1>
-      <p className="text-center text-[19px] sm:text-[21px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
+      <p className="text-center text-[20px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
         Tu ropa limpia por <span className="text-[#0f55d8] font-bold">$95</span>
       </p>
     </div>
@@ -1127,14 +1127,14 @@ export default function Landing() {
               <div className="pt-2 pb-[18px] px-4 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
-                  <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight ml-2 mb-1">
+                  <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight ml-2 mb-1">
                     Toda la ropa de tu cesto:
                   </span>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-[15px] h-[15px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight">
                       Lavada y doblada
                     </span>
                   </div>
@@ -1142,7 +1142,7 @@ export default function Landing() {
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-[15px] h-[15px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight">
                       Lista en 24 horas
                     </span>
                   </div>
@@ -1150,7 +1150,7 @@ export default function Landing() {
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-[15px] h-[15px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight">
                       Con entrega a domicilio
                     </span>
                   </div>
@@ -1181,24 +1181,24 @@ export default function Landing() {
 
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
-      <section className="w-full pt-6 sm:pt-8 pb-12 flex flex-col justify-start bg-transparent snap-start snap-always" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto font-sans">
-          {/* Tarjeta de Servicio a Domicilio - Blanca y englobando el título 'Empieza hoy' */}
-          <div className="px-0 sm:px-0 w-full">
+      <section className="relative w-full px-0 pt-0 pb-12 flex flex-col justify-start bg-transparent snap-start snap-always" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
+          {/* Título de la sección fuera de la tarjeta */}
+          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="empieza-hoy-title-container">
+            <h1 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
+              Empieza
+            </h1>
+            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
+              Sin salir de casa
+            </p>
+          </div>
+
+          {/* Tarjeta de Servicio a Domicilio - Blanca */}
+          <div className="px-0 sm:px-0 mt-3 w-full">
             <div 
-              className="w-full rounded-lg border-none shadow-none overflow-hidden bg-white flex flex-col pt-4 pb-1" 
+              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col pb-1 bg-white" 
               id="empty-green-landing-card"
             >
-              {/* Título de la sección dentro de la tarjeta */}
-              <div className="w-full text-left pb-2 select-none px-6" id="empieza-hoy-title-container">
-                <h1 className="text-left text-[28px] sm:text-[34px] font-semibold text-[#333333] tracking-tight leading-tight font-geist">
-                  Empieza hoy
-                </h1>
-                <p className="text-left text-[19px] sm:text-[21px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
-                  Recibe tu cesto <span className="text-[#0f55d8]">gratis</span>
-                </p>
-              </div>
-
               {/* Imagen exactamente del mismo tamaño que la imagen del cesto */}
               <div className="w-full h-[270px] flex flex-col">
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-3">
@@ -1213,12 +1213,10 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Texto explicativo debajo de la imagen */}
+              {/* Texto explicativo debajo de la imagen dentro de la tarjeta */}
               <div className="flex-1 min-h-[125px] pt-4 pb-[18px] px-6 w-full text-left">
-                <p className="text-[16px] sm:text-[17px] text-[#333333] font-medium font-geist leading-relaxed">
-                  Llénalo a tu propio ritmo.
-                  <br />
-                  Déjalo en nuestro punto de recolección cuando esté listo.
+                <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  Recibe tu cesto hoy y llénalo a tu propio ritmo
                 </p>
               </div>
             </div>
