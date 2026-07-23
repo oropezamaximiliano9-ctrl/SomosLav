@@ -1196,12 +1196,19 @@ export default function Landing() {
           {/* Tarjeta de Servicio a Domicilio - Blanca */}
           <div className="px-0 sm:px-0 mt-3 w-full">
             <div 
-              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col pb-1 bg-white" 
+              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
               id="empty-green-landing-card"
             >
-              {/* Imagen exactamente del mismo tamaño que la imagen del cesto */}
+              {/* Texto explicativo ARRIBA de la imagen */}
+              <div className="pt-5 pb-3 px-6 w-full text-left">
+                <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  Recibe tu cesto hoy y llénalo<br />a tu propio ritmo
+                </p>
+              </div>
+
+              {/* Imagen en el MEDIO */}
               <div className="w-full h-[270px] flex flex-col">
-                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-3">
+                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
                   <img 
                     src="https://i.ibb.co/sdyNTT4D/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png" 
                     alt="Servicio a domicilio SOMOS" 
@@ -1213,10 +1220,10 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Texto explicativo debajo de la imagen dentro de la tarjeta */}
-              <div className="flex-1 min-h-[125px] pt-4 pb-[18px] px-6 w-full text-left">
+              {/* Texto explicativo DEBAJO de la imagen */}
+              <div className="pt-3 pb-6 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Recibe tu cesto hoy y llénalo a tu propio ritmo
+                  Lavamos toda la ropa que quepa por el mismo precio
                 </p>
               </div>
             </div>
