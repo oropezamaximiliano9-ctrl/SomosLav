@@ -1223,8 +1223,24 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-3 pb-6 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Todo lo que quepa<br />al mismo precio, <span className="text-[#0f55d8] font-semibold">siempre</span>
+                  Todo lo que quepa<br />al <span className="text-[#0f55d8] font-semibold">mismo precio</span>, siempre
                 </p>
+                {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
+                <div className="mt-4 text-right">
+                  <button
+                    onClick={() => {
+                      const nextSection = document.getElementById("conoce-tu-cesto-section");
+                      if (nextSection) {
+                        nextSection.scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        openBottomSheet();
+                      }
+                    }}
+                    className="font-geist text-[15px] sm:text-[16px] font-semibold text-black underline underline-offset-4 hover:opacity-80 transition-opacity cursor-pointer select-none"
+                  >
+                    Más información
+                  </button>
+                </div>
               </div>
             </div>
           </div>
