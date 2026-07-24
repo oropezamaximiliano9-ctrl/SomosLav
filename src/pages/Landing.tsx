@@ -1202,7 +1202,7 @@ export default function Landing() {
               {/* Texto explicativo ARRIBA de la imagen */}
               <div className="pt-5 pb-3 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Recibe tu cesto hoy y llénalo<br />a tu propio ritmo
+                  Recibe tu cesto hoy y<br />llénalo a tu propio ritmo
                 </p>
               </div>
 
@@ -1223,7 +1223,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-3 pb-6 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Lavamos toda la ropa que quepa por el mismo precio
+                  Todo lo que quepa<br />al mismo precio, siempre
                 </p>
               </div>
             </div>
