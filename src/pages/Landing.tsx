@@ -1,131 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, ShoppingBag, Sparkles, Truck, User, X, Banknote, ArrowRight, Building, Wrench, Shirt, Package, Gift } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building } from "lucide-react";
 import { useState, useContext, useRef, FormEvent, useEffect } from "react";
+import { motion } from "motion/react";
 import { RoleContext } from "../App";
 import canvasLaundryBag from "../assets/images/IMG_8321.jpg";
 import { db } from "../firebase";
-import { collection, doc, getDoc, getDocs, updateDoc, setDoc, query, where } from "firebase/firestore";
-
-declare const process: any;
+import { collection, doc, getDocs, updateDoc, setDoc, query, where } from "firebase/firestore";
 
 const ORIGEN_LAVANDERIA = { lat: 18.1372216, lng: -94.4771462 };
-
-const AnimatedTruck = () => (
-  <div className="relative w-16 h-16 flex items-center justify-center mb-1">
-    {/* Clean gradient background pulse */}
-    <div 
-      className="absolute inset-0 bg-blue-50/60 rounded-full -z-10"
-      animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.7, 0.3] }}
-      transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-    />
-    
-    {/* Micro motion speed lines behind truck */}
-    <div className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-1.5 pt-1">
-      <div 
-        className="w-4 h-1 bg-[#0f55d8]/40 rounded-full"
-        animate={{ x: [0, -15], opacity: [0, 0.8, 0], scaleX: [0.6, 1, 0.4] }}
-        transition={{ repeat: Infinity, duration: 1.2, ease: "easeOut" }}
-      />
-      <div className="w-3 h-[3px] bg-[#0f55d8]/30 rounded-full " />
-    </div>
-
-    {/* Elegant Truck Icon with bobbing effect */}
-    <div
-      animate={{ 
-        y: [0, -2, 0, -1, 0],
-        rotate: [0, 1, -1, 0]
-      }}
-      transition={{ 
-        repeat: Infinity, 
-        duration: 1.6, 
-        ease: "easeInOut" 
-      }}
-    >
-      <Truck className="w-8 h-8 text-[#0f55d8]" />
-    </div>
-  </div>
-);
-
-const AnimatedClock = () => (
-  <div className="relative w-16 h-16 flex items-center justify-center mb-1">
-    {/* Glowing spinning aura ring */}
-    <div className="absolute inset-1 border border-dashed border-[#0f55d8]/20 rounded-full -z-10 -slow" />
-    
-    <div className="absolute inset-0 bg-blue-50/60 rounded-full -z-10 " />
-
-    {/* Beautifully rotating clock face representation */}
-    <div
-      animate={{ 
-        scale: [1, 1.04, 1],
-        rotate: [0, 3, -3, 0]
-      }}
-      transition={{ 
-        repeat: Infinity, 
-        duration: 2.2, 
-        ease: "easeInOut" 
-      }}
-      className="relative flex items-center justify-center"
-    >
-      <Clock className="w-8 h-8 text-[#0f55d8]" />
-    </div>
-  </div>
-);
-
-const AnimatedLocation = () => (
-  <div className="relative w-16 h-16 flex items-center justify-center mb-1">
-    {/* Glowing background pulsing aura */}
-    <div className="absolute inset-0 bg-blue-50/70 rounded-full -z-10 -fast" />
-
-    {/* Location ripple rings underneath */}
-    <div className="absolute bottom-2 w-8 h-2 bg-blue-500/10 rounded-full " />
-
-    {/* Elegant Pin bounce animation */}
-    <div
-      animate={{ 
-        y: [-3, 3, -3],
-      }}
-      transition={{ 
-        repeat: Infinity, 
-        duration: 2.0, 
-        ease: "easeInOut" 
-      }}
-    >
-      <MapPin className="w-8 h-8 text-[#0f55d8]" />
-    </div>
-  </div>
-);
-
-const AnimatedMoney = () => (
-  <div className="relative w-16 h-16 flex items-center justify-center mb-1">
-    {/* Glowing background pulsing aura */}
-    <div className="absolute inset-0 bg-emerald-50/80 rounded-full -z-10 -fast" />
-
-    {/* Floating tiny shiny sparkles */}
-    <div className="absolute top-2 right-2 flex items-center justify-center ">
-      <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-    </div>
-
-    <div className="absolute bottom-1 left-2 flex items-center justify-center ">
-      <Sparkles className="w-2.5 h-2.5 text-emerald-400" />
-    </div>
-
-    {/* Premium Banknote cash icon floating and tilting */}
-    <div
-      animate={{ 
-        y: [-2, 2, -2],
-        rotate: [-3, 3, -3],
-        scale: [1, 1.05, 1]
-      }}
-      transition={{ 
-        repeat: Infinity, 
-        duration: 2.4, 
-        ease: "easeInOut" 
-      }}
-    >
-      <Banknote className="w-8 h-8 text-emerald-600" />
-    </div>
-  </div>
-);
 
 const drillVariants = {
   enter: (direction: "forward" | "backward") => ({
@@ -384,8 +266,6 @@ export default function Landing() {
   const { role } = useContext(RoleContext);
   const navigate = useNavigate();
 
-  const [activeFeature, setActiveFeature] = useState(0);
-
   const [name, setName] = useState(() => localStorage.getItem("user_name") || "");
   const [phone, setPhone] = useState(() => localStorage.getItem("user_phone") || "");
   const [deliveryPreference, setDeliveryPreference] = useState(() => localStorage.getItem("user_delivery_preference") || "");
@@ -412,7 +292,6 @@ export default function Landing() {
     localStorage.setItem("user_is_waitlisted", isWaitlisted ? "true" : "false");
   }, [name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, registered, isWaitlisted]);
 
-  const [copied, setCopied] = useState(false);
   const [isNavigatingGPS, setIsNavigatingGPS] = useState(false);
   const [gpsLoadingStep, setGpsLoadingStep] = useState<string | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
@@ -639,7 +518,6 @@ export default function Landing() {
   const [selectedLocationName, setSelectedLocationName] = useState<string>("Ubicación Palmas");
   
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const [activeFormStep, setActiveFormStep] = useState<1 | 2>(1);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [formError, setFormError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
@@ -672,7 +550,7 @@ export default function Landing() {
 
   useEffect(() => {
     if (isBottomSheetOpen) {
-      const activeRef = activeFormStep === 1 ? step1Ref : step2Ref;
+      const activeRef = formStep === 2 ? step2Ref : step1Ref;
       if (activeRef.current) {
         const handleResize = () => {
           if (activeRef.current) {
@@ -687,13 +565,13 @@ export default function Landing() {
     } else {
       setSliderHeight("auto");
     }
-  }, [activeFormStep, isBottomSheetOpen, registered, formStep]);
+  }, [formStep, isBottomSheetOpen, registered]);
 
   useEffect(() => {
     if (viewportRef.current) {
       viewportRef.current.scrollLeft = 0;
     }
-  }, [activeFormStep]);
+  }, [formStep]);
 
   useEffect(() => {
     if (isBottomSheetOpen) {
@@ -704,7 +582,7 @@ export default function Landing() {
       }, 180);
       return () => clearTimeout(timer);
     }
-  }, [activeFormStep, isBottomSheetOpen]);
+  }, [formStep, isBottomSheetOpen]);
   
   useEffect(() => {
     console.log("[Firestore Call] Initiating fetch for 'locations' collection...");
@@ -735,7 +613,6 @@ export default function Landing() {
     setIsBottomSheetOpen(true);
     setRegistered(false);
     setFormStep(1);
-    setActiveFormStep(1);
     setDirection("forward");
     setFormError(null);
   };
@@ -807,7 +684,7 @@ export default function Landing() {
     }
 
     setDirection("forward");
-    setActiveFormStep(2);
+    setFormStep(2);
   };
 
   const dbPreregister = async () => {
@@ -869,7 +746,7 @@ export default function Landing() {
       setFormError("Por favor ingresa tu nombre en el paso 1.");
       triggerShake();
       setDirection("backward");
-      setActiveFormStep(1);
+      setFormStep(1);
       setTimeout(() => nameInputRef.current?.focus(), 150);
       return;
     }
@@ -877,7 +754,7 @@ export default function Landing() {
       setFormError("Por favor ingresa tu teléfono en el paso 1.");
       triggerShake();
       setDirection("backward");
-      setActiveFormStep(1);
+      setFormStep(1);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
@@ -885,7 +762,7 @@ export default function Landing() {
       setFormError("El número de teléfono debe tener exactamente 10 caracteres.");
       triggerShake();
       setDirection("backward");
-      setActiveFormStep(1);
+      setFormStep(1);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
@@ -893,7 +770,7 @@ export default function Landing() {
       setFormError("El número de teléfono no puede contener letras.");
       triggerShake();
       setDirection("backward");
-      setActiveFormStep(1);
+      setFormStep(1);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
@@ -1008,14 +885,14 @@ export default function Landing() {
     if (!name.trim()) {
       setFormError("Por favor ingresa tu nombre en el paso 1.");
       setDirection("backward");
-      setActiveFormStep(1);
+      setFormStep(1);
       setTimeout(() => nameInputRef.current?.focus(), 150);
       return;
     }
     if (!phone.trim()) {
       setFormError("Por favor ingresa tu teléfono en el paso 1.");
       setDirection("backward");
-      setActiveFormStep(1);
+      setFormStep(1);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
@@ -1024,7 +901,7 @@ export default function Landing() {
     if (!addressCalle.trim() || !addressColonia.trim()) {
       setFormError("Por favor ingresa tu dirección en el paso 2.");
       setDirection("backward");
-      setActiveFormStep(2);
+      setFormStep(2);
       setTimeout(() => {
         if (!addressCalle.trim()) calleInputRef.current?.focus();
         else coloniaInputRef.current?.focus();
@@ -1221,12 +1098,12 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-3 pb-6 px-6 w-full text-left">
+              <div className="pt-3 pb-3 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Todo lo que quepa<br />al <span className="text-[#0f55d8] font-semibold">mismo precio</span>, siempre
+                  Todo lo que quepa<br />al mismo precio, <span className="text-[#0f55d8] font-semibold">siempre</span>
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
-                <div className="mt-4 text-right">
+                <div className="mt-7 text-right">
                   <button
                     onClick={() => {
                       const nextSection = document.getElementById("conoce-tu-cesto-section");
@@ -1247,9 +1124,149 @@ export default function Landing() {
         </div>
       </section>
 
+      <section className="w-full px-0 pt-0 flex flex-col justify-start pb-12 bg-[#fdf0d5] snap-start snap-always" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
+          
+          {/* Header directly in the layout, matching Empieza hoy title container */}
+          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
+            <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
+              Recolección
+            </h2>
+            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
+              Cerca de ti
+            </p>
+          </div>
+
+          {/* Tarjeta de Recolección - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
+          <div className="px-0 sm:px-0 mt-3 w-full">
+            <div 
+              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
+              id="recoleccion-landing-card"
+            >
+              {/* Espacio superior (para igualar exactamente la altura de la tarjeta Empieza) */}
+              <div className="pt-5 pb-3 px-6 w-full text-left">
+                <p className="text-[20px] font-medium font-geist leading-tight invisible" aria-hidden="true">
+                  &nbsp;<br />&nbsp;
+                </p>
+              </div>
+
+              {/* Mapa en el medio (h-[270px] flex flex-col con px-2.5 exactamente igual a la imagen de Empieza) */}
+              <div className="w-full h-[270px] flex flex-col">
+                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
+                  <a 
+                    href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative w-full h-full rounded-md overflow-hidden bg-[#f4f5f5] flex items-center justify-center font-sans tracking-tight block cursor-pointer hover:opacity-95 transition-opacity" 
+                    id="location-dynamic-map-frame-container"
+                  >
+                    {/* Streets & Roads Layer */}
+                    {/* Paseo de las palmas */}
+                    <div className="absolute top-[-20%] bottom-[40%] left-[48%] w-[32px] bg-[#cbcfdb] z-0">
+                       <span translate="no" className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-medium tracking-wide notranslate">Paseo de las Palmas</span>
+                    </div>
+                    
+                    {/* Avestruces */}
+                    <div className="absolute top-[-20%] bottom-[-20%] right-0 w-[32px] bg-[#cbcfdb] z-0">
+                      <span translate="no" className="absolute top-[31.4%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-medium tracking-wide notranslate">Avestruces</span>
+                    </div>
+
+                    {/* Río Calzadas */}
+                    <div className="absolute bottom-[40%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center justify-center">
+                       <span translate="no" className="text-[#495464] text-[10px] font-medium tracking-wide whitespace-nowrap mr-10 relative notranslate">Río Calzadas</span>
+                       <ArrowRight className="absolute right-12 text-[#6e7682] w-3.5 h-3.5 rotate-180" />
+                    </div>
+                    
+                    {/* Bottom horizontal street */}
+                    <div className="absolute bottom-[15%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0">
+                       <ArrowRight className="absolute left-[47%] top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5" />
+                    </div>
+                    
+                    {/* Conexión de calles izquierda */}
+                    <div className="absolute bottom-[15%] -left-6 w-[50px] h-[30%] bg-[#cbcfdb] z-0"></div>
+
+                    {/* Markers & Labels */}
+                    
+                    {/* Lions Boot Camp */}
+                    <div className="absolute top-[13%] left-[12%] flex items-center z-10 transition-transform cursor-pointer">
+                      <span translate="no" className="text-black text-[12px] font-medium mr-2 tracking-tight notranslate">Lions Boot Camp</span>
+                      <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
+                        <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
+                      </div>
+                    </div>
+
+                    {/* Ferreteria */}
+                    <div className="absolute bottom-[50%] left-[65%] flex flex-col items-center z-10 transition-transform cursor-pointer">
+                      <span translate="no" className="text-black text-[12px] font-medium tracking-tight notranslate mb-0.5">Ferretería</span>
+                      <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
+                        <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
+                      </div>
+                    </div>
+
+                    {/* Red Pin - Location */}
+                    <div className="absolute top-[19%] left-[40%] z-20 cursor-pointer flex flex-col items-center">
+                      <div className="text-[#ea4335] relative origin-bottom">
+                        <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
+                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <div className="absolute top-[9px] left-1/2 w-3 h-3 bg-[#a50f03] rounded-full -translate-x-1/2 opacity-30"></div>
+                      </div>
+                    </div>
+
+                    {/* OXXO Santa Isabel */}
+                    <div className="absolute bottom-[3%] right-[15%] flex flex-col items-center z-10 transition-transform cursor-pointer">
+                      <div className="bg-white w-[34px] h-[22px] rounded-[2px] border-2 border-white shadow-sm flex items-center justify-center mb-1 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/4/40/OXXO_logo.svg" alt="OXXO" className="w-full h-full object-contain" />
+                      </div>
+                      <span translate="no" className="text-black text-[12px] font-medium whitespace-nowrap tracking-tight notranslate">OXXO Santa Isabel</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              {/* Botón ¿Cómo llegar? (pt-3 pb-3 px-6 para igualar la estructura inferior) */}
+              <div className="pt-3 pb-3 px-6 w-full text-left flex flex-col justify-between">
+                <p className="text-[20px] font-medium font-geist leading-tight invisible" aria-hidden="true">
+                  &nbsp;<br />&nbsp;
+                </p>
+
+                <div className="mt-2 w-full">
+                  <button 
+                    type="button"
+                    onClick={handleNavigationAndGPS}
+                    disabled={isNavigatingGPS}
+                    className="w-full py-3 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-xl font-bold text-base font-geist flex items-center justify-center gap-2 select-none cursor-pointer disabled:opacity-85 transition-colors"
+                    id="location-cta-navigation-button"
+                  >
+                    {isNavigatingGPS ? (
+                      <span>Conectando...</span>
+                    ) : (
+                      <span>¿Cómo llegar?</span>
+                    )}
+                  </button>
+
+                  {isNavigatingGPS && gpsLoadingStep && (
+                    <div className="mt-2 w-full p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
+                      <span className="w-2 h-2 rounded-full bg-[#0f55d8]" />
+                      <span>{gpsLoadingStep}</span>
+                    </div>
+                  )}
+
+                  {geoError && (
+                    <div className="mt-2 w-full p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
+                      ⚠️ {geoError}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Sección Exclusiva: El cesto SOMOS */}
       <section className="w-full pt-4 pb-12 flex flex-col justify-start bg-transparent snap-start snap-always" id="conoce-tu-cesto-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans ">
+        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           {/* Título de la sección */}
           <div className="w-full pb-4" id="conoce-tu-cesto-title-container">
             <h2 className="text-center text-[28px] sm:text-[34px] font-semibold tracking-tight text-gray-800 leading-tight px-4 font-geist">
@@ -1320,7 +1337,6 @@ export default function Landing() {
               <div className="absolute top-0 left-0 right-0 h-5 bg-white border-x border-[#eaeaea] z-0 pointer-events-none" />
 
               <div 
-               
                 className="w-full bg-[#f8fbff] border border-[#0f55d8]/30 rounded-lg pt-3.5 pb-3.5 pl-5 pr-2.5 mt-0 mb-0 text-left flex items-center gap-4 select-none transform-gpu relative z-10 overflow-hidden" 
                 id="flow-reward-banner"
               >
@@ -1328,10 +1344,7 @@ export default function Landing() {
                   className="shrink-0 w-9 h-9 flex items-center justify-center" 
                   id="flow-reward-icon-container"
                 >
-                  <div 
-                    className="w-7 h-7 text-[#0f55d8] bg-[#0f55d8]/10 border-[1.5px] border-[#0f55d8]/30 rounded-full flex items-center justify-center transform-gpu"
-                   
-                  >
+                  <div className="w-7 h-7 text-[#0f55d8] bg-[#0f55d8]/10 border-[1.5px] border-[#0f55d8]/30 rounded-full flex items-center justify-center transform-gpu">
                     <Check className="w-[15px] h-[15px]" strokeWidth={3.5} />
                   </div>
                 </div>
@@ -1350,8 +1363,7 @@ export default function Landing() {
           <div className="mt-10 px-4 sm:px-0">
             <button 
               onClick={openBottomSheet}
-              className="w-full py-4 bg-[#0f55d8] text-white rounded-2xl font-bold text-lg font-geist flex items-center justify-center gap-2 select-none disabled:opacity-85 hover:brightness-110  "
-             
+              className="w-full py-4 bg-[#0f55d8] text-white rounded-2xl font-bold text-lg font-geist flex items-center justify-center gap-2 select-none disabled:opacity-85 hover:brightness-110"
             >
               <div className="flex items-center space-x-2">
                 <span>Quiero mi cesto</span>
@@ -1364,161 +1376,6 @@ export default function Landing() {
       </section>
 
       {/* Nueva Sección: Ubicación Dinámica Interactiva sin Clave de API */}
-      <section className="w-full px-0 pt-5 flex flex-col justify-start pb-10 bg-[#fdf0d5] snap-start snap-always" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="w-full max-w-sm mx-auto text-left">
-          
-          {/* Header directly in the layout, extremely bold and crisp */}
-          <div id="location-editorial-head" className="w-full pb-4">
-            <h2 className="text-center text-[28px] sm:text-[34px] font-semibold tracking-tight text-gray-800 leading-tight px-4 font-geist">
-              Recolección
-            </h2>
-            <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist no-underline pointer-events-none select-text cursor-text" style={{ textDecoration: 'none', borderBottom: 'none', marginTop: '6px' }}>
-              Cerca de ti
-            </p>
-          </div>
-
-
-
-          {/* Custom CSS Map Container matching the exact provided location image */}
-          <div className="px-0 sm:px-0 mt-6 w-full">
-            <div className="w-full bg-white border border-[#eaeaea] rounded-lg p-[10px] text-left relative overflow-hidden flex flex-col">
-              {/* Dirección */}
-              <div className="pb-2 pt-1 w-full bg-white relative z-10 flex flex-col items-center px-1.5">
-                <div className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight text-center">
-                  Paseo de las Palmas 209
-                </div>
-              </div>
-
-              <div className="w-full p-0">
-                <a 
-                  href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative w-full h-[250px] rounded-lg overflow-hidden bg-[#f4f5f5] flex items-center justify-center font-sans tracking-tight block cursor-pointer hover:opacity-95 transition-opacity" 
-                  id="location-dynamic-map-frame-container"
-                >
-              {/* Streets & Roads Layer */}
-              {/* Paseo de las palmas */}
-              <div className="absolute top-[-20%] bottom-[40%] left-[48%] w-[32px] bg-[#cbcfdb] z-0">
-                 <span translate="no" className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-medium tracking-wide notranslate">Paseo de las Palmas</span>
-              </div>
-              
-              {/* Avestruces */}
-              <div className="absolute top-[-20%] bottom-[-20%] right-0 w-[32px] bg-[#cbcfdb] z-0">
-                <span translate="no" className="absolute top-[31.4%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-medium tracking-wide notranslate">Avestruces</span>
-              </div>
-
-              {/* Río Calzadas */}
-              <div className="absolute bottom-[40%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center justify-center">
-                 <span translate="no" className="text-[#495464] text-[10px] font-medium tracking-wide whitespace-nowrap mr-10 relative notranslate">Río Calzadas</span>
-                 <ArrowRight className="absolute right-12 text-[#6e7682] w-3.5 h-3.5 rotate-180" />
-              </div>
-              
-              {/* Bottom horizontal street */}
-              <div className="absolute bottom-[15%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0">
-                 <ArrowRight className="absolute left-[47%] top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5" />
-              </div>
-              
-              {/* Conexión de calles izquierda */}
-              <div className="absolute bottom-[15%] -left-6 w-[50px] h-[30%] bg-[#cbcfdb] z-0"></div>
-
-              {/* Markers & Labels */}
-              
-              {/* Lions Boot Camp */}
-              <div className="absolute top-[13%] left-[12%] flex items-center z-10 transition-transform cursor-pointer">
-                <span translate="no" className="text-black text-[12px] font-medium mr-2 tracking-tight notranslate">Lions Boot Camp</span>
-                <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
-                  <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
-                </div>
-              </div>
-
-              {/* Ferreteria */}
-              <div className="absolute bottom-[50%] left-[65%] flex flex-col items-center z-10 transition-transform cursor-pointer">
-                <span translate="no" className="text-black text-[12px] font-medium tracking-tight notranslate mb-0.5">Ferretería</span>
-                <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
-                  <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
-                </div>
-              </div>
-
-              {/* Red Pin - Location */}
-              <div className="absolute top-[19%] left-[40%] z-20 cursor-pointer flex flex-col items-center">
-                <div className="text-[#ea4335] relative origin-bottom">
-                  <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                  <div className="absolute top-[9px] left-1/2 w-3 h-3 bg-[#a50f03] rounded-full -translate-x-1/2 opacity-30"></div>
-                </div>
-              </div>
-
-              {/* OXXO Santa Isabel */}
-              <div className="absolute bottom-[3%] right-[15%] flex flex-col items-center z-10 transition-transform cursor-pointer">
-                <div className="bg-white w-[34px] h-[22px] rounded-[2px] border-2 border-white shadow-sm flex items-center justify-center mb-1 overflow-hidden">
-                  <img src="https://upload.wikimedia.org/wikipedia/en/4/40/OXXO_logo.svg" alt="OXXO" className="w-full h-full object-contain" />
-                </div>
-                <span translate="no" className="text-black text-[12px] font-medium whitespace-nowrap tracking-tight notranslate">OXXO Santa Isabel</span>
-              </div>
-                </a>
-              </div>
-
-              {/* Tarjeta de información */}
-              <div className="pt-2.5 pb-0.5 w-full bg-white relative z-10 flex flex-row justify-between items-center px-1.5">
-                {/* Contacto */}
-                <div className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight flex items-center gap-1.5">
-                  <MessageCircleMore size={16} strokeWidth={2} />
-                  <a 
-                    href="https://wa.me/529212393938?text=Hola%2C%20tengo%20una%20duda%20sobre%20SOMOS%20lavander%C3%ADa."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#6A6A6A] underline hover:no-underline"
-                  >
-                    Contáctanos
-                  </a>
-                </div>
-                {/* Horario */}
-                <div className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-tight flex items-center gap-1.5">
-                  <Clock size={16} strokeWidth={2} />
-                  9 am - 6 pm
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigation Route CTA helper */}
-          <div className="space-y-4 mt-10 px-4 sm:px-0 flex flex-col items-center">
-            <div className="w-full flex flex-col items-center gap-y-1.5" id="cta-info-wrapper">
-              <button 
-                type="button"
-                onClick={handleNavigationAndGPS}
-                disabled={isNavigatingGPS}
-                className="w-full py-4 bg-[#0f55d8] hover:bg-[#0d4bc0]  text-white rounded-2xl font-bold text-lg font-geist flex items-center justify-center gap-2 select-none cursor-pointer disabled:opacity-85"
-               
-                id="location-cta-navigation-button"
-              >
-                {isNavigatingGPS ? (
-                  <span>Conectando...</span>
-                ) : (
-                  <span>¿Cómo llegar?</span>
-                )}
-              </button>
-
-            </div>
-
-            {isNavigatingGPS && gpsLoadingStep && (
-              <div className="w-full p-3 bg-blue-50/60 border border-blue-100 rounded-2xl text-center text-sm text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
-                <span className="w-2 h-2 rounded-full bg-[#0f55d8]" />
-                <span>{gpsLoadingStep}</span>
-              </div>
-            )}
-
-            {geoError && (
-              <div className="w-full p-3 bg-rose-50 border border-rose-100 rounded-2xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
-                ⚠️ {geoError}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* Nueva Sección: Servicios adicionales */}
       <section className="w-full px-0 pt-5 flex flex-col justify-start pb-10 bg-[#fdf0d5] snap-start snap-always" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
         <div className="w-full max-w-sm mx-auto text-left">
@@ -1634,7 +1491,7 @@ export default function Landing() {
           <div className="form-content-inner w-full flex flex-col">
             
               {registered ? (
-                <div 
+                <motion.div 
                   key="step-registered"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -1684,7 +1541,7 @@ export default function Landing() {
                       <button
                         type="button"
                         onClick={() => setIsBottomSheetOpen(false)}
-                        className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm mt-4 select-none "
+                        className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm mt-4 select-none"
                       >
                         Entendido, ¡gracias!
                       </button>
@@ -1720,15 +1577,15 @@ export default function Landing() {
                        <button
                          type="button"
                          onClick={() => setIsBottomSheetOpen(false)}
-                         className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm mt-4 select-none "
+                         className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm mt-4 select-none"
                        >
                          Listo, ¡muchas gracias!
                        </button>
                     </>
                   )}
-                </div>
+                </motion.div>
               ) : formStep === "verifying" ? (
-                <div
+                <motion.div
                   key="step-verifying"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -1738,9 +1595,9 @@ export default function Landing() {
                 >
                   <div className="relative w-20 h-20 flex items-center justify-center mb-6">
                     {/* Animated pulsing target ring representing the routing check */}
-                    <div className="absolute inset-0 border-[2.5px] border-dashed border-[#0f55d8]/40 rounded-full -slower" />
-                    <div className="absolute inset-2 bg-[#0f55d8]/5 rounded-full " />
-                    <MapPin className="w-8 h-8 text-[#0f55d8] relative z-10 " />
+                    <div className="absolute inset-0 border-[2.5px] border-dashed border-[#0f55d8]/40 rounded-full animate-spin" style={{ animationDuration: '10s' }} />
+                    <div className="absolute inset-2 bg-[#0f55d8]/5 rounded-full" />
+                    <MapPin className="w-8 h-8 text-[#0f55d8] relative z-10" />
                   </div>
 
                   <h3 className="text-lg font-bold text-slate-900 tracking-tight mb-1.5 font-geist">
@@ -1795,7 +1652,7 @@ export default function Landing() {
                   </div>
 
                   <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden mt-6 max-w-sm">
-                    <div
+                    <motion.div
                       className="bg-[#0f55d8] h-full"
                       initial={{ width: "0%" }}
                       animate={{
@@ -1807,9 +1664,9 @@ export default function Landing() {
                       transition={{ duration: 0.8 }}
                     />
                   </div>
-                </div>
+                </motion.div>
               ) : formStep === "not_eligible_result" ? (
-                <div 
+                <motion.div 
                   key="step-not-eligible"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -1834,9 +1691,8 @@ export default function Landing() {
                     onClick={handleConfirmWaitlist}
                     disabled={loading}
                     className="w-full py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-sm font-geist disabled:opacity-50 flex items-center justify-center gap-1.5 pointer-events-auto"
-                   
                   >
-                    {loading ? <Loader2 className="w-4 h-4 " /> : (
+                    {loading ? <Loader2 className="w-4 h-4" /> : (
                       <>
                         <span>Quiero mi cesto</span>
                         <ArrowRight className="w-4 h-4" />
@@ -1846,15 +1702,14 @@ export default function Landing() {
 
                   <button
                     type="button"
-                    onClick={() => { setDirection("backward"); setFormStep(1); setActiveFormStep(2); setTimeout(() => { coloniaInputRef.current?.focus(); }, 40); }}
+                    onClick={() => { setDirection("backward"); setFormStep(2); setTimeout(() => { coloniaInputRef.current?.focus(); }, 40); }}
                     className="text-gray-400 hover:text-gray-650 text-xs font-semibold mt-3.5 font-geist transition-colors text-center pointer-events-auto w-full block"
-                   
                   >
                     Probar con otra dirección
                   </button>
-                </div>
+                </motion.div>
               ) : (
-                <div
+                <motion.div
                   key="active-steps-slider"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -1865,15 +1720,16 @@ export default function Landing() {
                   {/* Elegant Segmented Progress Indicator */}
                   <div className="flex gap-2 shrink-0 justify-center mb-1">
                     {[1, 2].map((step) => {
-                      const isActive = step <= activeFormStep;
+                      const currentStepNum = formStep === 2 ? 2 : 1;
+                      const isActive = step <= currentStepNum;
                       return (
                         <button 
                           key={step}
                           type="button"
                           onClick={() => {
                             setFormError(null);
-                            setDirection(step > activeFormStep ? "forward" : "backward");
-                            setActiveFormStep(step as 1 | 2);
+                            setDirection(step > currentStepNum ? "forward" : "backward");
+                            setFormStep(step as 1 | 2);
                             setTimeout(() => {
                               if (step === 1) {
                                 nameInputRef.current?.focus();
@@ -1886,7 +1742,7 @@ export default function Landing() {
                           title={`Ir al Paso ${step}`}
                         >
                           <div className="h-1.5 w-full bg-slate-105 rounded-full overflow-hidden group-hover:bg-slate-200">
-                            <div className={`h-full bg-[#0f55d8] rounded-full ${step === 1 ? "" : ""}`} style={{ width: isActive ? "100%" : "0%" }} />
+                            <div className="h-full bg-[#0f55d8] rounded-full" style={{ width: isActive ? "100%" : "0%" }} />
                           </div>
                           <span className="sr-only">Paso {step}</span>
                         </button>
@@ -1897,12 +1753,12 @@ export default function Landing() {
                   {/* Static Title/Subtitle block (does not slide) */}
                   <div className="pt-2 pb-1 shrink-0 select-none">
                     <h2 className="text-[19px] font-semibold text-slate-800 tracking-tight leading-snug">
-                      {activeFormStep === 1 && "Tu cesto SOMOS te espera"}
-                      {activeFormStep === 2 && "Tu dirección de entrega"}
+                      {(formStep === 1 || formStep !== 2) && "Tu cesto SOMOS te espera"}
+                      {formStep === 2 && "Tu dirección de entrega"}
                     </h2>
                     <p className="text-gray-550 text-xs mt-0.5 font-semibold">
-                      {activeFormStep === 1 && "Pedirla toma menos de un minuto."}
-                      {activeFormStep === 2 && "¿A dónde te llevamos tu cesto?"}
+                      {(formStep === 1 || formStep !== 2) && "Pedirla toma menos de un minuto."}
+                      {formStep === 2 && "¿A dónde te llevamos tu cesto?"}
                     </p>
                   </div>
 
@@ -1917,7 +1773,7 @@ export default function Landing() {
                     <div 
                       className="flex w-[200%] transform-gpu"
                       style={{
-                        transform: activeFormStep === 1 ? 'translateX(0%)' : 'translateX(-50%)',
+                        transform: formStep === 2 ? 'translateX(-50%)' : 'translateX(0%)',
                         transition: 'transform 300ms cubic-bezier(0.32, 0.94, 0.6, 1)'
                       }}
                     >
@@ -1990,7 +1846,7 @@ export default function Landing() {
  
                           <button
                             type="submit"
-                            className="w-full py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5/10 cursor-pointer"
+                            className="w-full py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
                           >
                             <span className="font-geist">Continuar</span>
                             <ArrowRight className="w-4 h-4" />
@@ -2003,7 +1859,7 @@ export default function Landing() {
                         <form onSubmit={submitStep2AndVerify} className="space-y-4 flex flex-col">
                           
                           {gpsAutofillError && (
-                            <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg ">
+                            <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg">
                               {gpsAutofillError}
                             </p>
                           )}
@@ -2013,7 +1869,7 @@ export default function Landing() {
                               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Calle y número</label>
                               <div className="relative">
                                 {gpsAutofillLoading ? (
-                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 " />
+                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
                                 ) : (
                                   <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 )}
@@ -2041,7 +1897,7 @@ export default function Landing() {
                               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Colonia</label>
                               <div className="relative">
                                 {gpsAutofillLoading ? (
-                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 " />
+                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
                                 ) : (
                                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 )}
@@ -2069,9 +1925,8 @@ export default function Landing() {
                           <div className="flex gap-2">
                             <button
                               type="button"
-                              onClick={() => { setFormError(null); setDirection("backward"); setActiveFormStep(1); }}
+                              onClick={() => { setFormError(null); setDirection("backward"); setFormStep(1); }}
                               className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm font-geist shrink-0"
-                             
                             >
                               Atrás
                             </button>
@@ -2079,9 +1934,8 @@ export default function Landing() {
                               type="submit"
                               disabled={loading}
                               className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-sm font-geist disabled:opacity-50 flex items-center justify-center gap-1.5"
-                             
                             >
-                              {loading ? <Loader2 className="w-4 h-4 " /> : (
+                              {loading ? <Loader2 className="w-4 h-4" /> : (
                                 <>
                                   <span>Quiero mi cesto</span>
                                   <ArrowRight className="w-4 h-4" />
@@ -2093,7 +1947,7 @@ export default function Landing() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               )}
             
           </div>
