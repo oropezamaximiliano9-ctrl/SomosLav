@@ -36,7 +36,7 @@ const TypewriterTitle = () => {
       <h1 
         className="text-center text-[28px] sm:text-[34px] font-semibold text-[#333333] tracking-tight leading-tight font-geist"
       >
-        Libérate
+        Es fácil
       </h1>
       <p className="text-center text-[20px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
         Tu ropa limpia por <span className="text-[#0f55d8] font-bold">$95</span>
@@ -1079,7 +1079,7 @@ export default function Landing() {
               {/* Texto explicativo ARRIBA de la imagen */}
               <div className="pt-5 pb-3 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="text-[#0f55d8] font-semibold">Recibe</span> tu cesto hoy y<br />llénalo a tu propio ritmo
+                  <span className="text-[#0f55d8] font-semibold">Recibe</span> tu cesto hoy<br />y llénalo a tu propio ritmo
                 </p>
               </div>
 
@@ -1130,28 +1130,18 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
             <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              Recolección
+              Nuestra ubicación
             </h2>
-            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              Cerca de ti
-            </p>
           </div>
 
-          {/* Tarjeta de Recolección - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
+          {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
           <div className="px-0 sm:px-0 mt-3 w-full">
             <div 
-              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
-              id="recoleccion-landing-card"
+              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col justify-between bg-white min-h-[440px]" 
+              id="recepcion-landing-card"
             >
-              {/* Espacio superior (para igualar exactamente la altura de la tarjeta Empieza) */}
-              <div className="pt-5 pb-3 px-6 w-full text-left">
-                <p className="text-[20px] font-medium font-geist leading-tight invisible" aria-hidden="true">
-                  &nbsp;<br />&nbsp;
-                </p>
-              </div>
-
-              {/* Mapa en el medio (h-[270px] flex flex-col con px-2.5 exactamente igual a la imagen de Empieza) */}
-              <div className="w-full h-[270px] flex flex-col">
+              {/* Contenedor superior con Mapa con su tamaño original h-[270px] */}
+              <div className="w-full h-[270px] flex flex-col pt-3">
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
@@ -1163,22 +1153,23 @@ export default function Landing() {
                     {/* Streets & Roads Layer */}
                     {/* Paseo de las palmas */}
                     <div className="absolute top-[-20%] bottom-[40%] left-[48%] w-[32px] bg-[#cbcfdb] z-0">
-                       <span translate="no" className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-medium tracking-wide notranslate">Paseo de las Palmas</span>
+                       <span translate="no" className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Paseo de las Palmas</span>
                     </div>
                     
                     {/* Avestruces */}
                     <div className="absolute top-[-20%] bottom-[-20%] right-0 w-[32px] bg-[#cbcfdb] z-0">
-                      <span translate="no" className="absolute top-[31.4%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-medium tracking-wide notranslate">Avestruces</span>
+                      <span translate="no" className="absolute top-[31.4%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Avestruces</span>
                     </div>
 
-                    {/* Río Calzadas */}
-                    <div className="absolute bottom-[40%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center justify-center">
-                       <span translate="no" className="text-[#495464] text-[10px] font-medium tracking-wide whitespace-nowrap mr-10 relative notranslate">Río Calzadas</span>
-                       <ArrowRight className="absolute right-12 text-[#6e7682] w-3.5 h-3.5 rotate-180" />
+                    {/* Middle horizontal street - Río Calzadas (colinda con Paseo de las Palmas) */}
+                    <div className="absolute bottom-[40%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
+                       <span translate="no" className="absolute left-[38%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
+                       <ArrowRight className="absolute right-12 top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5 rotate-180" />
                     </div>
                     
-                    {/* Bottom horizontal street */}
-                    <div className="absolute bottom-[15%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0">
+                    {/* Bottom horizontal street (Calle del Oxxo) - Río Calzadas */}
+                    <div className="absolute bottom-[15%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
+                       <span translate="no" className="absolute left-[20%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
                        <ArrowRight className="absolute left-[47%] top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5" />
                     </div>
                     
@@ -1187,11 +1178,20 @@ export default function Landing() {
 
                     {/* Markers & Labels */}
                     
-                    {/* Lions Boot Camp */}
-                    <div className="absolute top-[13%] left-[12%] flex items-center z-10 transition-transform cursor-pointer">
-                      <span translate="no" className="text-black text-[12px] font-medium mr-2 tracking-tight notranslate">Lions Boot Camp</span>
-                      <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
-                        <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
+                    {/* Red Pin - Positioned at left-[38%] to keep the blue circle near but not touching the street text */}
+                    <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
+                      {/* Attached label positioned to the left without affecting the marker's position */}
+                      <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap">
+                        <span translate="no" className="text-black text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
+                        <span translate="no" className="text-black text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
+                      </div>
+                      <div className="text-[#ea4335] relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
+                        {/* Circle enclosing the pin marker */}
+                        <div className="absolute -inset-0.5 border-2 border-[#0f55d8] bg-[#0f55d8]/10 rounded-full pointer-events-none"></div>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
+                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <div className="absolute top-[8px] left-1/2 w-2.5 h-2.5 bg-[#a50f03] rounded-full -translate-x-1/2 opacity-30 z-10"></div>
                       </div>
                     </div>
 
@@ -1200,16 +1200,6 @@ export default function Landing() {
                       <span translate="no" className="text-black text-[12px] font-medium tracking-tight notranslate mb-0.5">Ferretería</span>
                       <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
                         <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
-                      </div>
-                    </div>
-
-                    {/* Red Pin - Location */}
-                    <div className="absolute top-[19%] left-[40%] z-20 cursor-pointer flex flex-col items-center">
-                      <div className="text-[#ea4335] relative origin-bottom">
-                        <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
-                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                        </svg>
-                        <div className="absolute top-[9px] left-1/2 w-3 h-3 bg-[#a50f03] rounded-full -translate-x-1/2 opacity-30"></div>
                       </div>
                     </div>
 
@@ -1224,40 +1214,43 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Botón ¿Cómo llegar? (pt-3 pb-3 px-6 para igualar la estructura inferior) */}
-              <div className="pt-3 pb-3 px-6 w-full text-left flex flex-col justify-between">
-                <p className="text-[20px] font-medium font-geist leading-tight invisible" aria-hidden="true">
-                  &nbsp;<br />&nbsp;
+              {/* Texto explicativo DEBAJO del mapa */}
+              <div className="pt-4 pb-1 px-6 w-full text-left">
+                <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  <span className="text-[#0f55d8] font-semibold">Deja tu ropa sucia aquí.</span><br />
+                  Te la entregamos limpia<br />
+                  en casa
                 </p>
+              </div>
 
-                <div className="mt-2 w-full">
-                  <button 
-                    type="button"
-                    onClick={handleNavigationAndGPS}
-                    disabled={isNavigatingGPS}
-                    className="w-full py-3 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-xl font-bold text-base font-geist flex items-center justify-center gap-2 select-none cursor-pointer disabled:opacity-85 transition-colors"
-                    id="location-cta-navigation-button"
-                  >
-                    {isNavigatingGPS ? (
-                      <span>Conectando...</span>
-                    ) : (
-                      <span>¿Cómo llegar?</span>
-                    )}
-                  </button>
-
-                  {isNavigatingGPS && gpsLoadingStep && (
-                    <div className="mt-2 w-full p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
-                      <span className="w-2 h-2 rounded-full bg-[#0f55d8]" />
-                      <span>{gpsLoadingStep}</span>
-                    </div>
+              {/* Espacio con el botón ¿Cómo llegar? al final */}
+              <div className="pt-4 pb-5 px-6 w-full flex-1 flex flex-col justify-end items-start min-h-[120px]">
+                <button 
+                  type="button"
+                  onClick={handleNavigationAndGPS}
+                  disabled={isNavigatingGPS}
+                  className="h-[45px] px-6 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap"
+                  id="location-cta-navigation-button"
+                >
+                  {isNavigatingGPS ? (
+                    <span>Conectando...</span>
+                  ) : (
+                    <span>Ver cómo llegar</span>
                   )}
+                </button>
 
-                  {geoError && (
-                    <div className="mt-2 w-full p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
-                      ⚠️ {geoError}
-                    </div>
-                  )}
-                </div>
+                {isNavigatingGPS && gpsLoadingStep && (
+                  <div className="mt-2 w-full max-w-[280px] p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
+                    <span className="w-2 h-2 rounded-full bg-[#0f55d8]" />
+                    <span>{gpsLoadingStep}</span>
+                  </div>
+                )}
+
+                {geoError && (
+                  <div className="mt-2 w-full max-w-[280px] p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
+                    ⚠️ {geoError}
+                  </div>
+                )}
               </div>
             </div>
           </div>
