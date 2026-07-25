@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building } from "lucide-react";
+import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck } from "lucide-react";
 import { useState, useContext, useRef, FormEvent, useEffect } from "react";
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
@@ -252,15 +252,33 @@ const asyncGetColoniaDistance = async (coloniaName: string, coords?: { lat: numb
   return getColoniaDistance(coloniaName);
 };
 
-const FloatingBadge = ({ text }: { text: string }) => (
-  <div className="absolute top-[2px] -left-[2px] sm:left-[0px] z-20 -rotate-[8deg] pointer-events-none">
-    <div className="bg-white border-2 border-dashed border-[#333333] rounded-full w-[124px] h-[34px] flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
-      <span className="font-geist font-semibold text-[#333333] text-[16px] tracking-tight whitespace-nowrap">
-        {text}
-      </span>
+const FloatingBadge = ({ 
+  text, 
+  position = "top-left", 
+  className,
+  noBorder = false,
+  textClassName
+}: { 
+  text: React.ReactNode; 
+  position?: "top-left" | "top-right"; 
+  className?: string;
+  noBorder?: boolean;
+  textClassName?: string;
+}) => {
+  const defaultPos = position === "top-right"
+    ? "absolute top-[2px] -right-[12px] sm:-right-[10px] z-20 rotate-[8deg] pointer-events-none"
+    : "absolute top-[2px] -left-[2px] sm:left-[0px] z-20 -rotate-[8deg] pointer-events-none";
+
+  return (
+    <div className={className || defaultPos}>
+      <div className={`bg-white ${noBorder ? '' : 'border-2 border-dashed border-[#333333]'} rounded-full px-3.5 min-w-[124px] h-[36px] flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)]`}>
+        <span className={textClassName || "font-geist font-semibold text-[#333333] text-[16px] tracking-tight whitespace-nowrap"}>
+          {text}
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function Landing() {
   const { role } = useContext(RoleContext);
@@ -1071,7 +1089,8 @@ export default function Landing() {
           </div>
 
           {/* Tarjeta de Servicio a Domicilio - Blanca */}
-          <div className="px-0 sm:px-0 mt-3 w-full">
+          <div className="px-0 sm:px-0 mt-3 w-full relative">
+            <FloatingBadge text="Envío gratis" position="top-right" />
             <div 
               className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
               id="empty-green-landing-card"
@@ -1130,8 +1149,11 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
             <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              Nuestra ubicación
+              Visítanos
             </h2>
+            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
+              Con tu cesto lleno
+            </p>
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
