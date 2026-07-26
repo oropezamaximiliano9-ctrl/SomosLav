@@ -1234,7 +1234,7 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO del mapa */}
-              <div className="pt-4 pb-2 px-6 w-full text-left space-y-5">
+              <div className="pt-4 px-6 w-full text-left space-y-3.5">
                 <div>
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
                     Deja tu ropa sucia aquí.
@@ -1254,7 +1254,7 @@ export default function Landing() {
               </div>
 
               {/* Espacio con el botón ¿Cómo llegar? al final */}
-              <div className="mt-[27px] pb-5 px-6 w-full flex flex-col justify-start items-start">
+              <div className="mt-[27px] pb-5 px-4 w-full flex flex-col justify-start items-start">
                 <button 
                   type="button"
                   onClick={handleNavigationAndGPS}
