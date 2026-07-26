@@ -1149,17 +1149,14 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
             <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              Visítanos
+              Cerca de ti
             </h2>
-            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              Con tu cesto lleno
-            </p>
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
           <div className="px-0 sm:px-0 mt-3 w-full">
             <div 
-              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col justify-between bg-white min-h-[440px]" 
+              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
               id="recepcion-landing-card"
             >
               {/* Contenedor superior con Mapa con su tamaño original h-[270px] */}
@@ -1203,9 +1200,9 @@ export default function Landing() {
                     {/* Red Pin - Positioned at left-[38%] to keep the blue circle near but not touching the street text */}
                     <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
                       {/* Attached label positioned to the left without affecting the marker's position */}
-                      <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap">
-                        <span translate="no" className="text-black text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
-                        <span translate="no" className="text-black text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
+                      <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap font-geist">
+                        <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
+                        <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
                       </div>
                       <div className="text-[#ea4335] relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
                         {/* Circle enclosing the pin marker */}
@@ -1237,21 +1234,32 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO del mapa */}
-              <div className="pt-4 pb-1 px-6 w-full text-left">
-                <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="text-[#0f55d8] font-semibold">Deja tu ropa sucia aquí.</span><br />
-                  Te la entregamos limpia<br />
-                  en casa
-                </p>
+              <div className="pt-4 pb-2 px-6 w-full text-left space-y-5">
+                <div>
+                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                    Deja tu ropa sucia aquí.
+                  </p>
+                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-1.5 whitespace-nowrap">
+                    <span className="text-[#0f55d8] font-semibold">Sin esperar</span>
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                    Te la entregamos limpia en casa
+                  </p>
+                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-1.5 whitespace-nowrap">
+                    <span className="text-[#0f55d8] font-semibold">Sin costo</span>
+                  </p>
+                </div>
               </div>
 
               {/* Espacio con el botón ¿Cómo llegar? al final */}
-              <div className="pt-4 pb-5 px-6 w-full flex-1 flex flex-col justify-end items-start min-h-[120px]">
+              <div className="mt-[27px] pb-5 px-6 w-full flex flex-col justify-start items-start">
                 <button 
                   type="button"
                   onClick={handleNavigationAndGPS}
                   disabled={isNavigatingGPS}
-                  className="h-[45px] px-6 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap"
+                  className="h-[45px] w-[170px] shrink-0 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap"
                   id="location-cta-navigation-button"
                 >
                   {isNavigatingGPS ? (
