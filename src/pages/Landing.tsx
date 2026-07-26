@@ -36,7 +36,7 @@ const TypewriterTitle = () => {
       <h1 
         className="text-center text-[28px] sm:text-[34px] font-semibold text-[#333333] tracking-tight leading-tight font-geist"
       >
-        Es fácil
+        Muy fácil
       </h1>
       <p className="text-center text-[20px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
         Tu ropa limpia por <span className="text-[#0f55d8] font-bold">$95</span>
@@ -1159,8 +1159,20 @@ export default function Landing() {
               className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
               id="recepcion-landing-card"
             >
-              {/* Contenedor superior con Mapa con su tamaño original h-[270px] */}
-              <div className="w-full h-[270px] flex flex-col pt-3">
+              {/* Texto explicativo ARRIBA del mapa */}
+              <div className="pt-5 pb-1 px-6 w-full text-left">
+                <div>
+                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                    Deja tu ropa sucia aquí
+                  </p>
+                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-0.5 whitespace-nowrap">
+                    <span className="text-[#0f55d8] font-semibold">Sin esperar</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Contenedor con Mapa con su tamaño original h-[270px] */}
+              <div className="w-full h-[270px] flex flex-col pt-2">
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
@@ -1234,27 +1246,19 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO del mapa */}
-              <div className="pt-4 px-6 w-full text-left space-y-3.5">
-                <div>
-                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                    Deja tu ropa sucia aquí
-                  </p>
-                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-1.5 whitespace-nowrap">
-                    <span className="text-[#0f55d8] font-semibold">Sin esperar</span>
-                  </p>
-                </div>
+              <div className="pt-4 px-6 w-full text-left">
                 <div>
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
                     Te la entregamos limpia en casa
                   </p>
-                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-1.5 whitespace-nowrap">
+                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-0.5 whitespace-nowrap">
                     <span className="text-[#0f55d8] font-semibold">Sin costo</span>
                   </p>
                 </div>
               </div>
 
               {/* Espacio con el botón ¿Cómo llegar? al final */}
-              <div className="mt-[27px] pb-5 px-4 w-full flex flex-col justify-start items-start">
+              <div className="mt-5 pb-5 px-4 w-full flex flex-col justify-start items-start">
                 <button 
                   type="button"
                   onClick={handleNavigationAndGPS}
