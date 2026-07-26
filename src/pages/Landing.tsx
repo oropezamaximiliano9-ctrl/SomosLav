@@ -1237,7 +1237,7 @@ export default function Landing() {
               <div className="pt-4 px-6 w-full text-left space-y-3.5">
                 <div>
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                    Deja tu ropa sucia aquí.
+                    Deja tu ropa sucia aquí
                   </p>
                   <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-1.5 whitespace-nowrap">
                     <span className="text-[#0f55d8] font-semibold">Sin esperar</span>
