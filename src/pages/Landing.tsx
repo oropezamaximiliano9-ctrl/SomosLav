@@ -1149,15 +1149,16 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              ¿Cesto lleno?
+              Recepción
             </h1>
             <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              Recepción cerca de ti
+              Cerca de ti
             </p>
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
-          <div className="px-0 sm:px-0 mt-3 w-full">
+          <div className="px-0 sm:px-0 mt-3 w-full relative">
+            <FloatingBadge text="¿cesto lleno?" position="top-right" />
             <div 
               className="w-full rounded-lg overflow-hidden flex flex-col bg-white" 
               id="recepcion-landing-card"
@@ -1166,7 +1167,7 @@ export default function Landing() {
               <div className="pt-5 pb-1 px-6 w-full text-left">
                 <div>
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                    Deja tu ropa sucia aquí
+                    Deja tu ropa sucia
                   </p>
                   <p className="font-geist text-[#333333] text-[19px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
                     <span className="text-[#0f55d8] font-semibold">sin esperar</span>
