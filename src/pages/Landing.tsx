@@ -36,7 +36,7 @@ const TypewriterTitle = () => {
       <h1 
         className="text-center text-[28px] sm:text-[34px] font-semibold text-[#333333] tracking-tight leading-tight font-geist"
       >
-        Es muy fácil
+        Libérate
       </h1>
       <p className="text-center text-[20px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
         Tu ropa limpia por <span className="text-[#0f55d8] font-bold">$95</span>
@@ -1262,7 +1262,7 @@ export default function Landing() {
               </div>
 
               {/* Espacio con el botón ¿Cómo llegar? al final */}
-              <div className="mt-5 pb-5 px-4 w-full flex flex-col justify-start items-start">
+              <div className="mt-5 pb-3 px-4 w-full flex flex-col justify-start items-start">
                 <button 
                   type="button"
                   onClick={handleNavigationAndGPS}
