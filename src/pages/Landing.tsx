@@ -36,7 +36,7 @@ const TypewriterTitle = () => {
       <h1 
         className="text-center text-[28px] sm:text-[34px] font-semibold text-[#333333] tracking-tight leading-tight font-geist"
       >
-        Muy fácil
+        Es muy fácil
       </h1>
       <p className="text-center text-[20px] text-[#333333] font-semibold font-geist" style={{ marginTop: '1px' }}>
         Tu ropa limpia por <span className="text-[#0f55d8] font-bold">$95</span>
@@ -1149,17 +1149,17 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              Cerca de ti
+              ¿Cesto lleno?
             </h1>
             <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              ¿Cesto lleno?
+              Recepción cerca de ti
             </p>
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
           <div className="px-0 sm:px-0 mt-3 w-full">
             <div 
-              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
+              className="w-full rounded-lg overflow-hidden flex flex-col bg-white" 
               id="recepcion-landing-card"
             >
               {/* Texto explicativo ARRIBA del mapa */}
@@ -1168,8 +1168,8 @@ export default function Landing() {
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
                     Deja tu ropa sucia aquí
                   </p>
-                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-0.5 whitespace-nowrap">
-                    <span className="text-[#0f55d8] font-semibold">Sin esperar</span>
+                  <p className="font-geist text-[#333333] text-[19px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
+                    <span className="text-[#0f55d8] font-semibold">sin esperar</span>
                   </p>
                 </div>
               </div>
@@ -1254,8 +1254,8 @@ export default function Landing() {
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
                     Te la entregamos limpia en casa
                   </p>
-                  <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug mt-0.5 whitespace-nowrap">
-                    <span className="text-[#0f55d8] font-semibold">Sin costo</span>
+                  <p className="font-geist text-[#333333] text-[19px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
+                    <span className="text-[#0f55d8] font-semibold">sin costo</span>
                   </p>
                 </div>
               </div>
@@ -1294,21 +1294,128 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Nueva Sección: Servicios adicionales */}
+      <section className="w-full px-0 pt-0 flex flex-col justify-start pb-12 bg-[#fdf0d5] snap-start snap-always" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+        <div className="w-full max-w-sm mx-auto text-left">
+          
+          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="soluciones-title-container">
+            <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
+              Soluciones
+            </h2>
+            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
+              Con costo adicional
+            </p>
+          </div>
+
+          <div className="px-0 sm:px-0 mt-3 w-full">
+            <div className="w-full bg-white rounded-lg pt-5 pb-2.5 px-4 text-left relative overflow-hidden flex flex-col">
+              <div className="flex flex-col">
+                <div className="flex flex-col pb-2.5">
+                  <div className="flex items-center gap-4">
+                    <div className="shrink-0">
+                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                          +$20
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
+                        Urgente
+                      </h4>
+                      <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
+                        Recibe tu ropa limpia el mismo día.
+                      </p>
+                      <div className="flex items-start gap-1.5 pt-4">
+                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
+                          Pídelo al entregar tu cesto
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-[#EDE9E0] w-full" />
+
+                <div className="flex flex-col pt-5 pb-2.5">
+                  <div className="flex items-center gap-4">
+                    <div className="shrink-0">
+                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                          +$$$
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
+                        Ropa de cama
+                      </h4>
+                      <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
+                        Añade el lavado de tu edredón, cobertor o sábana.
+                      </p>
+                      <div className="flex items-start gap-1.5 pt-4">
+                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
+                          Entrégalo por separado
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-[#EDE9E0] w-full" />
+
+                <div className="flex flex-col pt-5 pb-2.5">
+                  <div className="flex items-center gap-4">
+                    <div className="shrink-0">
+                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                          +$$$
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
+                        Planchado
+                      </h4>
+                      <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
+                        Añade el planchado por pieza a tu pedido.
+                      </p>
+                      <div className="flex items-start gap-1.5 pt-4">
+                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
+                          Indícalo al entregar tu cesto
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+      </section>
+
       {/* Sección Exclusiva: El cesto SOMOS */}
-      <section className="w-full pt-4 pb-12 flex flex-col justify-start bg-transparent snap-start snap-always" id="conoce-tu-cesto-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+      <section className="w-full px-0 pt-0 flex flex-col justify-start pb-12 bg-transparent snap-start snap-always" id="conoce-tu-cesto-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           {/* Título de la sección */}
-          <div className="w-full pb-4" id="conoce-tu-cesto-title-container">
-            <h2 className="text-center text-[28px] sm:text-[34px] font-semibold tracking-tight text-gray-800 leading-tight px-4 font-geist">
+          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="conoce-tu-cesto-title-container">
+            <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
               Conoce tu cesto
             </h2>
-            <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist whitespace-nowrap" style={{ marginTop: '6px' }}>
+            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
               El primer paso es tuyo
             </p>
           </div>
 
           {/* Tarjeta Unica de Pasos */}
-          <div className="px-0 sm:px-0 mt-6 w-full">
+          <div className="px-0 sm:px-0 mt-3 w-full">
             <div className="w-full bg-white border-t border-x border-[#eaeaea] rounded-t-lg pt-3.5 pb-3.5 pl-5 pr-2.5 text-left relative overflow-hidden">
               <div className="flex flex-col">
                 {/* Item 1 */}
@@ -1402,86 +1509,6 @@ export default function Landing() {
             </button>
             <p className="text-center text-[15px] font-semibold text-gray-500 mt-2.5">Recíbelo gratis, paga solo al lavar</p>
           </div>
-        </div>
-      </section>
-
-      {/* Nueva Sección: Ubicación Dinámica Interactiva sin Clave de API */}
-      {/* Nueva Sección: Servicios adicionales */}
-      <section className="w-full px-0 pt-5 flex flex-col justify-start pb-10 bg-[#fdf0d5] snap-start snap-always" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="w-full max-w-sm mx-auto text-left">
-          
-          <div className="w-full pb-4">
-            <h2 className="text-center text-[28px] sm:text-[34px] font-semibold tracking-tight text-gray-800 leading-tight px-4 font-geist">
-              Soluciones
-            </h2>
-            <p className="text-center text-[19px] sm:text-[21px] text-[#6A6A6A] font-semibold px-4 font-geist no-underline pointer-events-none select-text cursor-text" style={{ textDecoration: 'none', borderBottom: 'none', marginTop: '6px' }}>
-              Con costo adicional
-            </p>
-          </div>
-
-          <div className="px-0 sm:px-0 mt-6 w-full">
-            <div className="w-full bg-white border border-[#eaeaea] rounded-lg pt-5 pb-2.5 px-4 text-left relative overflow-hidden flex flex-col">
-              <div className="flex flex-col">
-                <div className="flex flex-col pb-2.5">
-                  <div className="flex items-center gap-4">
-                    <div className="shrink-0">
-                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
-                          +$20
-                        </span>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="font-geist font-bold text-[#181818] text-[16px] sm:text-[17px] leading-snug">
-                        Urgente
-                      </h4>
-                      <p className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-relaxed">
-                        Recibe tu ropa limpia el mismo día.
-                      </p>
-                      <div className="flex items-start gap-1.5 pt-4">
-                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
-                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
-                          Pídelo al entregar tu cesto
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t border-[#EDE9E0] w-full" />
-
-                <div className="flex flex-col pt-5 pb-2.5">
-                  <div className="flex items-center gap-4">
-                    <div className="shrink-0">
-                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
-                          +$$$
-                        </span>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="font-geist font-bold text-[#181818] text-[16px] sm:text-[17px] leading-snug">
-                        Ropa de cama
-                      </h4>
-                      <p className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-relaxed">
-                        Añade el lavado de tu edredón, cobertor o sábana.
-                      </p>
-                      <div className="flex items-start gap-1.5 pt-4">
-                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
-                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
-                          Entrégalo por separado
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-
-
         </div>
       </section>
 
