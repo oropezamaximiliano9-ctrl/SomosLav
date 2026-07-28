@@ -293,6 +293,7 @@ export default function Landing() {
   const [preferredTime, setPreferredTime] = useState(() => localStorage.getItem("user_preferred_time") || "");
   
   const [loading, setLoading] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [registered, setRegistered] = useState(() => localStorage.getItem("user_registered") === "true");
   const [isWaitlisted, setIsWaitlisted] = useState(() => localStorage.getItem("user_is_waitlisted") === "true");
   const [formStep, setFormStep] = useState<1 | 2 | "verifying" | "not_eligible_result">(1);
@@ -992,7 +993,7 @@ export default function Landing() {
   return (
     <div className="flex-1 flex flex-col w-full bg-[#fdf0d5]">
       {/* Hero Section */}
-      <section className="relative w-full px-0 pt-0 pb-12 flex flex-col items-start text-left justify-start snap-start snap-always" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-between snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
 
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0">
 
@@ -1076,7 +1077,7 @@ export default function Landing() {
 
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
-      <section className="relative w-full px-0 pt-0 pb-12 flex flex-col justify-start bg-transparent snap-start snap-always" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="empieza-hoy-title-container">
@@ -1136,7 +1137,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="w-full px-0 pt-0 flex flex-col justify-start pb-12 bg-[#fdf0d5] snap-start snap-always" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+      <section className="w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
@@ -1289,108 +1290,97 @@ export default function Landing() {
       </section>
 
       {/* Nueva Sección: Servicios adicionales */}
-      <section className="w-full px-0 pt-0 flex flex-col justify-start pb-12 bg-[#fdf0d5] snap-start snap-always" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="w-full max-w-sm mx-auto text-left">
+      <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+        <div className="w-full max-w-sm mx-auto text-left flex flex-col justify-between flex-1 h-full">
           
-          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="soluciones-title-container">
-            <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              Soluciones
-            </h2>
-            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              Con costo adicional
-            </p>
-          </div>
-
-          <div className="px-0 sm:px-0 mt-3 w-full">
-            <div className="w-full bg-white rounded-lg pt-5 pb-2.5 px-4 text-left relative overflow-hidden flex flex-col">
-              <div className="flex flex-col">
-                <div className="flex flex-col pb-2.5">
-                  <div className="flex items-center gap-4">
-                    <div className="shrink-0">
-                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
-                          +$20
-                        </span>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
-                        Urgente
-                      </h4>
-                      <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
-                        Recibe tu ropa limpia el mismo día.
-                      </p>
-                      <div className="flex items-start gap-1.5 pt-4">
-                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
-                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
-                          Pídelo al entregar tu cesto
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t border-[#EDE9E0] w-full" />
-
-                <div className="flex flex-col pt-5 pb-2.5">
-                  <div className="flex items-center gap-4">
-                    <div className="shrink-0">
-                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
-                          +$$$
-                        </span>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
-                        Ropa de cama
-                      </h4>
-                      <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
-                        Añade el lavado de tu edredón, cobertor o sábana.
-                      </p>
-                      <div className="flex items-start gap-1.5 pt-4">
-                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
-                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
-                          Entrégalo por separado
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t border-[#EDE9E0] w-full" />
-
-                <div className="flex flex-col pt-5 pb-2.5">
-                  <div className="flex items-center gap-4 opacity-0 pointer-events-none select-none">
-                    <div className="shrink-0">
-                      <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
-                          +$$$
-                        </span>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
-                        Planchado
-                      </h4>
-                      <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
-                        Añade el planchado por pieza a tu pedido.
-                      </p>
-                      <div className="flex items-start gap-1.5 pt-4">
-                        <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
-                        <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
-                          Indícalo al entregar tu cesto
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+          <div>
+            <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="soluciones-title-container">
+              <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
+                Soluciones
+              </h2>
+              <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
+                Con costo adicional
+              </p>
             </div>
 
+            <div className="px-0 sm:px-0 mt-3 w-full">
+              <div className="w-full bg-white rounded-lg pt-5 pb-2.5 px-4 text-left relative overflow-hidden flex flex-col">
+                <div className="flex flex-col">
+                  <div className="flex flex-col pb-2.5">
+                    <div className="flex items-center gap-4">
+                      <div className="shrink-0">
+                        <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
+                          <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                            +$20
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
+                          Urgente
+                        </h4>
+                        <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
+                          Recibe tu ropa limpia el mismo día.
+                        </p>
+                        <div className="flex items-start gap-1.5 pt-4">
+                          <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                          <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
+                            Pídelo al entregar tu cesto
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-[#EDE9E0] w-full" />
+
+                  <div className="flex flex-col pt-5 pb-2.5">
+                    <div className="flex items-center gap-4">
+                      <div className="shrink-0">
+                        <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
+                          <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                            +$$$
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
+                          Ropa de cama
+                        </h4>
+                        <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
+                          Añade el lavado de tu edredón, cobertor o sábana.
+                        </p>
+                        <div className="flex items-start gap-1.5 pt-4">
+                          <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                          <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
+                            Entrégalo por separado
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
           </div>
 
+          {/* Footer Minimalista */}
+          <footer className="w-full pt-1.5 pb-0 mt-auto border-t border-[#EDE9E0]/80 text-center text-[11px] font-geist select-none">
+            <div className="max-w-sm mx-auto px-4 flex flex-col items-center justify-center gap-0 pb-0.5">
+              <p className="font-medium text-gray-500 leading-tight">
+                © {new Date().getFullYear()} Somos Lavandería. Todos los derechos reservados.
+              </p>
+              <button 
+                type="button"
+                onClick={() => setIsPrivacyOpen(true)}
+                className="text-[#0f55d8] hover:underline font-semibold cursor-pointer transition-colors leading-tight py-0.5"
+              >
+                Políticas de privacidad
+              </button>
+            </div>
+          </footer>
 
         </div>
       </section>
@@ -1896,8 +1886,68 @@ export default function Landing() {
         </div>
       </div>
 
+      {/* Modal de Políticas de Privacidad */}
+      {isPrivacyOpen && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setIsPrivacyOpen(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto space-y-4 text-left shadow-2xl relative z-[101]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b pb-3 border-gray-100">
+              <h3 className="font-geist font-bold text-lg text-gray-900">Políticas de Privacidad</h3>
+              <button 
+                type="button"
+                onClick={() => setIsPrivacyOpen(false)}
+                className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="text-sm font-geist text-gray-600 space-y-3 leading-relaxed">
+              <p>
+                En <strong>Somos Lavandería</strong>, valoramos y respetamos tu privacidad. Esta política describe cómo recopilamos, usamos y protegemos la información personal que nos proporcionas al utilizar nuestros servicios.
+              </p>
+              
+              <h4 className="font-bold text-gray-800 text-sm pt-1">1. Información recopilada</h4>
+              <p>
+                Recopilamos información básica como tu nombre, número de teléfono, dirección de entrega y preferencias de servicio únicamente para procesar y entregar tus pedidos de lavandería.
+              </p>
+
+              <h4 className="font-bold text-gray-800 text-sm pt-1">2. Uso de la información</h4>
+              <p>
+                Tus datos son utilizados exclusivamente para la coordinación de la recolección y entrega de tu cesto, comunicación sobre el estado de tu ropa y mejoras en el servicio. No vendemos ni compartimos tu información personal con terceros.
+              </p>
+
+              <h4 className="font-bold text-gray-800 text-sm pt-1">3. Seguridad de los datos</h4>
+              <p>
+                Implementamos medidas de seguridad técnicas y administrativas para proteger tus datos contra acceso no autorizado, alteración o divulgación.
+              </p>
+
+              <h4 className="font-bold text-gray-800 text-sm pt-1">4. Tus derechos</h4>
+              <p>
+                Puedes solicitar el acceso, rectificación o eliminación de tus datos personales en cualquier momento poniéndote en contacto con nosotros a través de nuestros canales oficiales de atención.
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <button 
+                type="button"
+                onClick={() => setIsPrivacyOpen(false)}
+                className="w-full py-2.5 bg-[#0f55d8] text-white font-semibold rounded-xl text-sm hover:brightness-110 transition-all cursor-pointer"
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Spacer to prevent Safari rubber-band snap glitch on the last section */}
-      <div className="h-[2vh] w-full shrink-0 bg-transparent snap-end" style={{ scrollSnapAlign: 'end' }} />
+      <div className="h-0 w-full shrink-0 bg-transparent snap-end" style={{ scrollSnapAlign: 'end' }} />
     </div>
   );
 }
