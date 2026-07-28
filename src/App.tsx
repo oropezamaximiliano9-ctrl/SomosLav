@@ -110,7 +110,7 @@ function MainLayout() {
                </button>
             )}
             <img 
-              src={logoImg} 
+              src="/logo.png" 
               alt="Somos Logo" 
               className="h-[35px] w-auto object-contain select-none pointer-events-none" 
             />
