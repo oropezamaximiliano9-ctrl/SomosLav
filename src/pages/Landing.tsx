@@ -319,6 +319,38 @@ export default function Landing() {
   const [gpsAutofillLoading, setGpsAutofillLoading] = useState(false);
   const [gpsAutofillError, setGpsAutofillError] = useState<string | null>(null);
   const [hasRequestedGps, setHasRequestedGps] = useState(false);
+  const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
+
+  const ALL_COATZA_COLONIAS = [
+    "Las Palmas",
+    "Petrolera",
+    "Rancho Alegre",
+    "Rancho Alegre 1",
+    "Rancho Alegre 2",
+    "Paraíso",
+    "Puerto México",
+    "Pensiones",
+    "Vistalmar",
+    "María de la Piedad",
+    "Centro",
+    "Playa Sol",
+    "El Tesoro",
+    "FOVISSSTE",
+    "Guadalupe Victoria",
+    "Santa Isabel",
+    "Manuel Ávila Camacho",
+    "Benito Juárez Norte",
+    "Benito Juárez Sur",
+    "Adolfo López Mateos",
+    "Gaviotas",
+    "Trópico de la Rivera",
+    "Puerto Esmeralda",
+    "Teresa Morales",
+    "Lomas de Coatzacoalcos",
+    "Lomas de Barrillas",
+    "Ciudad Olmeca",
+    "San Martín"
+  ];
 
   const handleAddressInputClick = () => {
     if (!hasRequestedGps && !addressCalle && !addressColonia && !gpsAutofillLoading) {
@@ -1801,7 +1833,7 @@ export default function Landing() {
                               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Calle y número</label>
                               <div className="relative">
                                 {gpsAutofillLoading ? (
-                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
+                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin" />
                                 ) : (
                                   <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 )}
@@ -1825,11 +1857,11 @@ export default function Landing() {
                               </div>
                             </div>
  
-                            <div className="space-y-1">
+                            <div className="space-y-1 relative">
                               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Colonia</label>
                               <div className="relative">
                                 {gpsAutofillLoading ? (
-                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
+                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin" />
                                 ) : (
                                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 )}
@@ -1840,10 +1872,17 @@ export default function Landing() {
                                   autoComplete="address-level2"
                                   value={addressColonia}
                                   onClick={handleAddressInputClick}
-                                  onChange={(e) => { setAddressColonia(e.target.value); setFormError(null); setGpsCoords(null); }}
+                                  onFocus={() => setShowColoniaSuggestions(true)}
+                                  onChange={(e) => { 
+                                    setAddressColonia(e.target.value); 
+                                    setShowColoniaSuggestions(true);
+                                    setFormError(null); 
+                                    setGpsCoords(null); 
+                                  }}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                       e.preventDefault();
+                                      setShowColoniaSuggestions(false);
                                       submitStep2AndVerify(e);
                                     }
                                   }}
@@ -1851,6 +1890,30 @@ export default function Landing() {
                                   placeholder=""
                                 />
                               </div>
+
+                              {/* Menu desplegable de sugerencias autocompletables */}
+                              {showColoniaSuggestions && addressColonia.trim().length > 0 && (
+                                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-50 max-h-36 overflow-y-auto divide-y divide-slate-100">
+                                  {ALL_COATZA_COLONIAS.filter(c => 
+                                    c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                                     .includes(addressColonia.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
+                                  ).slice(0, 5).map((col) => (
+                                    <button
+                                      key={col}
+                                      type="button"
+                                      onClick={() => {
+                                        setAddressColonia(col);
+                                        setShowColoniaSuggestions(false);
+                                        setFormError(null);
+                                      }}
+                                      className="w-full text-left px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0f55d8] flex items-center justify-between cursor-pointer transition-colors"
+                                    >
+                                      <span>Colonia {col}</span>
+                                      <Check className="w-3.5 h-3.5 opacity-0 hover:opacity-100 text-[#0f55d8]" />
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           </div>
  
