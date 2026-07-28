@@ -16,7 +16,6 @@ import AssociateSchedule from "./pages/AssociateSchedule";
 import AssociateAssignPreRegistered from "./pages/AssociateAssignPreRegistered";
 import AssociateSimulator from "./pages/AssociateSimulator";
 import FlowSimulator from "./components/FlowSimulator";
-import logoImg from "./assets/logo.png";
 
 interface RoleContextType {
   role: 'customer' | 'associate' | 'admin';
@@ -110,9 +109,9 @@ function MainLayout() {
                </button>
             )}
             <img 
-              src="/logo.png" 
+              src="https://i.ibb.co/3ynSFBH9/IMG-8932.webp" 
               alt="Somos Logo" 
-              className="h-[35px] w-auto object-contain select-none pointer-events-none" 
+              className="h-[35px] w-auto object-contain select-none cursor-pointer" 
             />
           </div>
         </div>
