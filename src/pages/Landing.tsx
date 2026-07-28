@@ -1124,14 +1124,7 @@ export default function Landing() {
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
                 <div className="mt-7 text-right">
                   <button
-                    onClick={() => {
-                      const nextSection = document.getElementById("conoce-tu-cesto-section");
-                      if (nextSection) {
-                        nextSection.scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        openBottomSheet();
-                      }
-                    }}
+                    onClick={openBottomSheet}
                     className="font-geist text-[15px] sm:text-[16px] font-semibold text-black underline underline-offset-4 hover:opacity-80 transition-opacity cursor-pointer select-none"
                   >
                     Más información
@@ -1402,116 +1395,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Sección Exclusiva: El cesto SOMOS */}
-      <section className="w-full px-0 pt-0 flex flex-col justify-start pb-12 bg-transparent snap-start snap-always" id="conoce-tu-cesto-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
-          {/* Título de la sección */}
-          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="conoce-tu-cesto-title-container">
-            <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              Conoce tu cesto
-            </h2>
-            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              El primer paso es tuyo
-            </p>
-          </div>
 
-          {/* Tarjeta Unica de Pasos */}
-          <div className="px-0 sm:px-0 mt-3 w-full">
-            <div className="w-full bg-white border-t border-x border-[#eaeaea] rounded-t-lg pt-3.5 pb-3.5 pl-5 pr-2.5 text-left relative overflow-hidden">
-              <div className="flex flex-col">
-                {/* Item 1 */}
-                <div className="flex items-center gap-4 pt-[6px] pb-[12px]">
-                  <span className="font-inter font-semibold text-[19px] text-[#6A6A6A] shrink-0 w-9 h-9 flex items-center justify-center select-none">1</span>
-                  <div className="space-y-0.5">
-                    <h4 className="font-geist font-bold text-[#181818] text-[16px] sm:text-[17px] leading-tight">
-                      Pide nuestro cesto
-                    </h4>
-                    <p className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-snug">
-                      Con envío gratis
-                    </p>
-                  </div>
-                </div>
-
-                 {/* Item 2 */}
-                <div className="w-full flex flex-col">
-                  {/* Separador 1 */}
-                  <div className="border-t border-[#EDE9E0] w-full" />
-
-                  <div className="flex items-center gap-4 pt-[18px] pb-[12px]">
-                    <span className="font-inter font-semibold text-[19px] text-[#6A6A6A] shrink-0 w-9 h-9 flex items-center justify-center select-none">2</span>
-                    <div className="space-y-0.5">
-                      <h4 className="font-geist font-bold text-[#181818] text-[16px] sm:text-[17px] leading-tight">
-                        Llénalo en casa
-                      </h4>
-                      <p className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-snug">
-                        A tu propio ritmo
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Item 3 */}
-                <div className="w-full flex flex-col">
-                  {/* Separador 2 */}
-                  <div className="border-t border-[#EDE9E0] w-full" />
-
-                  <div className="flex items-center gap-4 pt-[18px] pb-[6px]">
-                    <span className="font-inter font-semibold text-[19px] text-[#6A6A6A] shrink-0 w-9 h-9 flex items-center justify-center select-none">3</span>
-                    <div className="space-y-0.5">
-                      <h4 className="font-geist font-bold text-[#181818] text-[16px] sm:text-[17px] leading-tight">
-                        Déjalo en el punto de recolección
-                      </h4>
-                      <p className="font-geist text-[#6A6A6A] text-[16px] font-medium leading-snug">
-                        Sin pesar ni esperar
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative w-full">
-              {/* Underlay to bridge the straight white card with the rounded blue card corners */}
-              <div className="absolute top-0 left-0 right-0 h-5 bg-white border-x border-[#eaeaea] z-0 pointer-events-none" />
-
-              <div 
-                className="w-full bg-[#f8fbff] border border-[#0f55d8]/30 rounded-lg pt-3.5 pb-3.5 pl-5 pr-2.5 mt-0 mb-0 text-left flex items-center gap-4 select-none transform-gpu relative z-10 overflow-hidden" 
-                id="flow-reward-banner"
-              >
-                <div 
-                  className="shrink-0 w-9 h-9 flex items-center justify-center" 
-                  id="flow-reward-icon-container"
-                >
-                  <div className="w-7 h-7 text-[#0f55d8] bg-[#0f55d8]/10 border-[1.5px] border-[#0f55d8]/30 rounded-full flex items-center justify-center transform-gpu">
-                    <Check className="w-[15px] h-[15px]" strokeWidth={3.5} />
-                  </div>
-                </div>
-                <div className="flex flex-col text-left space-y-0.5">
-                  <p className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[17px] leading-tight">
-                    Tu ropa limpia a domicilio
-                  </p>
-                  <p className="font-geist text-[#4b6a9b] font-medium text-[16px] leading-snug">
-                    Entrega al día siguiente
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-10 px-4 sm:px-0">
-            <button 
-              onClick={openBottomSheet}
-              className="w-full py-4 bg-[#0f55d8] text-white rounded-2xl font-bold text-lg font-geist flex items-center justify-center gap-2 select-none disabled:opacity-85 hover:brightness-110"
-            >
-              <div className="flex items-center space-x-2">
-                <span>Quiero mi cesto</span>
-                <ArrowRight className="w-5 h-5" />
-              </div>
-            </button>
-            <p className="text-center text-[15px] font-semibold text-gray-500 mt-2.5">Recíbelo gratis, paga solo al lavar</p>
-          </div>
-        </div>
-      </section>
 
 
       {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}

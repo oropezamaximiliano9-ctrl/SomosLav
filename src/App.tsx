@@ -16,6 +16,7 @@ import AssociateSchedule from "./pages/AssociateSchedule";
 import AssociateAssignPreRegistered from "./pages/AssociateAssignPreRegistered";
 import AssociateSimulator from "./pages/AssociateSimulator";
 import FlowSimulator from "./components/FlowSimulator";
+import logoImg from "./assets/logo.png";
 
 interface RoleContextType {
   role: 'customer' | 'associate' | 'admin';
@@ -80,7 +81,7 @@ function MainLayout() {
         <div className="max-w-sm mx-auto px-4 h-14 flex items-center justify-between">
           <span 
             onClick={handleClick}
-            className="text-[22px] leading-none font-unbounded font-normal text-gray-900 select-none cursor-pointer relative -top-[2px]"
+            className="text-[22px] leading-none font-unbounded font-normal text-gray-900 select-none cursor-pointer relative -top-[1px]"
             style={{ WebkitTouchCallout: 'none', letterSpacing: '-0.04em' }}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUpOrLeave}
@@ -108,6 +109,11 @@ function MainLayout() {
                  <MoreVertical className="w-4 h-4" />
                </button>
             )}
+            <img 
+              src={logoImg} 
+              alt="Somos Logo" 
+              className="h-[35px] w-auto object-contain select-none pointer-events-none" 
+            />
           </div>
         </div>
       </header>
