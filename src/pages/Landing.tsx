@@ -1361,7 +1361,7 @@ export default function Landing() {
                 <div className="border-t border-[#EDE9E0] w-full" />
 
                 <div className="flex flex-col pt-5 pb-2.5">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 opacity-0 pointer-events-none select-none">
                     <div className="shrink-0">
                       <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
                         <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
