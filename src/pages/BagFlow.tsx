@@ -34,6 +34,12 @@ export default function BagFlow() {
   const [prefSpeed, setPrefSpeed] = useState("Estándar (48 h)");
   const [prefTime, setPrefTime] = useState("Mañana (8:00 AM – 10:00 AM)");
 
+  const [washMinutes, setWashMinutes] = useState("");
+  const [dryMinutes, setDryMinutes] = useState("");
+  const [weightKilos, setWeightKilos] = useState("");
+  const [transportKm, setTransportKm] = useState("");
+  const [startingProcess, setStartingProcess] = useState(false);
+
   useEffect(() => {
     if (bag?.user) {
       if (bag.user.deliveryPreference) {
@@ -198,6 +204,46 @@ export default function BagFlow() {
       alert(err.message);
     } finally {
       setReceiving(false);
+    }
+  };
+
+  const handleStartProcessing = async () => {
+    const activeOrderId = bag?.activeOrder?.id || confirmedOrderData?.orderId;
+    if (!activeOrderId) {
+      alert("Error: No hay una orden activa identificada para este cesto.");
+      return;
+    }
+
+    if (!weightKilos) {
+      alert("Por favor ingresa el peso real en kilos antes de iniciar.");
+      return;
+    }
+
+    setStartingProcess(true);
+    try {
+      const orderRef = doc(db, "orders", String(activeOrderId));
+      
+      const calcData = {
+        washMinutes,
+        dryMinutes,
+        weightKilos,
+        transportKm
+      };
+
+      await updateDoc(orderRef, { 
+        status: "processing",
+        financialCalc: calcData
+      });
+
+      // Also save to localStorage to maintain compatibility with dashboard
+      localStorage.setItem(`order_calc_${activeOrderId}`, JSON.stringify(calcData));
+
+      // Re-fetch to update view
+      await fetchBag();
+    } catch (err: any) {
+      alert("Error al iniciar proceso: " + err.message);
+    } finally {
+      setStartingProcess(false);
     }
   };
 
@@ -433,8 +479,58 @@ export default function BagFlow() {
     }
   };
 
-  // Associate View - Active Order Delivery Screen
+  // Associate View - Active Order Screen (Pending vs Processing)
   if (bag && bag.activeOrder && !orderConfirmed) {
+    if (bag.activeOrder.status === 'pending') {
+       return (
+        <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full animate-in fade-in duration-300">
+          <div className="mb-4 text-center">
+            <h2 className="text-2xl font-medium tracking-widest text-gray-900 uppercase tracking-tight">Recepción en Central</h2>
+          </div>
+          
+          <div className="w-full bg-white rounded-2xl border border-gray-100 p-5 space-y-4 text-left shadow-sm">
+             <div className="space-y-1 pb-3 border-b border-gray-100">
+               <span className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block">Orden</span>
+               <h3 className="text-lg font-bold text-slate-900 leading-tight">#{String(bag.activeOrder.id).padStart(4, "0")}</h3>
+             </div>
+             <p className="text-sm text-gray-500 font-medium">Por favor pesa el cesto. Puedes dejar los demás campos vacíos por ahora.</p>
+             
+             <div className="space-y-3 pt-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Peso Real (Kilos)</label>
+                    <input type="number" value={weightKilos} onChange={e => setWeightKilos(e.target.value)} placeholder="Ej. 5" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Transporte (Km)</label>
+                    <input type="number" value={transportKm} onChange={e => setTransportKm(e.target.value)} placeholder="Opcional" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Lavado (min)</label>
+                    <input type="number" value={washMinutes} onChange={e => setWashMinutes(e.target.value)} placeholder="Opcional" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Secado (min)</label>
+                    <input type="number" value={dryMinutes} onChange={e => setDryMinutes(e.target.value)} placeholder="Opcional" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
+                  </div>
+                </div>
+             </div>
+             <div className="flex justify-end border-t border-gray-100 pt-4 mt-4">
+               <button
+                 onClick={handleStartProcessing}
+                 disabled={startingProcess || !weightKilos}
+                 className="px-5 py-2.5 bg-[#0f55d8] hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors shadow-sm"
+               >
+                 {startingProcess ? "Iniciando..." : "Iniciar Lavado"}
+               </button>
+             </div>
+          </div>
+        </div>
+       );
+    }
+
     return (
       <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full animate-in fade-in duration-300">
         
@@ -652,7 +748,7 @@ export default function BagFlow() {
               onClick={() => setOrderConfirmed(false)}
               className="w-full py-3.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-xs border border-amber-200 select-none cursor-pointer"
             >
-              <span>🚚 Volver a Entrega y Liberación</span>
+              <span>🚚 Volver a Entrega </span>
             </button>
           )}
 

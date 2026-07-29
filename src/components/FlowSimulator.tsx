@@ -279,14 +279,14 @@ export default function FlowSimulator() {
     }
 
     setLoading(true);
-    setStatusMsg(`Entregando prendas para #${orderIdToComplete} y liberando CESTO-001...`);
+    setStatusMsg(`Entregando prendas para #${orderIdToComplete} ...`);
     try {
       const orderRef = doc(db, "orders", orderIdToComplete);
       await updateDoc(orderRef, { status: "completed" });
 
       setCurrentStep(5);
       setActiveOrderId("");
-      setStatusMsg("✅ ¡Prendas entregadas al cliente! Cesto liberado con éxito.");
+      setStatusMsg("✅ ¡Prendas entregadas al cliente! ");
       if (location.pathname !== "/simulator") {
         navigate("/cesto/CESTO-001");
       }
@@ -556,7 +556,7 @@ export default function FlowSimulator() {
             </div>
             <span className="text-[10px] text-slate-400">
               {currentStep === 5 
-                ? "🎉 ¡Entrega finalizada! Cesto vacío liberado automáticamente para volver a usarse sin trabas."
+                ? "🎉 ¡Entrega finalizada! El cesto sigue asignado para que el cliente lo lleve a casa."
                 : currentStep === 4
                 ? "✓ Escanear el cesto con orden activa ahora abre la nueva pantalla dedicada de Entrega de Ropa."
                 : "Disponible una vez confirmada la recepción."}

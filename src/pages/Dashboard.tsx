@@ -620,6 +620,154 @@ function CustomerFrequencyChart({ frequency, range = '7d' }: CustomerFrequencyCh
   );
 }
 
+function OrderFinancialBreakdown({ selectedOrder, onBack }: { selectedOrder: any, onBack: () => void }) {
+  const storageKey = `order_calc_${selectedOrder.id}`;
+
+  const [washMinutes, setWashMinutes] = useState(() => {
+    if (selectedOrder?.financialCalc?.washMinutes) return selectedOrder.financialCalc.washMinutes;
+    const saved = localStorage.getItem(storageKey);
+    return saved ? JSON.parse(saved).washMinutes : "";
+  });
+  const [dryMinutes, setDryMinutes] = useState(() => {
+    if (selectedOrder?.financialCalc?.dryMinutes) return selectedOrder.financialCalc.dryMinutes;
+    const saved = localStorage.getItem(storageKey);
+    return saved ? JSON.parse(saved).dryMinutes : "";
+  });
+  const [weightKilos, setWeightKilos] = useState(() => {
+    if (selectedOrder?.financialCalc?.weightKilos) return selectedOrder.financialCalc.weightKilos;
+    const saved = localStorage.getItem(storageKey);
+    return saved ? JSON.parse(saved).weightKilos : "";
+  });
+  const [transportKm, setTransportKm] = useState(() => {
+    if (selectedOrder?.financialCalc?.transportKm) return selectedOrder.financialCalc.transportKm;
+    const saved = localStorage.getItem(storageKey);
+    return saved ? JSON.parse(saved).transportKm : "";
+  });
+  const [showResult, setShowResult] = useState(() => {
+    return !!(selectedOrder?.financialCalc) || !!localStorage.getItem(storageKey);
+  });
+
+  const isHomeDelivery = !!selectedOrder?.addressCalle;
+
+  // We set values to 0 for the example case, as requested
+  const waterfallData: WaterfallData = {
+    baseRevenue: selectedOrder?.totalPrice || 100, // Or base
+    upsellRevenue: 0,
+    suppliesCost: 0,
+    operationsCost: 0,
+    logisticsCost: 0,
+    fixedCosts: 0,
+    isHomeDelivery
+  };
+
+  const handleCalculate = async () => {
+    if (weightKilos) {
+      const calcData = {
+        washMinutes,
+        dryMinutes,
+        weightKilos,
+        transportKm
+      };
+      localStorage.setItem(storageKey, JSON.stringify(calcData));
+      
+      try {
+        const orderRef = doc(db, "orders", String(selectedOrder.id));
+        await updateDoc(orderRef, { financialCalc: calcData });
+      } catch (err) {
+        console.error("Failed to save calc to DB:", err);
+      }
+
+      setShowResult(true);
+    }
+  };
+
+  return (
+    <div key="order-waterfall" className="space-y-4 w-full">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={onBack}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
+          </button>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">#{String(selectedOrder.id || '').padStart(4, '0')}</h2>
+            <p className="text-sm text-gray-500">Desglose Financiero</p>
+          </div>
+        </div>
+        {showResult && (
+          <button
+            onClick={() => setShowResult(false)}
+            className="text-sm font-medium text-[#0f55d8] hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+          >
+            Editar cálculo
+          </button>
+        )}
+      </div>
+      
+      {!showResult ? (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 w-full max-w-3xl mx-auto space-y-6">
+          <h3 className="text-base font-semibold text-gray-900 mb-4">Calculadora de Costos Operativos</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Peso Real (Kilos)</label>
+              <input 
+                type="number"
+                value={weightKilos}
+                onChange={e => setWeightKilos(e.target.value)}
+                placeholder="Ej. 5"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Transporte (Km)</label>
+              <input 
+                type="number"
+                value={transportKm}
+                onChange={e => setTransportKm(e.target.value)}
+                placeholder="Ej. 2"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Lavado (min)</label>
+              <input 
+                type="number"
+                value={washMinutes}
+                onChange={e => setWashMinutes(e.target.value)}
+                placeholder="Ej. 30"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Secado (min)</label>
+              <input 
+                type="number"
+                value={dryMinutes}
+                onChange={e => setDryMinutes(e.target.value)}
+                placeholder="Ej. 45"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end border-t border-gray-100 pt-5">
+            <button 
+              onClick={handleCalculate}
+              disabled={!weightKilos}
+              className="px-5 py-2.5 bg-[#0f55d8] hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors shadow-sm"
+            >
+              Calcular Costos
+            </button>
+          </div>
+        </div>
+      ) : (
+        <OrderWaterfall data={waterfallData} />
+      )}
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'general' | 'orders' | 'locations' | 'qrcodes' | 'customers'>('general');
   const [orders, setOrders] = useState<any[]>([]);
@@ -1349,41 +1497,11 @@ export default function Dashboard() {
 
             
             if (selectedOrder) {
-              // Mock data based on order
-              const isHomeDelivery = !!selectedOrder.addressCalle;
-              const baseRevenue = 100; // Fixed base for standard
-              const upsellRevenue = 0;
-const suppliesCost = 12;
-              const operationsCost = 15;
-              const logisticsCost = isHomeDelivery ? 15 : 0;
-              const fixedCosts = 20;
-
-              const waterfallData: WaterfallData = {
-                baseRevenue,
-                upsellRevenue,
-                suppliesCost,
-                operationsCost,
-                logisticsCost,
-                fixedCosts,
-                isHomeDelivery
-              };
-
               return (
-                <div key="order-waterfall" className="space-y-4 w-full">
-                  <div className="flex items-center gap-4 mb-4">
-                    <button 
-                      onClick={() => setSelectedOrder(null)}
-                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    >
-                      <ArrowLeft className="w-5 h-5 text-gray-600" />
-                    </button>
-                    <div>
-                      <h2 className="text-xl font-semibold text-gray-900">#{String(selectedOrder.id || '').padStart(4, '0')}</h2>
-                      <p className="text-sm text-gray-500">Desglose Financiero</p>
-                    </div>
-                  </div>
-                  <OrderWaterfall data={waterfallData} />
-                </div>
+                <OrderFinancialBreakdown 
+                  selectedOrder={selectedOrder} 
+                  onBack={() => setSelectedOrder(null)} 
+                />
               );
             }
 
