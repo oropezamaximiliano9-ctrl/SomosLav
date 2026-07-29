@@ -6,6 +6,7 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import { extractBagId } from "../utils/qr";
 import { db } from "../firebase";
 import { doc, getDoc, getDocs, updateDoc, setDoc, collection, query, where } from "firebase/firestore";
+import { getColoniaDistance } from "../utils/distance";
 
 export default function AssociateAssignPreRegistered() {
   const navigate = useNavigate();
@@ -91,6 +92,7 @@ export default function AssociateAssignPreRegistered() {
         const docSnap = usersSnap.docs[0];
         targetUserId = docSnap.id;
         const existingUser = docSnap.data();
+        const distKm = existingUser.distanceKm || (existingUser.addressColonia ? getColoniaDistance(existingUser.addressColonia) : null);
 
         await updateDoc(doc(db, "users", targetUserId), {
           name: foundUser.name,
@@ -99,7 +101,8 @@ export default function AssociateAssignPreRegistered() {
           addressCalle: existingUser.addressCalle || null,
           addressNumero: existingUser.addressNumero || null,
           preferredTime: existingUser.preferredTime || "",
-          addressReferences: existingUser.addressReferences || ""
+          addressReferences: existingUser.addressReferences || "",
+          distanceKm: distKm
         });
       } else {
         targetUserId = "USR-" + Math.random().toString(36).substring(2, 11);

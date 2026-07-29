@@ -9,6 +9,7 @@ import { db } from "../firebase";
 import { 
   collection, getDocs, getDoc, setDoc, updateDoc, doc, query, where, orderBy, limit 
 } from "firebase/firestore";
+import { getColoniaDistance } from "../utils/distance";
 
 const getDeliveryDayDescription = (deliveryTypeStr: string) => {
   const type = (deliveryTypeStr || 'Est\u00e1ndar').toLowerCase();
@@ -639,9 +640,26 @@ function OrderFinancialBreakdown({ selectedOrder, onBack }: { selectedOrder: any
     return saved ? JSON.parse(saved).weightKilos : "";
   });
   const [transportKm, setTransportKm] = useState(() => {
-    if (selectedOrder?.financialCalc?.transportKm) return selectedOrder.financialCalc.transportKm;
+    if (selectedOrder?.financialCalc?.transportKm !== undefined && selectedOrder?.financialCalc?.transportKm !== "") {
+      return String(selectedOrder.financialCalc.transportKm);
+    }
     const saved = localStorage.getItem(storageKey);
-    return saved ? JSON.parse(saved).transportKm : "";
+    if (saved && JSON.parse(saved).transportKm !== undefined && JSON.parse(saved).transportKm !== "") {
+      return String(JSON.parse(saved).transportKm);
+    }
+    if (selectedOrder?.user?.distanceKm !== undefined && selectedOrder?.user?.distanceKm !== null) {
+      return String(selectedOrder.user.distanceKm);
+    }
+    if (selectedOrder?.customer?.distanceKm !== undefined && selectedOrder?.customer?.distanceKm !== null) {
+      return String(selectedOrder.customer.distanceKm);
+    }
+    const col = selectedOrder?.addressColonia || selectedOrder?.user?.addressColonia || selectedOrder?.customer?.addressColonia;
+    if (col) {
+      return String(getColoniaDistance(col));
+    }
+    const localDist = localStorage.getItem("user_distance_km");
+    if (localDist) return localDist;
+    return "";
   });
   const [showResult, setShowResult] = useState(() => {
     return !!(selectedOrder?.financialCalc) || !!localStorage.getItem(storageKey);
@@ -731,24 +749,38 @@ function OrderFinancialBreakdown({ selectedOrder, onBack }: { selectedOrder: any
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Lavado (min)</label>
-              <input 
-                type="number"
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Lavado (Ciclos)</label>
+              <select 
                 value={washMinutes}
                 onChange={e => setWashMinutes(e.target.value)}
-                placeholder="Ej. 30"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors"
-              />
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors bg-white appearance-none"
+              >
+                <option value="">Opcional</option>
+                <option value="15">15 min (Medio Ciclo)</option>
+                <option value="30">30 min (1 Ciclo)</option>
+                <option value="45">45 min (1.5 Ciclos)</option>
+                <option value="60">60 min (2 Ciclos)</option>
+                <option value="75">75 min (2.5 Ciclos)</option>
+                <option value="90">90 min (3 Ciclos)</option>
+                <option value="120">120 min (4 Ciclos)</option>
+              </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Secado (min)</label>
-              <input 
-                type="number"
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Secado (Ciclos)</label>
+              <select 
                 value={dryMinutes}
                 onChange={e => setDryMinutes(e.target.value)}
-                placeholder="Ej. 45"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors"
-              />
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors bg-white appearance-none"
+              >
+                <option value="">Opcional</option>
+                <option value="15">15 min (Medio Ciclo)</option>
+                <option value="30">30 min (1 Ciclo)</option>
+                <option value="45">45 min (1.5 Ciclos)</option>
+                <option value="60">60 min (2 Ciclos)</option>
+                <option value="75">75 min (2.5 Ciclos)</option>
+                <option value="90">90 min (3 Ciclos)</option>
+                <option value="120">120 min (4 Ciclos)</option>
+              </select>
             </div>
           </div>
           <div className="flex justify-end border-t border-gray-100 pt-5">
@@ -899,6 +931,8 @@ export default function Dashboard() {
           status: ord.status,
           createdAt: ord.createdAt,
           deliveryType: ord.deliveryType,
+          financialCalc: ord.financialCalc,
+          user: u,
           userName: u ? (u.name || "") : "Usuario no encontrado",
           userPhone: u ? (u.phone || "") : "",
           deliveryPreference: u ? (u.deliveryPreference || "") : "",

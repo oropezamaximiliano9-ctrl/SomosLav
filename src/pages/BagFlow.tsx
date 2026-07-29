@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { toBlob } from "html-to-image";
 import { db } from "../firebase";
 import { doc, getDoc, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
+import { getColoniaDistance } from "../utils/distance";
 
 export default function BagFlow() {
   const { id } = useParams<{ id: string }>();
@@ -41,12 +42,30 @@ export default function BagFlow() {
   const [startingProcess, setStartingProcess] = useState(false);
 
   useEffect(() => {
-    if (bag?.user) {
-      if (bag.user.deliveryPreference) {
-        setPrefSpeed(bag.user.deliveryPreference);
+    if (bag) {
+      if (bag.user) {
+        if (bag.user.deliveryPreference) {
+          setPrefSpeed(bag.user.deliveryPreference);
+        }
+        if (bag.user.preferredTime) {
+          setPrefTime(bag.user.preferredTime);
+        }
       }
-      if (bag.user.preferredTime) {
-        setPrefTime(bag.user.preferredTime);
+
+      // Auto-fill transportKm with client distance data from registration/address
+      if (bag.activeOrder?.financialCalc?.transportKm !== undefined && bag.activeOrder?.financialCalc?.transportKm !== "") {
+        setTransportKm(String(bag.activeOrder.financialCalc.transportKm));
+      } else {
+        const userDist = bag.user?.distanceKm ?? bag.user?.distance ?? (bag.user?.addressColonia ? getColoniaDistance(bag.user.addressColonia) : null) ?? localStorage.getItem("user_distance_km");
+        if (userDist !== null && userDist !== undefined && userDist !== "") {
+          setTransportKm(String(userDist));
+        }
+      }
+
+      if (bag.activeOrder?.financialCalc) {
+        if (bag.activeOrder.financialCalc.washMinutes) setWashMinutes(String(bag.activeOrder.financialCalc.washMinutes));
+        if (bag.activeOrder.financialCalc.dryMinutes) setDryMinutes(String(bag.activeOrder.financialCalc.dryMinutes));
+        if (bag.activeOrder.financialCalc.weightKilos) setWeightKilos(String(bag.activeOrder.financialCalc.weightKilos));
       }
     }
   }, [bag]);
@@ -502,18 +521,36 @@ export default function BagFlow() {
                     <input type="number" value={weightKilos} onChange={e => setWeightKilos(e.target.value)} placeholder="Ej. 5" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Transporte (Km)</label>
-                    <input type="number" value={transportKm} onChange={e => setTransportKm(e.target.value)} placeholder="Opcional" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
+                    <label className="block text-xs font-semibold text-gray-400 mb-1">Transporte (Km)</label>
+                    <input type="number" disabled value={transportKm} placeholder="Calculado" className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Lavado (min)</label>
-                    <input type="number" value={washMinutes} onChange={e => setWashMinutes(e.target.value)} placeholder="Opcional" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
+                    <label className="block text-xs font-semibold text-gray-400 mb-1">Lavado (Ciclos)</label>
+                    <select disabled value={washMinutes} className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed appearance-none">
+                      <option value="">Automático</option>
+                      <option value="15">15 min (Medio Ciclo)</option>
+                      <option value="30">30 min (1 Ciclo)</option>
+                      <option value="45">45 min (1.5 Ciclos)</option>
+                      <option value="60">60 min (2 Ciclos)</option>
+                      <option value="75">75 min (2.5 Ciclos)</option>
+                      <option value="90">90 min (3 Ciclos)</option>
+                      <option value="120">120 min (4 Ciclos)</option>
+                    </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Secado (min)</label>
-                    <input type="number" value={dryMinutes} onChange={e => setDryMinutes(e.target.value)} placeholder="Opcional" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
+                    <label className="block text-xs font-semibold text-gray-400 mb-1">Secado (Ciclos)</label>
+                    <select disabled value={dryMinutes} className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed appearance-none">
+                      <option value="">Automático</option>
+                      <option value="15">15 min (Medio Ciclo)</option>
+                      <option value="30">30 min (1 Ciclo)</option>
+                      <option value="45">45 min (1.5 Ciclos)</option>
+                      <option value="60">60 min (2 Ciclos)</option>
+                      <option value="75">75 min (2.5 Ciclos)</option>
+                      <option value="90">90 min (3 Ciclos)</option>
+                      <option value="120">120 min (4 Ciclos)</option>
+                    </select>
                   </div>
                 </div>
              </div>

@@ -29,10 +29,10 @@ html, body, #root {
   font-family: var(--font-sans);
   background-color: #f6eedd !important;
   color: #1a1a1a;
-  height: 100dvh;
+  min-height: 100dvh;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-y: auto;
   overscroll-behavior: none;
   overscroll-behavior-y: none;
 }
@@ -124,7 +124,7 @@ html {
 
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
   transform: translateY(100%);
   visibility: hidden;
   pointer-events: none;

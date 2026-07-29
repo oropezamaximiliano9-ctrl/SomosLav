@@ -70,7 +70,9 @@ function MainLayout() {
 
   return (
     <div 
-      className="h-[100dvh] w-full overflow-y-auto overflow-x-hidden flex flex-col bg-[#fdf0d5] snap-y snap-mandatory"
+      className={`w-full flex flex-col bg-[#fdf0d5] overflow-x-hidden ${
+        isLandingPage ? "h-[100dvh] overflow-y-auto snap-y snap-mandatory" : "min-h-[100dvh] overflow-y-auto"
+      }`}
       style={{ scrollBehavior: 'smooth', scrollPaddingTop: '56px' }}
     >
       {/* Top Banner removed */}
