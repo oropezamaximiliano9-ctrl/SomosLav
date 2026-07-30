@@ -679,7 +679,7 @@ function OrderFinancialBreakdown({ selectedOrder, onBack }: { selectedOrder: any
   };
 
   const handleCalculate = async () => {
-    if (weightKilos) {
+    if (weightKilos && washMinutes && dryMinutes) {
       const calcData = {
         washMinutes,
         dryMinutes,
@@ -749,13 +749,13 @@ function OrderFinancialBreakdown({ selectedOrder, onBack }: { selectedOrder: any
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Lavado (Ciclos)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Lavado (Ciclos) *</label>
               <select 
                 value={washMinutes}
                 onChange={e => setWashMinutes(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors bg-white appearance-none"
               >
-                <option value="">Opcional</option>
+                <option value="">Seleccionar...</option>
                 <option value="15">15 min (Medio Ciclo)</option>
                 <option value="30">30 min (1 Ciclo)</option>
                 <option value="45">45 min (1.5 Ciclos)</option>
@@ -766,13 +766,13 @@ function OrderFinancialBreakdown({ selectedOrder, onBack }: { selectedOrder: any
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Secado (Ciclos)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Secado (Ciclos) *</label>
               <select 
                 value={dryMinutes}
                 onChange={e => setDryMinutes(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:ring-1 focus:ring-[#0f55d8] focus:border-[#0f55d8] outline-none transition-colors bg-white appearance-none"
               >
-                <option value="">Opcional</option>
+                <option value="">Seleccionar...</option>
                 <option value="15">15 min (Medio Ciclo)</option>
                 <option value="30">30 min (1 Ciclo)</option>
                 <option value="45">45 min (1.5 Ciclos)</option>
@@ -786,8 +786,8 @@ function OrderFinancialBreakdown({ selectedOrder, onBack }: { selectedOrder: any
           <div className="flex justify-end border-t border-gray-100 pt-5">
             <button 
               onClick={handleCalculate}
-              disabled={!weightKilos}
-              className="px-5 py-2.5 bg-[#0f55d8] hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors shadow-sm"
+              disabled={!weightKilos || !washMinutes || !dryMinutes}
+              className="px-5 py-2.5 bg-[#0f55d8] hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
             >
               Calcular Costos
             </button>

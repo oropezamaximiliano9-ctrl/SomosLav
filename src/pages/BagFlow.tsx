@@ -502,12 +502,12 @@ export default function BagFlow() {
   if (bag && bag.activeOrder && !orderConfirmed) {
     if (bag.activeOrder.status === 'pending') {
        return (
-        <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full animate-in fade-in duration-300">
+        <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full">
           <div className="mb-4 text-center">
             <h2 className="text-2xl font-medium tracking-widest text-gray-900 uppercase tracking-tight">Recepción en Central</h2>
           </div>
           
-          <div className="w-full bg-white rounded-2xl border border-gray-100 p-5 space-y-4 text-left shadow-sm">
+          <div className="w-full bg-white rounded-2xl border border-gray-100 p-5 space-y-4 text-left">
              <div className="space-y-1 pb-3 border-b border-gray-100">
                <span className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block">Orden</span>
                <h3 className="text-lg font-bold text-slate-900 leading-tight">#{String(bag.activeOrder.id).padStart(4, "0")}</h3>
@@ -529,7 +529,7 @@ export default function BagFlow() {
                   <div>
                     <label className="block text-xs font-semibold text-gray-400 mb-1">Lavado (Ciclos)</label>
                     <select disabled value={washMinutes} className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed appearance-none">
-                      <option value="">Automático</option>
+                      <option value=""></option>
                       <option value="15">15 min (Medio Ciclo)</option>
                       <option value="30">30 min (1 Ciclo)</option>
                       <option value="45">45 min (1.5 Ciclos)</option>
@@ -542,7 +542,7 @@ export default function BagFlow() {
                   <div>
                     <label className="block text-xs font-semibold text-gray-400 mb-1">Secado (Ciclos)</label>
                     <select disabled value={dryMinutes} className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed appearance-none">
-                      <option value="">Automático</option>
+                      <option value=""></option>
                       <option value="15">15 min (Medio Ciclo)</option>
                       <option value="30">30 min (1 Ciclo)</option>
                       <option value="45">45 min (1.5 Ciclos)</option>
@@ -558,7 +558,7 @@ export default function BagFlow() {
                <button
                  onClick={handleStartProcessing}
                  disabled={startingProcess || !weightKilos}
-                 className="px-5 py-2.5 bg-[#0f55d8] hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors shadow-sm"
+                 className="px-5 py-2.5 bg-[#0f55d8] hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
                >
                  {startingProcess ? "Iniciando..." : "Iniciar Lavado"}
                </button>
@@ -569,7 +569,7 @@ export default function BagFlow() {
     }
 
     return (
-      <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full animate-in fade-in duration-300">
+      <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full">
         
         {/* Header Indicator */}
         <div className="mb-8 text-center">
@@ -661,9 +661,6 @@ export default function BagFlow() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", damping: 15 }}
           className="w-full bg-[#f6eedd] border border-[#0c3ab5]/15 rounded-sm p-5 text-left relative overflow-hidden flex flex-col items-stretch text-[#0c3ab5] font-sans text-sm leading-relaxed"
-          style={{
-            boxShadow: '0 20px 40px -15px rgba(12,58,181,0.08), 0 15px 20px -10px rgba(0,0,0,0.05)'
-          }}
         >
           {/* Adhesive Tape on Top Center (mimicking the original image) */}
           <div 
@@ -867,7 +864,7 @@ export default function BagFlow() {
   const isEligibleForDelivery = bag?.user?.addressColonia?.toLowerCase().includes("palmas") ?? false;
 
   return (
-    <div className="flex-1 flex flex-col mt-4 animate-in slide-in-from-bottom-4 duration-500 pb-6">
+    <div className="flex-1 flex flex-col mt-4 pb-6">
       <div className="mb-8 text-center">
         <h1 className="text-2xl font-medium tracking-widest text-gray-900 uppercase tracking-tight">Confirmar Recepción</h1>
       </div>

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck } from "lucide-react";
+import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag } from "lucide-react";
 import { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "react";
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
@@ -86,6 +86,7 @@ export default function Landing() {
   
   const [loading, setLoading] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isPriceInfoModalOpen, setIsPriceInfoModalOpen] = useState(false);
   const [registered, setRegistered] = useState(() => localStorage.getItem("user_registered") === "true");
   const [isWaitlisted, setIsWaitlisted] = useState(() => localStorage.getItem("user_is_waitlisted") === "true");
   const [formStep, setFormStep] = useState<1 | 2 | "verifying" | "not_eligible_result">(1);
@@ -967,7 +968,8 @@ export default function Landing() {
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
                 <div className="mt-7 text-right">
                   <button
-                    onClick={openBottomSheet}
+                    type="button"
+                    onClick={() => setIsPriceInfoModalOpen(true)}
                     className="font-geist text-[15px] sm:text-[16px] font-semibold text-black underline underline-offset-4 hover:opacity-80 transition-opacity cursor-pointer select-none"
                   >
                     Más información
@@ -985,16 +987,16 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-              Recepción
+              Visítanos
             </h1>
             <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              Cerca de ti
+              con tu cesto listo
             </p>
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
           <div className="px-0 sm:px-0 mt-3 w-full relative">
-            <FloatingBadge text="¿cesto lleno?" position="top-right" />
+            <FloatingBadge text="Cerca de ti" position="top-right" />
             <div 
               className="w-full rounded-lg overflow-hidden flex flex-col bg-white" 
               id="recepcion-landing-card"
@@ -1003,7 +1005,7 @@ export default function Landing() {
               <div className="pt-5 pb-1 px-6 w-full text-left">
                 <div>
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                    Deja tu ropa sucia
+                    Dejas tu ropa sucia
                   </p>
                   <p className="font-geist text-[#333333] text-[19px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
                     <span className="text-[#0f55d8] font-semibold">sin esperar</span>
@@ -1145,66 +1147,81 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="px-0 sm:px-0 mt-3 w-full">
-              <div className="w-full bg-white rounded-lg pt-5 pb-2.5 px-4 text-left relative overflow-hidden flex flex-col">
-                <div className="flex flex-col">
-                  <div className="flex flex-col pb-2.5">
-                    <div className="flex items-center gap-4">
-                      <div className="shrink-0">
-                        <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
-                          <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
-                            +$20
-                          </span>
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
-                          Urgente
-                        </h4>
-                        <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
-                          Recibe tu ropa limpia el mismo día.
-                        </p>
-                        <div className="flex items-start gap-1.5 pt-4">
-                          <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
-                          <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
-                            Pídelo al entregar tu cesto
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+            <div className="px-0 sm:px-0 mt-3 w-full space-y-3.5">
+              {/* Urgente */}
+              <div className="w-full bg-white rounded-lg py-3.5 px-4 text-left relative overflow-hidden flex items-center gap-4 border border-[#EDE9E0]">
+                <div className="shrink-0">
+                  <div className="bg-[#0f55d8]/10 w-[64px] flex justify-center py-2 rounded-full">
+                    <span className="font-geist font-semibold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                      +$20
+                    </span>
                   </div>
-
-                  <div className="border-t border-[#EDE9E0] w-full" />
-
-                  <div className="flex flex-col pt-5 pb-2.5">
-                    <div className="flex items-center gap-4">
-                      <div className="shrink-0">
-                        <div className="bg-white w-[64px] flex justify-center py-2 rounded-full border-[1.5px] border-[#4b6a9b]">
-                          <span className="font-geist font-bold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
-                            +$$$
-                          </span>
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-geist font-bold text-[#333333] text-[17px] leading-snug">
-                          Ropa de cama
-                        </h4>
-                        <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug">
-                          Añade el lavado de tu edredón, cobertor o sábana.
-                        </p>
-                        <div className="flex items-start gap-1.5 pt-4">
-                          <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
-                          <span className="font-geist text-[#4b6a9b] text-[13.5px] font-semibold leading-snug">
-                            Entrégalo por separado
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="font-geist font-semibold text-[#333333] text-[16.5px] leading-snug">
+                    Urgente
+                  </h4>
+                  <p className="font-geist text-[#333333] text-[14.5px] font-medium leading-snug">
+                    Tu ropa limpia el mismo día.
+                  </p>
+                  <div className="flex items-start gap-1.5 pt-1.5">
+                    <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug">
+                      Pídelo en recepción
+                    </span>
                   </div>
-
                 </div>
               </div>
 
+              {/* Suavizante premium */}
+              <div className="w-full bg-white rounded-lg py-3.5 px-4 text-left relative overflow-hidden flex items-center gap-4 border border-[#EDE9E0]">
+                <div className="shrink-0">
+                  <div className="bg-[#0f55d8]/10 w-[64px] flex justify-center py-2 rounded-full">
+                    <span className="font-geist font-semibold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                      +$10
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="font-geist font-semibold text-[#333333] text-[16.5px] leading-snug">
+                    Suavizante premium
+                  </h4>
+                  <p className="font-geist text-[#333333] text-[14.5px] font-medium leading-snug">
+                    Aroma de larga duración.
+                  </p>
+                  <div className="flex items-start gap-1.5 pt-1.5">
+                    <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug">
+                      Pídelo en recepción
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Ropa de cama */}
+              <div className="w-full bg-white rounded-lg py-3.5 px-4 text-left relative overflow-hidden flex items-center gap-4 border border-[#EDE9E0]">
+                <div className="shrink-0">
+                  <div className="bg-[#0f55d8]/10 w-[64px] flex justify-center py-2 rounded-full">
+                    <span className="font-geist font-semibold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                      +$$$
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="font-geist font-semibold text-[#333333] text-[16.5px] leading-snug">
+                    Ropa de cama
+                  </h4>
+                  <p className="font-geist text-[#333333] text-[14.5px] font-medium leading-snug">
+                    Lavado de edredón, cobertor o sábana.
+                  </p>
+                  <div className="flex items-start gap-1.5 pt-1.5">
+                    <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0 mt-[2px]" />
+                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug">
+                      Entrégalo por separado
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1814,6 +1831,60 @@ export default function Landing() {
               >
                 Entendido
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Información de Precio / Modelo por Cesto */}
+      {isPriceInfoModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn"
+          onClick={() => setIsPriceInfoModalOpen(false)}
+        >
+          <div 
+            className="bg-white rounded-t-2xl sm:rounded-2xl p-5 max-w-md w-full max-h-[85vh] overflow-y-auto text-left shadow-2xl relative z-[101] border border-gray-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button 
+              type="button"
+              onClick={() => setIsPriceInfoModalOpen(false)}
+              className="absolute top-3.5 right-3.5 p-1.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer z-10"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            {/* Content */}
+            <div className="font-geist text-gray-700 space-y-3.5 pt-1 text-[14px] leading-relaxed">
+              {/* Concepto Principal */}
+              <div className="bg-[#0f55d8]/5 p-3.5 pr-9 rounded-xl border border-[#0f55d8]/10 space-y-1">
+                <p className="font-bold text-[#0f55d8] text-[15px]">
+                  Todo lo que quepa al mismo precio ($99)
+                </p>
+                <p className="text-[13px] text-slate-700 leading-snug font-normal">
+                  Tarifa fija por cesto oficial SOMOS lleno con ropa de uso diario. Sin medir ni pesar por kilo.
+                </p>
+              </div>
+
+              {/* Restricciones y consideraciones */}
+              <div className="space-y-2 pt-1 border-t border-gray-100">
+                <h4 className="font-bold text-[#333333] text-[14px]">Condiciones y restricciones</h4>
+                <div className="space-y-2.5 text-[13px] text-slate-600">
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Ropa de uso diario:</strong> Incluye playeras, pantalones, ropa interior, toallas y prendas personales.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Límite de capacidad:</strong> Toda la ropa debe colocarse dentro del cesto de forma razonable sin desbordar.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Info className="w-4 h-4 text-[#0f55d8] shrink-0 mt-0.5" />
+                    <span><strong>Piezas especiales:</strong> Edredones, cobertores o ropa de cama voluminosa se entregan por separado como solución adicional.</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
