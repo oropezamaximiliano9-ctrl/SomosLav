@@ -1549,7 +1549,7 @@ export default function Landing() {
                     </h2>
                     <p className="text-gray-550 text-xs mt-0.5 font-semibold">
                       {(formStep === 1 || formStep !== 2) && "Pedirla toma menos de un minuto."}
-                      {formStep === 2 && "¿A dónde te llevamos tu cesto?"}
+                      {formStep === 2 && "Usaremos tu ubicación para llenarlo automáticamente"}
                     </p>
                   </div>
 
@@ -1857,31 +1857,39 @@ export default function Landing() {
             
             {/* Content */}
             <div className="font-geist text-gray-700 space-y-3.5 pt-1 text-[14px] leading-relaxed">
-              {/* Concepto Principal */}
-              <div className="bg-[#0f55d8]/5 p-3.5 pr-9 rounded-xl border border-[#0f55d8]/10 space-y-1">
-                <p className="font-bold text-[#0f55d8] text-[15px]">
-                  Todo lo que quepa al mismo precio ($99)
-                </p>
-                <p className="text-[13px] text-slate-700 leading-snug font-normal">
-                  Tarifa fija por cesto oficial SOMOS lleno con ropa de uso diario. Sin medir ni pesar por kilo.
-                </p>
+              {/* Especificaciones del cesto / Capacidad y tamaño */}
+              <div className="space-y-2">
+                <h4 className="font-bold text-[#333333] text-[14px] flex items-center gap-1.5">
+                  <ShoppingBag className="w-4 h-4 text-[#0f55d8]" />
+                  Especificaciones del cesto
+                </h4>
+                <div className="space-y-2.5 text-[13px] text-slate-600 bg-gray-50 p-3.5 rounded-xl border border-gray-100">
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Capacidad aproximada:</strong> 8 a 10 kg de ropa de uso diario (~30 a 35 prendas).</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Volumen y tamaño:</strong> ~50 Litros (55 cm × 38 cm × 32 cm).</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Límite de llenado:</strong> Toda la ropa debe colocarse dentro del cesto de forma razonable sin desbordar el borde superior.</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Restricciones y consideraciones */}
+              {/* Condiciones y restricciones */}
               <div className="space-y-2 pt-1 border-t border-gray-100">
-                <h4 className="font-bold text-[#333333] text-[14px]">Condiciones y restricciones</h4>
+                <h4 className="font-bold text-[#333333] text-[14px]">Condiciones de uso</h4>
                 <div className="space-y-2.5 text-[13px] text-slate-600">
                   <div className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <span><strong>Ropa de uso diario:</strong> Incluye playeras, pantalones, ropa interior, toallas y prendas personales.</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>Límite de capacidad:</strong> Toda la ropa debe colocarse dentro del cesto de forma razonable sin desbordar.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
                     <Info className="w-4 h-4 text-[#0f55d8] shrink-0 mt-0.5" />
-                    <span><strong>Piezas especiales:</strong> Edredones, cobertores o ropa de cama voluminosa se entregan por separado como solución adicional.</span>
+                    <span><strong>Piezas especiales:</strong> Edredones, cobertores o ropa de cama voluminosa se cobran por separado.</span>
                   </div>
                 </div>
               </div>
