@@ -680,14 +680,9 @@ export default function Landing() {
         localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
       } catch(e) {}
 
-      if (eligible) {
-        setIsWaitlisted(false);
-        setDirection("forward");
-        setRegistered(true);
-      } else {
-        setDirection("forward");
-        setFormStep("not_eligible_result");
-      }
+      setIsWaitlisted(false);
+      setDirection("forward");
+      setRegistered(true);
     } catch (err: any) {
       console.warn("API preregister failed, falling back to seamless client-side experience:", err);
       // Seamless LocalStorage Fallback!
@@ -698,14 +693,9 @@ export default function Landing() {
         localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
       } catch(e) {}
 
-      if (eligible) {
-        setIsWaitlisted(false);
-        setDirection("forward");
-        setRegistered(true);
-      } else {
-        setDirection("forward");
-        setFormStep("not_eligible_result");
-      }
+      setIsWaitlisted(false);
+      setDirection("forward");
+      setRegistered(true);
     } finally {
       setLoading(false);
     }
@@ -726,10 +716,10 @@ export default function Landing() {
 
     try {
       await dbPreregister();
-      setFormStep(eligible ? 2 : "not_eligible_result");
+      setFormStep(2);
     } catch (err: any) {
       // Offline fallback
-      setFormStep(eligible ? 2 : "not_eligible_result");
+      setFormStep(2);
     } finally {
       setLoading(false);
     }
@@ -1058,14 +1048,18 @@ export default function Landing() {
                         <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
                         <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
                       </div>
-                      <div className="text-[#ea4335] relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
+                      <motion.div 
+                        animate={{ scale: [1, 1.15, 1] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                        className="text-[#ea4335] relative origin-bottom flex items-center justify-center w-[38px] h-[38px]"
+                      >
                         {/* Circle enclosing the pin marker */}
                         <div className="absolute -inset-0.5 border-2 border-[#0f55d8] bg-[#0f55d8]/10 rounded-full pointer-events-none"></div>
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
                         <div className="absolute top-[8px] left-1/2 w-2.5 h-2.5 bg-[#a50f03] rounded-full -translate-x-1/2 opacity-30 z-10"></div>
-                      </div>
+                      </motion.div>
                     </div>
 
                     {/* Ferreteria */}
@@ -1455,49 +1449,6 @@ export default function Landing() {
                       transition={{ duration: 0.8 }}
                     />
                   </div>
-                </motion.div>
-              ) : formStep === "not_eligible_result" ? (
-                <motion.div 
-                  key="step-not-eligible"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-center flex flex-col items-center justify-center w-full py-4 zoom-in-95 duration-200"
-                >
-                  <div className="w-12 h-12 bg-blue-50 border border-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4 shrink-0">
-                    <MapPin className="w-6 h-6 text-blue-500" />
-                  </div>
-
-                  <h2 className="text-xl font-bold text-slate-900 tracking-tight mb-2 leading-tight">
-                    ¡Recoge gratis en sucursal!
-                  </h2>
-                  
-                  <p className="text-gray-550 text-xs leading-relaxed mb-5 max-w-sm">
-                    Por ahora no contamos con entregas a domicilio en tu zona, pero aún puedes pedir tu cesto gratis y manejar tus prendas directamente en nuestro mostrador.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={handleConfirmWaitlist}
-                    disabled={loading}
-                    className="w-full py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-sm font-geist disabled:opacity-50 flex items-center justify-center gap-1.5 pointer-events-auto"
-                  >
-                    {loading ? <Loader2 className="w-4 h-4" /> : (
-                      <>
-                        <span>Quiero mi cesto</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => { setDirection("backward"); setFormStep(2); setTimeout(() => { coloniaInputRef.current?.focus(); }, 40); }}
-                    className="text-gray-400 hover:text-gray-650 text-xs font-semibold mt-3.5 font-geist transition-colors text-center pointer-events-auto w-full block"
-                  >
-                    Probar con otra dirección
-                  </button>
                 </motion.div>
               ) : (
                 <motion.div
