@@ -1048,18 +1048,23 @@ export default function Landing() {
                         <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
                         <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
                       </div>
-                      <motion.div 
-                        animate={{ scale: [1, 1.15, 1] }}
-                        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                        className="text-[#ea4335] relative origin-bottom flex items-center justify-center w-[38px] h-[38px]"
-                      >
+                      <div className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
                         {/* Circle enclosing the pin marker */}
                         <div className="absolute -inset-0.5 border-2 border-[#0f55d8] bg-[#0f55d8]/10 rounded-full pointer-events-none"></div>
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
-                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
+                          <defs>
+                            <mask id="google-pin-cutout">
+                              <rect width="24" height="24" fill="white" />
+                              <circle cx="12" cy="9" r="2.8" fill="black" />
+                            </mask>
+                          </defs>
+                          <path 
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
+                            fill="#ea4335" 
+                            mask="url(#google-pin-cutout)"
+                          />
                         </svg>
-                        <div className="absolute top-[8px] left-1/2 w-2.5 h-2.5 bg-[#a50f03] rounded-full -translate-x-1/2 opacity-30 z-10"></div>
-                      </motion.div>
+                      </div>
                     </div>
 
                     {/* Ferreteria */}
@@ -1137,7 +1142,7 @@ export default function Landing() {
                 Soluciones
               </h2>
               <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-                Con costo adicional
+                Adicionales
               </p>
             </div>
 
