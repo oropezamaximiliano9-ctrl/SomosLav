@@ -73,16 +73,16 @@ function MainLayout() {
       className={`w-full flex flex-col bg-[#fdf0d5] overflow-x-hidden ${
         isLandingPage ? "h-[100dvh] overflow-y-auto snap-y snap-mandatory" : "min-h-[100dvh] overflow-y-auto"
       }`}
-      style={{ scrollBehavior: 'smooth', scrollPaddingTop: '56px' }}
+      style={{ scrollBehavior: 'smooth', scrollPaddingTop: '50px' }}
     >
       {/* Top Banner removed */}
 
       {/* Header - Always present, sticky below the top banner */}
       <header className="bg-[#fdf0d5]/95 backdrop-blur-md sticky top-0 w-full z-50">
-        <div className="max-w-sm mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="max-w-sm mx-auto px-4 h-[50px] flex items-center justify-between">
           <span 
             onClick={handleClick}
-            className="text-[22px] leading-none font-unbounded font-normal text-gray-900 select-none cursor-pointer relative -top-[1px]"
+            className="text-[20px] leading-none font-unbounded font-normal text-gray-900 select-none cursor-pointer relative -top-[1px]"
             style={{ WebkitTouchCallout: 'none', letterSpacing: '-0.04em' }}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUpOrLeave}
@@ -113,7 +113,7 @@ function MainLayout() {
             <img 
               src="https://i.ibb.co/3ynSFBH9/IMG-8932.webp" 
               alt="Somos Logo" 
-              className="h-[35px] w-auto object-contain select-none cursor-pointer" 
+              className="h-[31px] w-auto object-contain select-none cursor-pointer" 
             />
           </div>
         </div>

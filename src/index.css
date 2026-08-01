@@ -145,8 +145,10 @@ html {
   transition-delay: 0ms;
 }
 
+
 .form-bottom-sheet[data-open="true"] .form-content-inner {
   opacity: 1;
   transform: translateY(0);
   transition-delay: 50ms;
 }
+
