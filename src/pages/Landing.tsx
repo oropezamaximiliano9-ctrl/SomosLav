@@ -904,7 +904,7 @@ export default function Landing() {
               <div className="pt-2 pb-[18px] px-4 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
-                  <div className="ml-9">
+                  <div className="ml-2">
                     <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
                       Todo por <span className="text-[#0f55d8] font-bold">$95</span>
                     </span>
@@ -1003,7 +1003,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-3 pb-3 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Toda la ropa que metas<br />al mismo precio, <span className="text-[#0f55d8] font-semibold">siempre</span>
+                  Toda la ropa que metas<br />al <span className="text-[#0f55d8] font-semibold">mismo precio</span>
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
                 <div className="mt-7 text-right">
