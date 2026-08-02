@@ -904,14 +904,14 @@ export default function Landing() {
               <div className="pt-2 pb-[18px] px-4 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
-                  <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight ml-2 mb-1">
+                  <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight ml-2 mb-0.5">
                     Toda la ropa de tu cesto:
                   </span>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight">
                       Lavada y doblada
                     </span>
                   </div>
@@ -919,7 +919,7 @@ export default function Landing() {
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight">
                       Lista en 24 horas
                     </span>
                   </div>
@@ -928,7 +928,7 @@ export default function Landing() {
                       <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight">
-                      En la puerta de tu casa
+                      A domicilio
                     </span>
                   </div>
                 </div>
@@ -962,11 +962,11 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="empieza-hoy-title-container">
-            <h1 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
+            <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
               Empieza
             </h1>
-            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
-              Sin salir de casa
+            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[1px]">
+              sin salir de casa
             </p>
           </div>
 
@@ -1024,10 +1024,10 @@ export default function Landing() {
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
-            <h1 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
+            <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
               Visítanos
             </h1>
-            <p className="text-center text-[20px] text-[#333333] font-semibold font-geist leading-tight" style={{ marginTop: '1px' }}>
+            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[1px]">
               con tu cesto listo
             </p>
           </div>
