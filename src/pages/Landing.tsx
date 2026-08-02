@@ -31,11 +31,11 @@ const drillTransition = {
 
 const TypewriterTitle = () => {
   return (
-    <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="rotating-title-container">
-      <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
+    <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
+      <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
         Tu ropa <span className="text-[#0f55d8]">limpia</span>
       </h1>
-      <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[3px]">
+      <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
         con envío{" "}
         <span className="relative inline-block px-0.5">
           gratis
@@ -881,7 +881,7 @@ export default function Landing() {
           <TypewriterTitle />
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
-          <div className="px-0 sm:px-0 mt-3 mb-6 w-full relative">
+          <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
             <FloatingBadge text="Cesto incluido" />
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
@@ -906,7 +906,7 @@ export default function Landing() {
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
                   <div className="ml-2">
                     <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
-                      La ropa de tu cesto:
+                      Toda la ropa de tu cesto:
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -935,12 +935,12 @@ export default function Landing() {
                   </div>
                 </div>
                 
-                <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start">
+                <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start ml-2">
                   <button 
                      onClick={openBottomSheet}
                     className="h-[45px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors"
                   >
-                    <span>Quiero mi cesto gratis</span>
+                    <span>Quiero mi cesto</span>
                   </button>
                   <button 
                     onClick={() => {
@@ -963,17 +963,17 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="empieza-hoy-title-container">
-            <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
+            <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
               Empieza
             </h1>
-            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[3px]">
+            <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
               sin salir de casa
             </p>
           </div>
 
           {/* Tarjeta de Servicio a Domicilio - Blanca */}
           <div className="px-0 sm:px-0 mt-3 w-full relative">
-            <FloatingBadge text="Envío gratis" position="top-right" />
+            <FloatingBadge text="Es gratis" position="top-right" />
             <div 
               className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
               id="empty-green-landing-card"
@@ -1002,7 +1002,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-3 pb-3 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Toda la ropa que quepa<br />por <span className="text-[#0f55d8] font-bold">$95</span>, siempre
+                  Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold">$95</span>
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
                 <div className="mt-7 text-right">
@@ -1025,10 +1025,10 @@ export default function Landing() {
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
-            <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
+            <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
               Visítanos
             </h1>
-            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[3px]">
+            <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
               con tu cesto listo
             </p>
           </div>
@@ -1187,7 +1187,7 @@ export default function Landing() {
           
           <div>
             <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="soluciones-title-container">
-              <h2 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
+              <h2 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
                 Adicionales
               </h2>
             </div>
@@ -1808,7 +1808,7 @@ export default function Landing() {
                             >
                               {loading ? <Loader2 className="w-4 h-4" /> : (
                                 <>
-                                  <span>Quiero mi cesto gratis</span>
+                                  <span>Quiero mi cesto</span>
                                   <ArrowRight className="w-4 h-4" />
                                 </>
                               )}
