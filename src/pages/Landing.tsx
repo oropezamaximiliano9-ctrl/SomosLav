@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "react";
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
@@ -33,7 +33,7 @@ const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="rotating-title-container">
       <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
-        Tu ropa limpia
+        Tu ropa <span className="text-[#0f55d8]">limpia</span>
       </h1>
       <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[3px]">
         con envío{" "}
@@ -901,12 +901,12 @@ export default function Landing() {
               </div>
 
               {/* Tarjeta de beneficios */}
-              <div className="pt-2 pb-[18px] px-4 w-full border-t border-gray-100/50">
+              <div className="pt-2 pb-[18px] px-2 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
                   <div className="ml-2">
                     <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
-                      Todo por <span className="text-[#0f55d8] font-bold">$95</span>
+                      La ropa de tu cesto:
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -914,7 +914,7 @@ export default function Landing() {
                       <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
-                      Lavado y doblado
+                      Lavada y doblada
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -922,7 +922,7 @@ export default function Landing() {
                       <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
                     <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
-                      Entrega en 24 horas
+                      Lista en 24 horas
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -942,22 +942,21 @@ export default function Landing() {
                   >
                     <span>Quiero mi cesto gratis</span>
                   </button>
-                  <a 
-                    href="https://wa.me/529212393938?text=Hola%2C%20tengo%20una%20duda%20sobre%20SOMOS%20lavander%C3%ADa."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="h-[45px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none"
+                  <button 
+                    onClick={() => {
+                      document.getElementById('empieza-hoy-section')?.scrollIntoView({ behavior: 'smooth' })
+                    }}
+                    className="h-[45px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors"
                   >
-                    <span>Escríbenos</span>
-                  </a>
+                    <span>Saber más</span>
+                    <ChevronDown className="w-[18px] h-[18px]" strokeWidth={2.5} />
+                  </button>
                 </div>
               </div>
           </div>
         </div>
       </div>
       </section>
-
-
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
@@ -1003,7 +1002,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-3 pb-3 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Toda la ropa que metas<br />al <span className="text-[#0f55d8] font-semibold">mismo precio</span>
+                  Toda la ropa que quepa<br />por <span className="text-[#0f55d8] font-bold">$95</span>, siempre
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
                 <div className="mt-7 text-right">
@@ -1021,7 +1020,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
+      <section className="relative w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
