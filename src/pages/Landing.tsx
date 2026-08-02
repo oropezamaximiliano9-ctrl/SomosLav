@@ -33,9 +33,9 @@ const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="rotating-title-container">
       <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
-        Tu ropa limpia por <span className="text-[#0f55d8] text-[21px] font-bold">$95</span>
+        Tu ropa limpia
       </h1>
-      <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[1px]">
+      <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[3px]">
         con envío{" "}
         <span className="relative inline-block px-0.5">
           gratis
@@ -904,30 +904,32 @@ export default function Landing() {
               <div className="pt-2 pb-[18px] px-4 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
-                  <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight ml-2 mb-0.5">
-                    Toda la ropa de tu cesto:
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                      <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
-                    </div>
-                    <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight">
-                      Lavada y doblada
+                  <div className="ml-9">
+                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
+                      Todo por <span className="text-[#0f55d8] font-bold">$95</span>
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[16px] font-medium leading-tight">
-                      Lista en 24 horas
+                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
+                      Lavado y doblado
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
                       <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[17px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
+                      Entrega en 24 horas
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
+                      <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
+                    </div>
+                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
                       A domicilio
                     </span>
                   </div>
@@ -965,7 +967,7 @@ export default function Landing() {
             <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
               Empieza
             </h1>
-            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[1px]">
+            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[3px]">
               sin salir de casa
             </p>
           </div>
@@ -1001,7 +1003,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-3 pb-3 px-6 w-full text-left">
                 <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                  Todo lo que quepa<br />al mismo precio, <span className="text-[#0f55d8] font-semibold">siempre</span>
+                  Toda la ropa que metas<br />al mismo precio, <span className="text-[#0f55d8] font-semibold">siempre</span>
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
                 <div className="mt-7 text-right">
@@ -1027,7 +1029,7 @@ export default function Landing() {
             <h1 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
               Visítanos
             </h1>
-            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[1px]">
+            <p className="text-center text-[23px] text-[#333333] font-semibold font-geist -mt-[3px]">
               con tu cesto listo
             </p>
           </div>
@@ -1186,8 +1188,8 @@ export default function Landing() {
           
           <div>
             <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="soluciones-title-container">
-              <h2 className="text-center text-[28px] sm:text-[34px] tracking-tight text-[#333333] font-semibold font-geist leading-tight">
-                Especiales
+              <h2 className="text-center text-[23px] text-[#333333] font-semibold font-geist">
+                Adicionales
               </h2>
             </div>
 
