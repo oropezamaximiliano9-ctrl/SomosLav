@@ -882,7 +882,7 @@ export default function Landing() {
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
-            <FloatingBadge text="Cesto incluido" />
+            <FloatingBadge text="Cesto incluido" className="absolute top-[2px] -left-[11px] sm:-left-[9px] z-20 -rotate-[8deg] pointer-events-none" />
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
                 {/* Imagen del cesto */}
@@ -962,7 +962,7 @@ export default function Landing() {
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
-          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="empieza-hoy-title-container">
+          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
               Empieza
             </h1>
@@ -972,10 +972,9 @@ export default function Landing() {
           </div>
 
           {/* Tarjeta de Servicio a Domicilio - Blanca */}
-          <div className="px-0 sm:px-0 mt-3 w-full relative">
-            <FloatingBadge text="Es gratis" position="top-right" />
+          <div className="px-0 sm:px-0 mt-2.5 w-full relative">
             <div 
-              className="w-full rounded-lg border border-gray-100/50 shadow-none overflow-hidden flex flex-col bg-white" 
+              className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
               id="empty-green-landing-card"
             >
               {/* Texto explicativo ARRIBA de la imagen */}
@@ -986,7 +985,31 @@ export default function Landing() {
               </div>
 
               {/* Imagen en el MEDIO */}
-              <div className="w-full h-[270px] flex flex-col">
+              <div className="w-full h-[270px] flex flex-col relative">
+                <FloatingBadge 
+                  text="Es gratis" 
+                  position="top-right" 
+                  className="absolute -top-[5px] -right-[10px] sm:-right-[4px] z-20 rotate-[6deg] pointer-events-none"
+                />
+                
+                {/* Línea curva punteada que conecta la etiqueta "Es gratis" con el cesto de la imagen */}
+                <svg 
+                  className="absolute inset-0 w-full h-full pointer-events-none z-15 overflow-visible" 
+                  viewBox="0 0 100 100" 
+                  preserveAspectRatio="none"
+                >
+                  <path 
+                    d="M 83 7 Q 92 28, 58 48" 
+                    stroke="#333333" 
+                    strokeWidth="1.5" 
+                    strokeDasharray="8 8" 
+                    strokeOpacity="0.6"
+                    fill="none" 
+                    strokeLinecap="round" 
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
+
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
                   <img 
                     src="https://i.ibb.co/sdyNTT4D/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png" 
@@ -1155,7 +1178,7 @@ export default function Landing() {
                   {isNavigatingGPS ? (
                     <span>Conectando...</span>
                   ) : (
-                    <span>Ver cómo llegar</span>
+                    <span>Abrir mapa</span>
                   )}
                 </button>
 
