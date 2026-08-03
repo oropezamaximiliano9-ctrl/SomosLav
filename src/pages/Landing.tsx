@@ -81,7 +81,7 @@ const FloatingBadge = ({
   return (
     <div className={className || defaultPos}>
       <div className={`bg-white ${noBorder ? '' : 'border-2 border-dashed border-[#333333]'} rounded-full ${innerClassName || 'px-2.5 h-[36px]'} flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)]`}>
-        <span className={textClassName || "font-geist font-semibold text-[#333333] text-[16px] tracking-tight whitespace-nowrap"}>
+        <span className={textClassName || "font-geist font-semibold text-[#333333] text-[18px] tracking-tight whitespace-nowrap"}>
           {text}
         </span>
       </div>
@@ -938,7 +938,7 @@ export default function Landing() {
                 <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start ml-2">
                   <button 
                      onClick={openBottomSheet}
-                    className="h-[45px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors"
+                    className="h-[45px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors"
                   >
                     <span>Quiero mi cesto</span>
                   </button>
@@ -946,7 +946,7 @@ export default function Landing() {
                     onClick={() => {
                       document.getElementById('empieza-hoy-section')?.scrollIntoView({ behavior: 'smooth' })
                     }}
-                    className="h-[45px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors"
+                    className="h-[45px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors"
                   >
                     <span>Saber más</span>
                     <ChevronDown className="w-[18px] h-[18px]" strokeWidth={2.5} />
@@ -980,7 +980,7 @@ export default function Landing() {
             >
               {/* Texto explicativo ARRIBA de la imagen */}
               <div className="pt-5 pb-3 px-6 w-full text-left">
-                <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   <span className="text-[#0f55d8] font-semibold">Recibe</span> tu cesto hoy<br />y llénalo a tu propio ritmo
                 </p>
               </div>
@@ -1000,8 +1000,8 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-3 pb-3 px-6 w-full text-left">
-                <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+              <div className="pt-3 pb-3 pl-4 pr-2 sm:pl-6 sm:pr-3 w-full text-left">
+                <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
                   Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold">$95</span>
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
@@ -1024,7 +1024,7 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
-          <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="location-editorial-head">
+          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
               Visítanos
             </h1>
@@ -1034,7 +1034,7 @@ export default function Landing() {
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
-          <div className="px-0 sm:px-0 mt-3 w-full relative">
+          <div className="px-0 sm:px-0 mt-2.5 w-full relative">
             <FloatingBadge text="Cerca de ti" position="top-right" />
             <div 
               className="w-full rounded-lg overflow-hidden flex flex-col bg-white" 
@@ -1043,10 +1043,10 @@ export default function Landing() {
               {/* Texto explicativo ARRIBA del mapa */}
               <div className="pt-5 pb-1 px-6 w-full text-left">
                 <div>
-                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                     Dejas tu ropa sucia
                   </p>
-                  <p className="font-geist text-[#333333] text-[19px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
+                  <p className="font-geist text-[#333333] text-[21px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
                     <span className="text-[#0f55d8] font-semibold">sin esperar</span>
                   </p>
                 </div>
@@ -1059,7 +1059,7 @@ export default function Landing() {
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative w-full h-full rounded-md overflow-hidden bg-[#f4f5f5] flex items-center justify-center font-sans tracking-tight block cursor-pointer hover:opacity-95 transition-opacity" 
+                    className="relative w-full h-full rounded-md overflow-hidden bg-[#f4f5f5] border border-gray-300 flex items-center justify-center font-sans tracking-tight block cursor-pointer hover:opacity-95 transition-opacity" 
                     id="location-dynamic-map-frame-container"
                   >
                     {/* Streets & Roads Layer */}
@@ -1137,14 +1137,10 @@ export default function Landing() {
 
               {/* Texto explicativo DEBAJO del mapa */}
               <div className="pt-4 px-6 w-full text-left">
-                <div>
-                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                    Te la entregamos limpia en casa
-                  </p>
-                  <p className="font-geist text-[#333333] text-[19px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
-                    <span className="text-[#0f55d8] font-semibold">sin costo</span>
-                  </p>
-                </div>
+                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
+                  Te la entregamos limpia en casa&nbsp;&nbsp;
+                  <span className="text-[#0f55d8] font-semibold">sin costo</span>
+                </p>
               </div>
 
               {/* Espacio con el botón ¿Cómo llegar? al final */}
@@ -1153,7 +1149,7 @@ export default function Landing() {
                   type="button"
                   onClick={handleNavigationAndGPS}
                   disabled={isNavigatingGPS}
-                  className="h-[45px] w-[170px] shrink-0 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap"
+                  className="h-[45px] px-5 shrink-0 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap"
                   id="location-cta-navigation-button"
                 >
                   {isNavigatingGPS ? (
@@ -1804,7 +1800,7 @@ export default function Landing() {
                             <button
                               type="submit"
                               disabled={loading}
-                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-sm font-geist disabled:opacity-50 flex items-center justify-center gap-1.5"
+                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-[18px] font-geist disabled:opacity-50 flex items-center justify-center gap-1.5"
                             >
                               {loading ? <Loader2 className="w-4 h-4" /> : (
                                 <>
