@@ -901,7 +901,7 @@ export default function Landing() {
               </div>
 
               {/* Tarjeta de beneficios */}
-              <div className="pt-2 pb-[18px] px-2 w-full border-t border-gray-100/50">
+              <div className="pt-2 pb-2.5 px-2 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-2 select-none text-left pt-2">
                   <div className="ml-2">
@@ -938,7 +938,7 @@ export default function Landing() {
                 <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start ml-2">
                   <button 
                      onClick={openBottomSheet}
-                    className="h-[45px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors"
+                    className="h-[45px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Quiero mi cesto</span>
                   </button>
@@ -946,7 +946,7 @@ export default function Landing() {
                     onClick={() => {
                       document.getElementById('empieza-hoy-section')?.scrollIntoView({ behavior: 'smooth' })
                     }}
-                    className="h-[45px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors"
+                    className="h-[45px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Saber más</span>
                     <ChevronDown className="w-[18px] h-[18px]" strokeWidth={2.5} />
@@ -1077,120 +1077,125 @@ export default function Landing() {
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
               <div className="w-full h-[270px] flex flex-col pt-2">
-                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
+                <div className="relative w-full flex-1 select-none overflow-visible bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative w-full h-full rounded-md overflow-hidden bg-[#f4f5f5] border border-gray-300 flex items-center justify-center font-sans tracking-tight block cursor-pointer hover:opacity-95 transition-opacity" 
+                    className="relative w-full h-full rounded-md overflow-visible bg-[#f4f5f5] border border-gray-300 flex items-center justify-center font-sans tracking-tight block cursor-pointer hover:opacity-95 transition-opacity" 
                     id="location-dynamic-map-frame-container"
                   >
-                    {/* Streets & Roads Layer */}
-                    {/* Paseo de las palmas */}
-                    <div className="absolute top-[-20%] bottom-[40%] left-[48%] w-[32px] bg-[#cbcfdb] z-0">
-                       <span translate="no" className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Paseo de las Palmas</span>
-                    </div>
-                    
-                    {/* Avestruces */}
-                    <div className="absolute top-[-20%] bottom-[-20%] right-0 w-[32px] bg-[#cbcfdb] z-0">
-                      <span translate="no" className="absolute top-[31.4%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Avestruces</span>
+                    {/* Inner map canvas container to keep streets & markers clipped to map rounded corners */}
+                    <div className="absolute inset-0 rounded-md overflow-hidden bg-[#f4f5f5]">
+                      {/* Streets & Roads Layer */}
+                      {/* Paseo de las palmas */}
+                      <div className="absolute top-[-20%] bottom-[40%] left-[48%] w-[32px] bg-[#cbcfdb] z-0">
+                         <span translate="no" className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Paseo de las Palmas</span>
+                      </div>
+                      
+                      {/* Avestruces */}
+                      <div className="absolute top-[-20%] bottom-[-20%] right-0 w-[32px] bg-[#cbcfdb] z-0">
+                        <span translate="no" className="absolute top-[31.4%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Avestruces</span>
+                      </div>
+
+                      {/* Middle horizontal street - Río Calzadas (colinda con Paseo de las Palmas) */}
+                      <div className="absolute bottom-[40%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
+                         <span translate="no" className="absolute left-[38%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
+                         <ArrowRight className="absolute right-12 top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5 rotate-180" />
+                      </div>
+                      
+                      {/* Bottom horizontal street (Calle del Oxxo) - Río Calzadas */}
+                      <div className="absolute bottom-[15%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
+                         <span translate="no" className="absolute left-[20%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
+                         <ArrowRight className="absolute left-[47%] top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5" />
+                      </div>
+                      
+                      {/* Conexión de calles izquierda */}
+                      <div className="absolute bottom-[15%] -left-6 w-[50px] h-[30%] bg-[#cbcfdb] z-0"></div>
+
+                      {/* Markers & Labels */}
+                      
+                      {/* Red Pin - Positioned at left-[38%] to keep the blue circle near but not touching the street text */}
+                      <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
+                        {/* Attached label positioned to the left without affecting the marker's position */}
+                        <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap font-geist">
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
+                        </div>
+                        <div className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
+                          {/* Circle enclosing the pin marker */}
+                          <div className="absolute -inset-0.5 border-2 border-[#0f55d8] bg-[#0f55d8]/10 rounded-full pointer-events-none"></div>
+                          <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
+                            <defs>
+                              <mask id="google-pin-cutout">
+                                <rect width="24" height="24" fill="white" />
+                                <circle cx="12" cy="9" r="2.8" fill="black" />
+                              </mask>
+                            </defs>
+                            <path 
+                              d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
+                              fill="#ea4335" 
+                              mask="url(#google-pin-cutout)"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Ferreteria */}
+                      <div className="absolute bottom-[50%] left-[65%] flex flex-col items-center z-10 transition-transform cursor-pointer">
+                        <span translate="no" className="text-black text-[12px] font-medium tracking-tight notranslate mb-0.5">Ferretería</span>
+                        <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
+                          <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
+                        </div>
+                      </div>
+
+                      {/* OXXO Santa Isabel */}
+                      <div className="absolute bottom-[3%] right-[15%] flex flex-col items-center z-10 transition-transform cursor-pointer">
+                        <div className="bg-white w-[34px] h-[22px] rounded-[2px] border-2 border-white shadow-sm flex items-center justify-center mb-1 overflow-hidden">
+                          <img src="https://upload.wikimedia.org/wikipedia/en/4/40/OXXO_logo.svg" alt="OXXO" className="w-full h-full object-contain" />
+                        </div>
+                        <span translate="no" className="text-black text-[12px] font-medium whitespace-nowrap tracking-tight notranslate">OXXO Santa Isabel</span>
+                      </div>
                     </div>
 
-                    {/* Middle horizontal street - Río Calzadas (colinda con Paseo de las Palmas) */}
-                    <div className="absolute bottom-[40%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
-                       <span translate="no" className="absolute left-[38%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
-                       <ArrowRight className="absolute right-12 top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5 rotate-180" />
-                    </div>
-                    
-                    {/* Bottom horizontal street (Calle del Oxxo) - Río Calzadas */}
-                    <div className="absolute bottom-[15%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
-                       <span translate="no" className="absolute left-[20%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
-                       <ArrowRight className="absolute left-[47%] top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5" />
-                    </div>
-                    
-                    {/* Conexión de calles izquierda */}
-                    <div className="absolute bottom-[15%] -left-6 w-[50px] h-[30%] bg-[#cbcfdb] z-0"></div>
-
-                    {/* Markers & Labels */}
-                    
-                    {/* Red Pin - Positioned at left-[38%] to keep the blue circle near but not touching the street text */}
-                    <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
-                      {/* Attached label positioned to the left without affecting the marker's position */}
-                      <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap font-geist">
-                        <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
-                        <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
-                      </div>
-                      <div className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
-                        {/* Circle enclosing the pin marker */}
-                        <div className="absolute -inset-0.5 border-2 border-[#0f55d8] bg-[#0f55d8]/10 rounded-full pointer-events-none"></div>
-                        <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
-                          <defs>
-                            <mask id="google-pin-cutout">
-                              <rect width="24" height="24" fill="white" />
-                              <circle cx="12" cy="9" r="2.8" fill="black" />
-                            </mask>
-                          </defs>
-                          <path 
-                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
-                            fill="#ea4335" 
-                            mask="url(#google-pin-cutout)"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* Ferreteria */}
-                    <div className="absolute bottom-[50%] left-[65%] flex flex-col items-center z-10 transition-transform cursor-pointer">
-                      <span translate="no" className="text-black text-[12px] font-medium tracking-tight notranslate mb-0.5">Ferretería</span>
-                      <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
-                        <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
-                      </div>
-                    </div>
-
-                    {/* OXXO Santa Isabel */}
-                    <div className="absolute bottom-[3%] right-[15%] flex flex-col items-center z-10 transition-transform cursor-pointer">
-                      <div className="bg-white w-[34px] h-[22px] rounded-[2px] border-2 border-white shadow-sm flex items-center justify-center mb-1 overflow-hidden">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/4/40/OXXO_logo.svg" alt="OXXO" className="w-full h-full object-contain" />
-                      </div>
-                      <span translate="no" className="text-black text-[12px] font-medium whitespace-nowrap tracking-tight notranslate">OXXO Santa Isabel</span>
-                    </div>
+                    {/* Botón Abrir mapa ubicado en la esquina inferior izquierda sobresaliendo del mapa */}
+                    <button 
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleNavigationAndGPS();
+                      }}
+                      disabled={isNavigatingGPS}
+                      className="absolute bottom-[-19px] left-[-4px] sm:left-[-2px] z-30 h-[38px] px-5 bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                      id="location-cta-navigation-button"
+                    >
+                      {isNavigatingGPS ? (
+                        <span>Conectando...</span>
+                      ) : (
+                        <span>Abrir mapa</span>
+                      )}
+                    </button>
                   </a>
                 </div>
               </div>
 
               {/* Texto explicativo DEBAJO del mapa */}
-              <div className="pt-4 px-6 w-full text-left">
+              <div className="pt-9 pb-6 px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Te la entregamos limpia en casa&nbsp;&nbsp;
                   <span className="text-[#0f55d8] font-semibold">sin costo</span>
                 </p>
-              </div>
-
-              {/* Espacio con el botón ¿Cómo llegar? al final */}
-              <div className="mt-5 pb-3 px-4 w-full flex flex-col justify-start items-start">
-                <button 
-                  type="button"
-                  onClick={handleNavigationAndGPS}
-                  disabled={isNavigatingGPS}
-                  className="h-[45px] px-5 shrink-0 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap"
-                  id="location-cta-navigation-button"
-                >
-                  {isNavigatingGPS ? (
-                    <span>Conectando...</span>
-                  ) : (
-                    <span>Abrir mapa</span>
-                  )}
-                </button>
 
                 {isNavigatingGPS && gpsLoadingStep && (
-                  <div className="mt-2 w-full max-w-[280px] p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
-                    <span className="w-2 h-2 rounded-full bg-[#0f55d8]" />
+                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
+                    <span className="w-2 h-2 rounded-full bg-[#0f55d8] animate-pulse" />
                     <span>{gpsLoadingStep}</span>
                   </div>
                 )}
 
                 {geoError && (
-                  <div className="mt-2 w-full max-w-[280px] p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
+                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
                     ⚠️ {geoError}
                   </div>
                 )}
@@ -1823,7 +1828,7 @@ export default function Landing() {
                             <button
                               type="submit"
                               disabled={loading}
-                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-[18px] font-geist disabled:opacity-50 flex items-center justify-center gap-1.5"
+                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-[18px] font-geist disabled:opacity-50 flex items-center justify-center gap-1.5 border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                             >
                               {loading ? <Loader2 className="w-4 h-4" /> : (
                                 <>
