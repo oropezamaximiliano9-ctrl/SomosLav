@@ -882,7 +882,17 @@ export default function Landing() {
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
-            <FloatingBadge text="Cesto incluido" className="absolute top-[2px] -left-[11px] sm:-left-[9px] z-20 -rotate-[8deg] pointer-events-none" />
+            <div className="absolute top-[4px] -left-[10px] sm:-left-[8px] z-20 w-[105px] sm:w-[120px] pointer-events-none">
+              <img 
+                src="https://iili.io/CU67SLX.webp" 
+                alt="Cesto incluido" 
+                className="w-full h-auto object-contain drop-shadow-sm"
+              />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] sm:text-[20px] font-geist rotate-[2deg] pt-0.5 tracking-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                <span>Cesto</span>
+                <span>incluido</span>
+              </div>
+            </div>
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
                 {/* Imagen del cesto */}
