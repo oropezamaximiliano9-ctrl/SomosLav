@@ -883,7 +883,7 @@ export default function Landing() {
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
             <div 
-              className="absolute top-[4px] -left-[4px] sm:-left-[2px] z-20 w-[105px] sm:w-[120px] pointer-events-none -rotate-[10deg]"
+              className="absolute top-[16px] -left-[4px] sm:-left-[2px] z-20 w-[105px] sm:w-[120px] pointer-events-none -rotate-[10deg]"
             >
               <img 
                 src="https://iili.io/CU67SLX.webp" 
@@ -979,7 +979,24 @@ export default function Landing() {
               Empieza
             </h1>
             <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-              sin salir de casa
+              <span className="relative inline-block px-0.5">
+                sin salir
+                <svg
+                  className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
+                  viewBox="0 0 100 10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M 1 6 C 30 4.5, 70 7, 99 5.5"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>{" "}
+              de casa
             </p>
           </div>
 
