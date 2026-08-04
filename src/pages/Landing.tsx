@@ -882,13 +882,15 @@ export default function Landing() {
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
-            <div className="absolute top-[4px] -left-[10px] sm:-left-[8px] z-20 w-[105px] sm:w-[120px] pointer-events-none">
+            <div 
+              className="absolute top-[4px] -left-[4px] sm:-left-[2px] z-20 w-[105px] sm:w-[120px] pointer-events-none -rotate-[10deg]"
+            >
               <img 
                 src="https://iili.io/CU67SLX.webp" 
                 alt="Cesto incluido" 
                 className="w-full h-auto object-contain drop-shadow-sm"
               />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] sm:text-[20px] font-geist rotate-[2deg] pt-0.5 tracking-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[19px] font-geist rotate-[5deg] pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
                 <span>Cesto</span>
                 <span>incluido</span>
               </div>
@@ -948,7 +950,7 @@ export default function Landing() {
                 <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start ml-2">
                   <button 
                      onClick={openBottomSheet}
-                    className="h-[45px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                    className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Quiero mi cesto</span>
                   </button>
@@ -956,7 +958,7 @@ export default function Landing() {
                     onClick={() => {
                       document.getElementById('empieza-hoy-section')?.scrollIntoView({ behavior: 'smooth' })
                     }}
-                    className="h-[45px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                    className="h-[43px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Saber más</span>
                     <ChevronDown className="w-[18px] h-[18px]" strokeWidth={2.5} />
@@ -1177,7 +1179,7 @@ export default function Landing() {
                         handleNavigationAndGPS();
                       }}
                       disabled={isNavigatingGPS}
-                      className="absolute bottom-[-19px] left-[-4px] sm:left-[-2px] z-30 h-[38px] px-5 bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                      className="absolute bottom-[-19px] left-[14px] sm:left-[16px] z-30 h-[38px] px-5 bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                       id="location-cta-navigation-button"
                     >
                       {isNavigatingGPS ? (
