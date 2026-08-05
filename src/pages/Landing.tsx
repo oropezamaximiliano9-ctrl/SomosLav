@@ -1087,9 +1087,8 @@ export default function Landing() {
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
           <div className="px-0 sm:px-0 mt-2.5 w-full relative">
-            <FloatingBadge text="Cerca de ti" position="top-right" />
             <div 
-              className="w-full rounded-lg overflow-hidden flex flex-col bg-white" 
+              className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
               id="recepcion-landing-card"
             >
               {/* Texto explicativo ARRIBA del mapa */}
@@ -1105,7 +1104,12 @@ export default function Landing() {
               </div>
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
-              <div className="w-full h-[270px] flex flex-col pt-2">
+              <div className="w-full h-[270px] flex flex-col pt-2 relative">
+                <FloatingBadge 
+                  text="Cerca de ti" 
+                  position="top-right" 
+                  className="absolute -top-[12px] -right-[10px] sm:-right-[4px] z-20 rotate-[6deg] pointer-events-none"
+                />
                 <div className="relative w-full flex-1 select-none overflow-visible bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
@@ -1124,7 +1128,7 @@ export default function Landing() {
                       
                       {/* Avestruces */}
                       <div className="absolute top-[-20%] bottom-[-20%] right-0 w-[32px] bg-[#cbcfdb] z-0">
-                        <span translate="no" className="absolute top-[31.4%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Avestruces</span>
+                        <span translate="no" className="absolute top-[34%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Avestruces</span>
                       </div>
 
                       {/* Middle horizontal street - Río Calzadas (colinda con Paseo de las Palmas) */}
@@ -1374,7 +1378,7 @@ export default function Landing() {
           <footer className="w-full pt-1.5 pb-0 mt-auto border-t border-[#EDE9E0]/80 text-center text-[11px] font-geist select-none">
             <div className="max-w-sm mx-auto px-4 flex flex-col items-center justify-center gap-0 pb-0.5">
               <p className="font-medium text-gray-500 leading-tight">
-                © {new Date().getFullYear()} Somos Lavandería. Todos los derechos reservados.
+                © {new Date().getFullYear()} Somos Lavandería.
               </p>
               <button 
                 type="button"
