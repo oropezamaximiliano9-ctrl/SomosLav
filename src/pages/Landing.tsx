@@ -136,7 +136,7 @@ export default function Landing() {
         const nextSlide = (currentSlide + 1) % 3;
         scrollToSlide(nextSlide);
       }
-    }, 4000);
+    }, 6000);
 
     return () => clearInterval(timer);
   }, [currentSlide]);
@@ -883,14 +883,14 @@ export default function Landing() {
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
             <div 
-              className="absolute top-[16px] -left-[4px] sm:-left-[2px] z-20 w-[105px] sm:w-[120px] pointer-events-none -rotate-[10deg]"
+              className="absolute top-[16px] -left-[4px] sm:-left-[2px] z-20 w-[100px] sm:w-[114px] pointer-events-none -rotate-[10deg]"
             >
               <img 
                 src="https://iili.io/CU67SLX.webp" 
                 alt="Cesto incluido" 
                 className="w-full h-auto object-contain drop-shadow-sm"
               />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[19px] font-geist rotate-[5deg] pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist rotate-[5deg] pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
                 <span>Cesto</span>
                 <span>incluido</span>
               </div>
@@ -1257,81 +1257,81 @@ export default function Landing() {
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
               >
                 {/* Slide 1 - Urgente */}
-                <div role="group" aria-roledescription="slide" aria-label="1 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-4 p-4 pb-2">
+                <div role="group" aria-roledescription="slide" aria-label="1 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
+                  <div className="flex items-center gap-4 p-3.5 sm:p-4 pb-2">
                     <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[64px] flex justify-center py-2 rounded-full">
-                        <span className="font-geist font-semibold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                      <div className="bg-[#0f55d8]/10 w-[66px] flex justify-center py-2 rounded-full">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[18px] sm:text-[19.5px] leading-none tracking-tight">
                           +$20
                         </span>
                       </div>
                     </div>
                     <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16.5px] leading-snug mb-1.5">
-                        Urgente
+                      <h4 className="font-geist font-semibold text-[#333333] text-[18px] leading-snug mb-1.5">
+                        Servicio urgente
                       </h4>
-                      <p className="font-geist text-[#333333] text-[14.5px] font-medium leading-snug">
-                        Tu ropa limpia el mismo día.
+                      <p className="font-geist text-[#333333] text-[18px] font-medium leading-snug tracking-tight">
+                        Tu ropa lista el mismo día.
                       </p>
                     </div>
                   </div>
-                  <div className="px-4 pb-4 pt-1 w-full flex items-center justify-start gap-1.5">
+                  <div className="mt-auto px-3.5 sm:px-4 pb-3.5 pt-0.5 w-full flex items-center justify-end gap-1.5">
                     <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0" />
-                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-left">
+                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Pídelo en recepción
                     </span>
                   </div>
                 </div>
 
                 {/* Slide 2 - Suavizante premium */}
-                <div role="group" aria-roledescription="slide" aria-label="2 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-4 p-4 pb-2">
+                <div role="group" aria-roledescription="slide" aria-label="2 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
+                  <div className="flex items-center gap-4 p-3.5 sm:p-4 pb-2">
                     <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[64px] flex justify-center py-2 rounded-full">
-                        <span className="font-geist font-semibold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                      <div className="bg-[#0f55d8]/10 w-[66px] flex justify-center py-2 rounded-full">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[18px] sm:text-[19.5px] leading-none tracking-tight">
                           +$10
                         </span>
                       </div>
                     </div>
                     <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16.5px] leading-snug mb-1.5">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[18px] leading-snug mb-1.5">
                         Suavizante premium
                       </h4>
-                      <p className="font-geist text-[#333333] text-[14.5px] font-medium leading-snug">
+                      <p className="font-geist text-[#333333] text-[18px] font-medium leading-snug tracking-tight">
                         Aroma de larga duración.
                       </p>
                     </div>
                   </div>
-                  <div className="px-4 pb-4 pt-1 w-full flex items-center justify-start gap-1.5">
+                  <div className="mt-auto px-3.5 sm:px-4 pb-3.5 pt-0.5 w-full flex items-center justify-end gap-1.5">
                     <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0" />
-                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-left">
+                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Pídelo en recepción
                     </span>
                   </div>
                 </div>
 
                 {/* Slide 3 - Ropa de cama */}
-                <div role="group" aria-roledescription="slide" aria-label="3 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-4 p-4 pb-2">
-                    <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[64px] flex justify-center py-2 rounded-full">
-                        <span className="font-geist font-semibold text-[#0f55d8] text-[16px] sm:text-[18px] leading-none tracking-tight">
+                <div role="group" aria-roledescription="slide" aria-label="3 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
+                  <div className="flex items-center gap-4 p-3.5 sm:p-4 pb-2">
+                    <div className="shrink-0 -mt-3.5 sm:-mt-4">
+                      <div className="bg-[#0f55d8]/10 w-[66px] flex justify-center py-2 rounded-full">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[18px] sm:text-[19.5px] leading-none tracking-tight">
                           +$$$
                         </span>
                       </div>
                     </div>
                     <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16.5px] leading-snug mb-1.5">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[18px] leading-snug mb-1.5">
                         Ropa de cama
                       </h4>
-                      <p className="font-geist text-[#333333] text-[14.5px] font-medium leading-snug">
+                      <p className="font-geist text-[#333333] text-[18px] font-medium leading-snug tracking-tight">
                         Lavado de edredón, cobertor o sábana.
                       </p>
                     </div>
                   </div>
-                  <div className="px-4 pb-4 pt-1 w-full flex items-center justify-start gap-1.5">
+                  <div className="mt-auto px-3.5 sm:px-4 pb-3.5 pt-0.5 w-full flex items-center justify-end gap-1.5">
                     <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0" />
-                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-left">
+                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Entrégalo por separado
                     </span>
                   </div>
