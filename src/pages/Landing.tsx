@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight, ChevronDown, Plus } from "lucide-react";
 import { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "react";
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
@@ -113,6 +113,33 @@ export default function Landing() {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const shirtCarouselRef = useRef<HTMLDivElement>(null);
+  const [currentShirtSlide, setCurrentShirtSlide] = useState(0);
+
+  const shirtProducts = [
+    { id: 1, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "/blue_shirt.webp" },
+    { id: 2, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "" },
+    { id: 3, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "" },
+  ];
+
+  const handleShirtScroll = () => {
+    if (shirtCarouselRef.current) {
+      const scrollPosition = shirtCarouselRef.current.scrollLeft;
+      const slideWidth = shirtCarouselRef.current.clientWidth * 0.76;
+      setCurrentShirtSlide(Math.round(scrollPosition / slideWidth));
+    }
+  };
+
+  const scrollToShirtSlide = (index: number) => {
+    if (shirtCarouselRef.current) {
+      const slideWidth = shirtCarouselRef.current.clientWidth * 0.76;
+      shirtCarouselRef.current.scrollTo({
+        left: index * slideWidth,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleScroll = () => {
     if (carouselRef.current) {
       const scrollPosition = carouselRef.current.scrollLeft;
@@ -136,7 +163,7 @@ export default function Landing() {
         const nextSlide = (currentSlide + 1) % 3;
         scrollToSlide(nextSlide);
       }
-    }, 6000);
+    }, 5000);
 
     return () => clearInterval(timer);
   }, [currentSlide]);
@@ -1268,10 +1295,10 @@ export default function Landing() {
 
       {/* Nueva Sección: Servicios adicionales */}
       <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="w-full max-w-sm mx-auto text-left flex flex-col justify-between flex-1 h-full">
+        <div className="w-full max-w-sm mx-auto text-left flex flex-col flex-1 h-full pb-2">
           
           <div>
-            <div className="w-full text-center pt-2 pb-[18px] select-none px-4" id="soluciones-title-container">
+            <div className="w-full text-center pt-2 pb-[18px] select-none" id="soluciones-title-container">
               <h2 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
                 Adicionales
               </h2>
@@ -1290,25 +1317,25 @@ export default function Landing() {
               >
                 {/* Slide 1 - Urgente */}
                 <div role="group" aria-roledescription="slide" aria-label="1 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-4 p-3.5 sm:p-4 pb-2">
+                  <div className="flex items-center gap-3.5 p-2.5 sm:p-3 pb-1">
                     <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[66px] flex justify-center py-2 rounded-full">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[18px] sm:text-[19.5px] leading-none tracking-tight">
+                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1.5 rounded-full">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
                           +$20
                         </span>
                       </div>
                     </div>
                     <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[18px] leading-snug mb-1.5">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-snug mb-0.5">
                         Servicio urgente
                       </h4>
-                      <p className="font-geist text-[#333333] text-[18px] font-medium leading-snug tracking-tight">
+                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-snug tracking-tight">
                         Tu ropa lista el mismo día.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-auto px-3.5 sm:px-4 pb-3.5 pt-0.5 w-full flex items-center justify-end gap-1.5">
-                    <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0" />
+                  <div className="mt-auto px-2.5 sm:px-3 pb-2 pt-0 w-full flex items-center justify-end gap-1.5">
+                    <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
                     <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Pídelo en recepción
                     </span>
@@ -1317,25 +1344,25 @@ export default function Landing() {
 
                 {/* Slide 2 - Suavizante premium */}
                 <div role="group" aria-roledescription="slide" aria-label="2 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-4 p-3.5 sm:p-4 pb-2">
+                  <div className="flex items-center gap-3.5 p-2.5 sm:p-3 pb-1">
                     <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[66px] flex justify-center py-2 rounded-full">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[18px] sm:text-[19.5px] leading-none tracking-tight">
+                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1.5 rounded-full">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
                           +$10
                         </span>
                       </div>
                     </div>
                     <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[18px] leading-snug mb-1.5">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-snug mb-0.5">
                         Suavizante premium
                       </h4>
-                      <p className="font-geist text-[#333333] text-[18px] font-medium leading-snug tracking-tight">
+                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-snug tracking-tight">
                         Aroma de larga duración.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-auto px-3.5 sm:px-4 pb-3.5 pt-0.5 w-full flex items-center justify-end gap-1.5">
-                    <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0" />
+                  <div className="mt-auto px-2.5 sm:px-3 pb-2 pt-0 w-full flex items-center justify-end gap-1.5">
+                    <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
                     <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Pídelo en recepción
                     </span>
@@ -1344,25 +1371,25 @@ export default function Landing() {
 
                 {/* Slide 3 - Ropa de cama */}
                 <div role="group" aria-roledescription="slide" aria-label="3 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-4 p-3.5 sm:p-4 pb-2">
-                    <div className="shrink-0 -mt-3.5 sm:-mt-4">
-                      <div className="bg-[#0f55d8]/10 w-[66px] flex justify-center py-2 rounded-full">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[18px] sm:text-[19.5px] leading-none tracking-tight">
+                  <div className="flex items-center gap-3.5 p-2.5 sm:p-3 pb-1">
+                    <div className="shrink-0 -mt-2">
+                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1.5 rounded-full">
+                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
                           +$$$
                         </span>
                       </div>
                     </div>
                     <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[18px] leading-snug mb-1.5">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-snug mb-0.5">
                         Ropa de cama
                       </h4>
-                      <p className="font-geist text-[#333333] text-[18px] font-medium leading-snug tracking-tight">
+                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-snug tracking-tight">
                         Lavado de edredón, cobertor o sábana.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-auto px-3.5 sm:px-4 pb-3.5 pt-0.5 w-full flex items-center justify-end gap-1.5">
-                    <Info className="w-[14px] h-[14px] text-[#0f55d8] shrink-0" />
+                  <div className="mt-auto px-2.5 sm:px-3 pb-2 pt-0 w-full flex items-center justify-end gap-1.5">
+                    <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
                     <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Entrégalo por separado
                     </span>
@@ -1370,53 +1397,75 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Carousel Controls */}
-              <div className="flex items-center justify-center gap-2.5 mt-2 pb-2">
-                <button 
-                  onClick={() => scrollToSlide(Math.max(0, currentSlide - 1))}
-                  className="p-1 rounded-full bg-white border border-[#EDE9E0] text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-                  disabled={currentSlide === 0}
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
-                <div className="flex gap-1.5">
-                  {[0, 1, 2].map((i) => (
-                    <button
-                      key={i}
-                      onClick={() => scrollToSlide(i)}
-                      className={`w-1.5 h-1.5 rounded-full transition-colors ${currentSlide === i ? 'bg-[#0f55d8]' : 'bg-gray-300'}`}
-                      aria-label={`Go to slide ${i + 1}`}
-                    />
-                  ))}
-                </div>
-                <button 
-                  onClick={() => scrollToSlide(Math.min(2, currentSlide + 1))}
-                  className="p-1 rounded-full bg-white border border-[#EDE9E0] text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-                  disabled={currentSlide === 2}
-                  aria-label="Next slide"
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
+              {/* Carousel Controls (Puntos indicadores sin flechas alineados a la derecha) */}
+              <div className="flex items-center justify-end gap-1.5 mt-1 pb-0.5 pr-2">
+                {[0, 1, 2].map((i) => (
+                  <button
+                    key={i}
+                    onClick={() => scrollToSlide(i)}
+                    className={`w-1.5 h-1.5 rounded-full transition-colors ${currentSlide === i ? 'bg-[#0f55d8]' : 'bg-gray-300'}`}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Footer Minimalista */}
-          <footer className="w-full pt-1.5 pb-0 mt-auto border-t border-[#EDE9E0]/80 text-center text-[11px] font-geist select-none">
-            <div className="max-w-sm mx-auto px-4 flex flex-col items-center justify-center gap-0 pb-0.5">
-              <p className="font-medium text-gray-500 leading-tight">
-                © {new Date().getFullYear()} Somos Lavandería.
-              </p>
-              <button 
-                type="button"
-                onClick={() => setIsPrivacyOpen(true)}
-                className="text-[#0f55d8] hover:underline font-semibold cursor-pointer transition-colors leading-tight py-0.5"
-              >
-                Políticas de privacidad
-              </button>
+          {/* Tarjeta inferior con carrusel de playeras estilo f4t3.co */}
+          <div className="w-full flex-1 my-3 bg-white rounded-lg border border-gray-100/50 shadow-none flex flex-col justify-between overflow-hidden relative p-2">
+            {/* Contenedor con scroll snap y side peek */}
+            <div 
+              ref={shirtCarouselRef}
+              onScroll={handleShirtScroll}
+              className="w-full flex-1 flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-1 items-stretch py-0.5 px-0.5"
+            >
+              {shirtProducts.map((product, idx) => (
+                <div 
+                  key={product.id}
+                  className="w-[75%] sm:w-[76%] shrink-0 snap-start snap-always h-full min-h-[170px] relative rounded-lg bg-[#f3f3f4] p-3 flex flex-col justify-between overflow-hidden border border-neutral-200/40 select-none group"
+                  style={{ scrollSnapStop: 'always' }}
+                >
+                  {/* Badges superiores izquierda */}
+                  <div className="flex flex-col gap-1 items-start z-10 pointer-events-none">
+                    <span className="px-1.5 py-0.5 border border-neutral-800 text-neutral-800 text-[9px] font-mono tracking-widest uppercase bg-transparent font-medium leading-none">
+                      {product.tag1}
+                    </span>
+                    <span className="px-1.5 py-0.5 border border-[#a81c1c] text-[#a81c1c] text-[9px] font-mono tracking-widest uppercase bg-transparent font-medium leading-none">
+                      {product.tag2}
+                    </span>
+                  </div>
+
+                  {/* Área central para la imagen */}
+                  <div className="flex-1 flex items-center justify-center my-2 relative min-h-[100px]">
+                    {product.image ? (
+                      <img 
+                        src={product.image} 
+                        alt={`Playera ${idx + 1}`} 
+                        className="max-h-full max-w-full object-contain pointer-events-none drop-shadow-sm"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center gap-1.5 text-neutral-400 font-geist text-xs py-3 px-2 text-center border-2 border-dashed border-neutral-300/60 rounded-md w-full h-full bg-white/40">
+                        <Shirt className="w-6 h-6 stroke-[1.25] text-neutral-400 opacity-60" />
+                        <span className="text-[11px] font-medium text-neutral-400 tracking-wide">
+                          [ Imagen de Playera {idx + 1} ]
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Botón flotante '+' en la esquina inferior derecha */}
+                  <button 
+                    type="button"
+                    aria-label="Ver detalles"
+                    className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white text-neutral-900 flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all z-10 border border-neutral-100"
+                  >
+                    <Plus className="w-4 h-4 stroke-[2]" />
+                  </button>
+                </div>
+              ))}
             </div>
-          </footer>
+          </div>
 
         </div>
       </section>
