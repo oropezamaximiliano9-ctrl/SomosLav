@@ -106,7 +106,7 @@ export default function Landing() {
   const [isPriceInfoModalOpen, setIsPriceInfoModalOpen] = useState(false);
   const [registered, setRegistered] = useState(() => localStorage.getItem("user_registered") === "true");
   const [isWaitlisted, setIsWaitlisted] = useState(() => localStorage.getItem("user_is_waitlisted") === "true");
-  const [formStep, setFormStep] = useState<1 | 2 | "verifying" | "not_eligible_result">(1);
+  const [formStep, setFormStep] = useState<1 | 2 | 3 | "verifying" | "not_eligible_result">(1);
   const [verificationProgress, setVerificationProgress] = useState(0);
   const [calculatedDistance, setCalculatedDistance] = useState<number>(() => getColoniaDistance(addressColonia || ""));
 
@@ -328,11 +328,9 @@ export default function Landing() {
               colonia = "Centro";
             }
 
-            setAddressColonia(colonia);
-            if (calleYNum) {
-              setAddressCalle(calleYNum);
-            }
-            
+            const fullAddr = [calleYNum, colonia].filter(Boolean).join(", ");
+            setAddressCalle(fullAddr || calleYNum || colonia);
+            setAddressColonia(colonia || fullAddr);
             setFormError(null);
           } else {
             setGpsAutofillError("Error al obtener la dirección desde el servidor de mapas.");
@@ -438,12 +436,14 @@ export default function Landing() {
 
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
+  const step3Ref = useRef<HTMLDivElement>(null);
+  const step4Ref = useRef<HTMLDivElement>(null);
   const [sliderHeight, setSliderHeight] = useState<number | string>("auto");
 
   useEffect(() => {
     if (isBottomSheetOpen) {
-      const activeRef = formStep === 2 ? step2Ref : step1Ref;
-      if (activeRef.current) {
+      const activeRef = formStep === 1 ? step1Ref : formStep === 2 ? step2Ref : step3Ref;
+      if (activeRef?.current) {
         const handleResize = () => {
           if (activeRef.current) {
             setSliderHeight(activeRef.current.offsetHeight);
@@ -546,14 +546,23 @@ export default function Landing() {
     e.preventDefault();
     setFormError(null);
 
-    const trimmedPhone = phone.trim();
     if (!name.trim()) {
       setFormError("Por favor ingresa tu nombre completo.");
       triggerShake();
       nameInputRef.current?.focus();
       return;
     }
-    
+
+    setDirection("forward");
+    setFormStep(2);
+    setTimeout(() => phoneInputRef.current?.focus(), 150);
+  };
+
+  const goToStep3 = (e: FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+
+    const trimmedPhone = phone.trim();
     if (!trimmedPhone) {
       setFormError("Por favor ingresa tu teléfono.");
       triggerShake();
@@ -576,7 +585,8 @@ export default function Landing() {
     }
 
     setDirection("forward");
-    setFormStep(2);
+    setFormStep(3);
+    setTimeout(() => calleInputRef.current?.focus(), 150);
   };
 
   const dbPreregister = async () => {
@@ -640,12 +650,11 @@ export default function Landing() {
     return { success: true, userId };
   };
 
-  const submitStep2AndVerify = async (e: FormEvent) => {
+  const submitStep3AndVerify = async (e: FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
-    // Guard: Validate Step 1 fields
-    const trimmedPhone = phone.trim();
+    // Guard: Validate Step 1 field
     if (!name.trim()) {
       setFormError("Por favor ingresa tu nombre en el paso 1.");
       triggerShake();
@@ -654,11 +663,14 @@ export default function Landing() {
       setTimeout(() => nameInputRef.current?.focus(), 150);
       return;
     }
+
+    // Guard: Validate Step 2 field
+    const trimmedPhone = phone.trim();
     if (!trimmedPhone) {
-      setFormError("Por favor ingresa tu teléfono en el paso 1.");
+      setFormError("Por favor ingresa tu teléfono en el paso 2.");
       triggerShake();
       setDirection("backward");
-      setFormStep(1);
+      setFormStep(2);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
@@ -666,7 +678,7 @@ export default function Landing() {
       setFormError("El número de teléfono debe tener exactamente 10 caracteres.");
       triggerShake();
       setDirection("backward");
-      setFormStep(1);
+      setFormStep(2);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
@@ -674,24 +686,22 @@ export default function Landing() {
       setFormError("El número de teléfono no puede contener letras.");
       triggerShake();
       setDirection("backward");
-      setFormStep(1);
+      setFormStep(2);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
 
-    // Guard: Validate Step 2 fields
-    if (!addressCalle.trim()) {
-      setFormError("Por favor ingresa tu calle y número.");
+    // Guard: Validate Step 3 field (Dirección)
+    const fullAddress = addressCalle.trim() || addressColonia.trim();
+    if (!fullAddress) {
+      setFormError("Por favor ingresa tu dirección.");
       triggerShake();
       calleInputRef.current?.focus();
       return;
     }
-    if (!addressColonia.trim()) {
-      setFormError("Por favor ingresa tu colonia.");
-      triggerShake();
-      coloniaInputRef.current?.focus();
-      return;
-    }
+
+    if (!addressCalle.trim()) setAddressCalle(fullAddress);
+    if (!addressColonia.trim()) setAddressColonia(fullAddress);
 
     setFormStep("verifying");
     setVerificationProgress(0);
@@ -699,9 +709,9 @@ export default function Landing() {
 
     let distance = 5.0;
     try {
-      distance = await asyncGetColoniaDistance(addressColonia, gpsCoords);
+      distance = await asyncGetColoniaDistance(fullAddress, gpsCoords);
     } catch (e) {
-      distance = getColoniaDistance(addressColonia);
+      distance = getColoniaDistance(fullAddress);
     }
     const eligible = distance <= 1.0;
     setCalculatedDistance(distance);
@@ -722,9 +732,9 @@ export default function Landing() {
 
       // Save simulated user details locally for subsequent loads
       try {
-        const distVal = calculatedDistance || (addressColonia ? getColoniaDistance(addressColonia) : null);
+        const distVal = calculatedDistance || getColoniaDistance(fullAddress);
         const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, distanceKm: distVal };
+        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia: fullAddress, addressCalle: fullAddress, preferredTime, distanceKm: distVal };
         localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
       } catch(e) {}
 
@@ -735,9 +745,9 @@ export default function Landing() {
       console.warn("API preregister failed, falling back to seamless client-side experience:", err);
       // Seamless LocalStorage Fallback!
       try {
-        const distVal = calculatedDistance || (addressColonia ? getColoniaDistance(addressColonia) : null);
+        const distVal = calculatedDistance || getColoniaDistance(fullAddress);
         const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, distanceKm: distVal };
+        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia: fullAddress, addressCalle: fullAddress, preferredTime, distanceKm: distVal };
         localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
       } catch(e) {}
 
@@ -923,25 +933,25 @@ export default function Landing() {
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                      <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
+                      <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
                       Lavada y doblada
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                      <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
+                      <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
                       Lista en 24 horas
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                      <Check className="w-[16px] h-[16px] text-[#0f55d8]" strokeWidth={4} />
+                      <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                     </div>
-                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
                       A domicilio
                     </span>
                   </div>
@@ -972,7 +982,7 @@ export default function Landing() {
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
+        <div className="relative z-10 w-full max-w-sm mx-auto pt-3.5 sm:pt-4 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
@@ -1073,7 +1083,7 @@ export default function Landing() {
       </section>
 
       <section className="relative w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
+        <div className="relative z-10 w-full max-w-sm mx-auto pt-3.5 sm:pt-4 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
@@ -1614,10 +1624,10 @@ export default function Landing() {
                   transition={{ duration: 0.15 }}
                   className="w-full relative flex flex-col"
                 >
-                  {/* Elegant Segmented Progress Indicator */}
+                  {/* Elegant Segmented Progress Indicator (3 Steps) */}
                   <div className="flex gap-2 shrink-0 justify-center mb-1">
-                    {[1, 2].map((step) => {
-                      const currentStepNum = formStep === 2 ? 2 : 1;
+                    {[1, 2, 3].map((step) => {
+                      const currentStepNum = typeof formStep === "number" ? formStep : 1;
                       const isActive = step <= currentStepNum;
                       return (
                         <button 
@@ -1626,20 +1636,18 @@ export default function Landing() {
                           onClick={() => {
                             setFormError(null);
                             setDirection(step > currentStepNum ? "forward" : "backward");
-                            setFormStep(step as 1 | 2);
+                            setFormStep(step as 1 | 2 | 3);
                             setTimeout(() => {
-                              if (step === 1) {
-                                nameInputRef.current?.focus();
-                              } else if (step === 2) {
-                                calleInputRef.current?.focus();
-                              }
+                              if (step === 1) nameInputRef.current?.focus();
+                              else if (step === 2) phoneInputRef.current?.focus();
+                              else if (step === 3) calleInputRef.current?.focus();
                             }, 40);
                           }}
-                          className="h-5 flex-1 relative group focus:outline-none pointer-events-auto"
+                          className="h-5 flex-1 relative group focus:outline-none pointer-events-auto cursor-pointer"
                           title={`Ir al Paso ${step}`}
                         >
                           <div className="h-1.5 w-full bg-slate-105 rounded-full overflow-hidden group-hover:bg-slate-200">
-                            <div className="h-full bg-[#0f55d8] rounded-full" style={{ width: isActive ? "100%" : "0%" }} />
+                            <div className="h-full bg-[#0f55d8] rounded-full transition-all duration-300" style={{ width: isActive ? "100%" : "0%" }} />
                           </div>
                           <span className="sr-only">Paso {step}</span>
                         </button>
@@ -1649,14 +1657,64 @@ export default function Landing() {
 
                   {/* Static Title/Subtitle block (does not slide) */}
                   <div className="pt-2 pb-1 shrink-0 select-none">
-                    <h2 className="text-[19px] font-semibold text-slate-800 tracking-tight leading-snug">
-                      {(formStep === 1 || formStep !== 2) && "Tu cesto SOMOS te espera"}
-                      {formStep === 2 && "Tu dirección de entrega"}
+                    <h2 className="text-[19px] font-semibold text-slate-800 tracking-tight leading-snug flex items-center gap-1.5">
+                      {formStep === 1 && (
+                        <span className="inline-flex items-center gap-1">
+                          <motion.span
+                            className="inline-block origin-bottom-right select-none"
+                            animate={{ rotate: [0, 18, -10, 18, -6, 0, 0] }}
+                            transition={{
+                              duration: 2.2,
+                              times: [0, 0.12, 0.24, 0.36, 0.48, 0.6, 1],
+                              ease: "easeInOut",
+                              repeat: Infinity
+                            }}
+                          >
+                            👋
+                          </motion.span>
+                          <motion.span
+                            className="inline-block origin-center select-none"
+                            animate={{ 
+                              scale: [1, 1.2, 0.95, 1.1, 1, 1],
+                              rotate: [0, 6, -4, 2, 0, 0]
+                            }}
+                            transition={{
+                              duration: 2.2,
+                              times: [0, 0.12, 0.24, 0.36, 0.48, 0.6, 1],
+                              ease: "easeInOut",
+                              repeat: Infinity
+                            }}
+                          >
+                            😁
+                          </motion.span>
+                          <span>¿Cuál es tu nombre?</span>
+                        </span>
+                      )}
+                      {formStep === 2 && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <motion.span
+                            className="inline-block"
+                            animate={{ rotate: [0, -12, 12, -12, 12, 0] }}
+                            transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }}
+                          >
+                            📱
+                          </motion.span>
+                          <span>¿Tu número de teléfono?</span>
+                        </span>
+                      )}
+                      {formStep === 3 && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <motion.span
+                            className="inline-block"
+                            animate={{ y: [0, -6, 0] }}
+                            transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.8, ease: "easeInOut" }}
+                          >
+                            📍
+                          </motion.span>
+                          <span>¿Dónde te lo entregamos?</span>
+                        </span>
+                      )}
                     </h2>
-                    <p className="text-gray-550 text-xs mt-0.5 font-semibold">
-                      {(formStep === 1 || formStep !== 2) && "Pedirla toma menos de un minuto."}
-                      {formStep === 2 && "Usaremos tu ubicación para llenarlo automáticamente"}
-                    </p>
                   </div>
 
                   {/* Slider viewport */}
@@ -1668,14 +1726,16 @@ export default function Landing() {
                     }}
                   >
                     <div 
-                      className="flex w-[200%] transform-gpu"
+                      className="flex w-[300%] transform-gpu"
                       style={{
-                        transform: formStep === 2 ? 'translateX(-50%)' : 'translateX(0%)',
+                        transform: 
+                          formStep === 2 ? 'translateX(-33.33333%)' : 
+                          formStep === 3 ? 'translateX(-66.66666%)' : 'translateX(0%)',
                         transition: 'transform 300ms cubic-bezier(0.32, 0.94, 0.6, 1)'
                       }}
                     >
-                      {/* Paso 1 */}
-                      <div ref={step1Ref} className="w-1/2 shrink-0 select-none px-0.5">
+                      {/* Paso 1: Nombre Completo */}
+                      <div ref={step1Ref} className="w-1/3 shrink-0 select-none px-0.5">
                         <form onSubmit={goToStep2} className="space-y-4 flex flex-col">
                           <div className="space-y-3">
                             <div className="space-y-1">
@@ -1692,7 +1752,7 @@ export default function Landing() {
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                       e.preventDefault();
-                                      phoneInputRef.current?.focus();
+                                      goToStep2(e);
                                     }
                                   }}
                                   className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
@@ -1700,7 +1760,22 @@ export default function Landing() {
                                 />
                               </div>
                             </div>
-       
+                          </div>
+
+                          <button
+                            type="submit"
+                            className="w-full py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                          >
+                            <span className="font-geist">Continuar</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </button>
+                        </form>
+                      </div>
+
+                      {/* Paso 2: Teléfono */}
+                      <div ref={step2Ref} className="w-1/3 shrink-0 select-none px-0.5">
+                        <form onSubmit={goToStep3} className="space-y-4 flex flex-col">
+                          <div className="space-y-3">
                             <div className="space-y-1">
                               <div className="flex justify-between items-center ml-0.5">
                                 <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Teléfono (WhatsApp)</label>
@@ -1727,7 +1802,7 @@ export default function Landing() {
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                       e.preventDefault();
-                                      goToStep2(e);
+                                      goToStep3(e);
                                     }
                                   }}
                                   className={`w-full pl-9 pr-4 py-2 rounded-xl outline-none font-semibold text-base focus:ring-2 ${
@@ -1740,21 +1815,29 @@ export default function Landing() {
                               </div>
                             </div>
                           </div>
- 
-                          <button
-                            type="submit"
-                            className="w-full py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
-                          >
-                            <span className="font-geist">Continuar</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </button>
+
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => { setFormError(null); setDirection("backward"); setFormStep(1); setTimeout(() => nameInputRef.current?.focus(), 150); }}
+                              className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm font-geist shrink-0 cursor-pointer hover:bg-slate-200"
+                            >
+                              Atrás
+                            </button>
+                            <button
+                              type="submit"
+                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                            >
+                              <span className="font-geist">Continuar</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
                         </form>
                       </div>
 
-                      {/* Paso 2 */}
-                      <div ref={step2Ref} className="w-1/2 shrink-0 select-none px-0.5">
-                        <form onSubmit={submitStep2AndVerify} className="space-y-4 flex flex-col">
-                          
+                      {/* Paso 3: Dirección (Calle, número y colonia unificado) */}
+                      <div ref={step3Ref} className="w-1/3 shrink-0 select-none px-0.5">
+                        <form onSubmit={submitStep3AndVerify} className="space-y-4 flex flex-col">
                           {gpsAutofillError && (
                             <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg">
                               {gpsAutofillError}
@@ -1762,13 +1845,13 @@ export default function Landing() {
                           )}
 
                           <div className="space-y-3">
-                            <div className="space-y-1">
-                              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Calle y número</label>
+                            <div className="space-y-1 relative">
+                              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Dirección</label>
                               <div className="relative">
                                 {gpsAutofillLoading ? (
                                   <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin" />
                                 ) : (
-                                  <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 )}
                                 <input
                                   ref={calleInputRef}
@@ -1777,37 +1860,11 @@ export default function Landing() {
                                   autoComplete="street-address"
                                   value={addressCalle}
                                   onClick={handleAddressInputClick}
-                                  onChange={(e) => { setAddressCalle(e.target.value); setFormError(null); setGpsCoords(null); }}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      coloniaInputRef.current?.focus();
-                                    }
-                                  }}
-                                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
-                                  placeholder=""
-                                />
-                              </div>
-                            </div>
- 
-                            <div className="space-y-1 relative">
-                              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Colonia</label>
-                              <div className="relative">
-                                {gpsAutofillLoading ? (
-                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin" />
-                                ) : (
-                                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                )}
-                                <input
-                                  ref={coloniaInputRef}
-                                  type="text"
-                                  required
-                                  autoComplete="address-level2"
-                                  value={addressColonia}
-                                  onClick={handleAddressInputClick}
                                   onFocus={() => setShowColoniaSuggestions(true)}
                                   onChange={(e) => { 
-                                    setAddressColonia(e.target.value); 
+                                    const val = e.target.value;
+                                    setAddressCalle(val);
+                                    setAddressColonia(val);
                                     setShowColoniaSuggestions(true);
                                     setFormError(null); 
                                     setGpsCoords(null); 
@@ -1816,56 +1873,64 @@ export default function Landing() {
                                     if (e.key === "Enter") {
                                       e.preventDefault();
                                       setShowColoniaSuggestions(false);
-                                      submitStep2AndVerify(e);
+                                      submitStep3AndVerify(e);
                                     }
                                   }}
                                   className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
-                                  placeholder=""
+                                  placeholder="Dirección..."
                                 />
                               </div>
 
                               {/* Menu desplegable de sugerencias autocompletables */}
-                              {showColoniaSuggestions && addressColonia.trim().length > 0 && (
-                                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-50 max-h-36 overflow-y-auto divide-y divide-slate-100">
-                                  {ALL_COATZA_COLONIAS.filter(c => 
-                                    c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                                     .includes(addressColonia.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
-                                  ).slice(0, 5).map((col) => (
-                                    <button
-                                      key={col}
-                                      type="button"
-                                      onClick={() => {
-                                        setAddressColonia(col);
-                                        setShowColoniaSuggestions(false);
-                                        setFormError(null);
-                                      }}
-                                      className="w-full text-left px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0f55d8] flex items-center justify-between cursor-pointer transition-colors"
-                                    >
-                                      <span>Colonia {col}</span>
-                                      <Check className="w-3.5 h-3.5 opacity-0 hover:opacity-100 text-[#0f55d8]" />
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
+                              {showColoniaSuggestions && addressCalle.trim().length > 0 && (() => {
+                                const matches = ALL_COATZA_COLONIAS.filter(c => 
+                                  c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                                   .includes(addressCalle.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
+                                ).slice(0, 5);
+
+                                if (matches.length === 0) return null;
+
+                                return (
+                                  <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-50 max-h-36 overflow-y-auto divide-y divide-slate-100">
+                                    {matches.map((col) => (
+                                      <button
+                                        key={col}
+                                        type="button"
+                                        onClick={() => {
+                                          const newAddr = addressCalle.toLowerCase().includes(col.toLowerCase()) ? addressCalle : `${addressCalle}, ${col}`;
+                                          setAddressCalle(newAddr);
+                                          setAddressColonia(col);
+                                          setShowColoniaSuggestions(false);
+                                          setFormError(null);
+                                        }}
+                                        className="w-full text-left px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0f55d8] flex items-center justify-between cursor-pointer transition-colors"
+                                      >
+                                        <span>Colonia {col}</span>
+                                        <Check className="w-3.5 h-3.5 opacity-0 hover:opacity-100 text-[#0f55d8]" />
+                                      </button>
+                                    ))}
+                                  </div>
+                                );
+                              })()}
                             </div>
                           </div>
- 
+
                           <div className="flex gap-2">
                             <button
                               type="button"
-                              onClick={() => { setFormError(null); setDirection("backward"); setFormStep(1); }}
-                              className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm font-geist shrink-0"
+                              onClick={() => { setFormError(null); setDirection("backward"); setFormStep(2); setTimeout(() => phoneInputRef.current?.focus(), 150); }}
+                              className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm font-geist shrink-0 cursor-pointer hover:bg-slate-200"
                             >
                               Atrás
                             </button>
                             <button
                               type="submit"
                               disabled={loading}
-                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] text-white font-extrabold text-[18px] font-geist disabled:opacity-50 flex items-center justify-center gap-1.5 border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                             >
-                              {loading ? <Loader2 className="w-4 h-4" /> : (
+                              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                                 <>
-                                  <span>Quiero mi cesto</span>
+                                  <span className="font-geist">Quiero mi cesto</span>
                                   <ArrowRight className="w-4 h-4" />
                                 </>
                               )}
