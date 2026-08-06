@@ -950,6 +950,16 @@ export default function Dashboard() {
           locationsData.push(data);
         }
       });
+      if (locationsData.length === 0) {
+        locationsData.push({
+          id: "loc_1",
+          name: "Ubicación Palmas",
+          address: "Paseo de las Palmas 209, Coatzacoalcos, Veracruz",
+          isActive: 1,
+          latitude: 18.1404,
+          longitude: -94.4632
+        });
+      }
 
       // 5. Map bags with assigned owners
       const rawBagsList: any[] = [];

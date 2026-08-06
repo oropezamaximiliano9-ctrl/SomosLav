@@ -478,8 +478,17 @@ export default function Landing() {
   
   useEffect(() => {
     console.log("[Firestore Call] Initiating fetch for 'locations' collection...");
+    const defaultLocation = {
+      id: "loc_1",
+      name: "Ubicación Palmas",
+      address: "Paseo de las Palmas 209, Coatzacoalcos, Veracruz",
+      isActive: 1,
+      latitude: 18.1404,
+      longitude: -94.4632
+    };
+
     getDocs(collection(db, "locations"))
-      .then(snap => {
+      .then(async (snap) => {
         console.log("[Firestore Call] Successfully fetched 'locations', document count:", snap.size);
         const list: any[] = [];
         snap.forEach(d => {
@@ -488,16 +497,25 @@ export default function Landing() {
             list.push(data);
           }
         });
-        if (list.length === 0) throw new Error("No active locations in DB");
+
+        if (list.length === 0) {
+          console.log("[Firestore Init] No active locations found in DB. Seeding default location...");
+          list.push(defaultLocation);
+          try {
+            await setDoc(doc(db, "locations", "loc_1"), defaultLocation);
+            console.log("[Firestore Init] Successfully seeded default location 'loc_1'.");
+          } catch (e) {
+            console.warn("[Firestore Init] Could not seed default location to DB:", e);
+          }
+        }
+
         setLocations(list);
         setSelectedLocationName(list[0].name);
       })
       .catch((err) => {
-        console.error("[Firestore Error] Failed to fetch locations:", err);
-        console.warn("[Firestore Fallback] Using offline mock locations.");
-        const mockLocations = [{ id: "loc_1", name: "Ubicación Palmas", address: "Paseo de las Palmas 209, Coatzacoalcos, Veracruz", isActive: 1, latitude: 18.1404, longitude: -94.4632 }];
-        setLocations(mockLocations);
-        setSelectedLocationName(mockLocations[0].name);
+        console.info("[Firestore] Using default location fallback:", err?.message || err);
+        setLocations([defaultLocation]);
+        setSelectedLocationName(defaultLocation.name);
       });
   }, []);
 
@@ -1643,10 +1661,10 @@ export default function Landing() {
                               else if (step === 3) calleInputRef.current?.focus();
                             }, 40);
                           }}
-                          className="h-5 flex-1 relative group focus:outline-none pointer-events-auto cursor-pointer"
+                          className="h-5 flex-1 relative group focus:outline-none pointer-events-auto cursor-pointer flex items-center"
                           title={`Ir al Paso ${step}`}
                         >
-                          <div className="h-1.5 w-full bg-slate-105 rounded-full overflow-hidden group-hover:bg-slate-200">
+                          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden group-hover:bg-slate-300 transition-colors">
                             <div className="h-full bg-[#0f55d8] rounded-full transition-all duration-300" style={{ width: isActive ? "100%" : "0%" }} />
                           </div>
                           <span className="sr-only">Paso {step}</span>
@@ -1764,7 +1782,7 @@ export default function Landing() {
 
                           <button
                             type="submit"
-                            className="w-full py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                            className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer"
                           >
                             <span className="font-geist">Continuar</span>
                             <ArrowRight className="w-4 h-4" />
@@ -1778,7 +1796,7 @@ export default function Landing() {
                           <div className="space-y-3">
                             <div className="space-y-1">
                               <div className="flex justify-between items-center ml-0.5">
-                                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Teléfono (WhatsApp)</label>
+                                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">WhatsApp</label>
                                 <span className={`text-[11px] font-semibold tracking-wider transition-colors font-geist ${
                                   phone.length === 10 
                                     ? "text-emerald-600 font-bold" 
@@ -1816,22 +1834,13 @@ export default function Landing() {
                             </div>
                           </div>
 
-                          <div className="flex gap-2">
-                            <button
-                              type="button"
-                              onClick={() => { setFormError(null); setDirection("backward"); setFormStep(1); setTimeout(() => nameInputRef.current?.focus(), 150); }}
-                              className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm font-geist shrink-0 cursor-pointer hover:bg-slate-200"
-                            >
-                              Atrás
-                            </button>
-                            <button
-                              type="submit"
-                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer"
-                            >
-                              <span className="font-geist">Continuar</span>
-                              <ArrowRight className="w-4 h-4" />
-                            </button>
-                          </div>
+                          <button
+                            type="submit"
+                            className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer"
+                          >
+                            <span className="font-geist">Continuar</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </button>
                         </form>
                       </div>
 
@@ -1877,7 +1886,7 @@ export default function Landing() {
                                     }
                                   }}
                                   className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
-                                  placeholder="Dirección..."
+                                  placeholder="Compartir ubicación"
                                 />
                               </div>
 
@@ -1915,27 +1924,18 @@ export default function Landing() {
                             </div>
                           </div>
 
-                          <div className="flex gap-2">
-                            <button
-                              type="button"
-                              onClick={() => { setFormError(null); setDirection("backward"); setFormStep(2); setTimeout(() => phoneInputRef.current?.focus(), 150); }}
-                              className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm font-geist shrink-0 cursor-pointer hover:bg-slate-200"
-                            >
-                              Atrás
-                            </button>
-                            <button
-                              type="submit"
-                              disabled={loading}
-                              className="flex-1 py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-sm flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                            >
-                              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
-                                <>
-                                  <span className="font-geist">Quiero mi cesto</span>
-                                  <ArrowRight className="w-4 h-4" />
-                                </>
-                              )}
-                            </button>
-                          </div>
+                          <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                          >
+                            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                              <>
+                                <span className="font-geist">Terminar</span>
+                                <ArrowRight className="w-4 h-4" />
+                              </>
+                            )}
+                          </button>
                         </form>
                       </div>
                     </div>
