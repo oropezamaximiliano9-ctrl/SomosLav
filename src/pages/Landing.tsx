@@ -1026,8 +1026,8 @@ export default function Landing() {
       </section>
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
-      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-3.5 sm:pt-4 font-sans">
+      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
@@ -1127,8 +1127,8 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="relative w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-3.5 sm:pt-4 font-sans">
+      <section className="relative w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
@@ -1294,8 +1294,8 @@ export default function Landing() {
       </section>
 
       {/* Nueva Sección: Servicios adicionales */}
-      <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-56px)] min-h-[calc(100svh-56px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 56px)' }}>
-        <div className="w-full max-w-sm mx-auto text-left flex flex-col flex-1 h-full pb-2">
+      <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+        <div className="w-full max-w-sm mx-auto text-left flex flex-col flex-1 h-full pb-2 pt-0">
           
           <div>
             <div className="w-full text-center pt-2 pb-[18px] select-none" id="soluciones-title-container">
@@ -1453,15 +1453,6 @@ export default function Landing() {
                       </div>
                     )}
                   </div>
-
-                  {/* Botón flotante '+' en la esquina inferior derecha */}
-                  <button 
-                    type="button"
-                    aria-label="Ver detalles"
-                    className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white text-neutral-900 flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all z-10 border border-neutral-100"
-                  >
-                    <Plus className="w-4 h-4 stroke-[2]" />
-                  </button>
                 </div>
               ))}
             </div>
