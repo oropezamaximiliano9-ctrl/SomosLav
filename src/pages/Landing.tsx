@@ -117,7 +117,7 @@ export default function Landing() {
   const [currentShirtSlide, setCurrentShirtSlide] = useState(0);
 
   const shirtProducts = [
-    { id: 1, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "/blue_shirt.webp" },
+    { id: 1, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "https://iili.io/CrT5og4.webp" },
     { id: 2, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "" },
     { id: 3, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "" },
   ];
