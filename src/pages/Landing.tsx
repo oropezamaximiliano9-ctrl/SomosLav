@@ -46,11 +46,15 @@ const TypewriterTitle = () => {
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="none"
           >
-            <path
+            <motion.path
               d="M 1 6 C 30 4.5, 70 7, 99 5.5"
               stroke="currentColor"
               strokeWidth="4"
               strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: false, amount: 0.5 }}
+              transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
             />
           </svg>
         </span>
@@ -117,9 +121,9 @@ export default function Landing() {
   const [currentShirtSlide, setCurrentShirtSlide] = useState(0);
 
   const shirtProducts = [
-    { id: 1, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "https://iili.io/CrT5og4.webp" },
-    { id: 2, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "" },
-    { id: 3, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "" },
+    { id: 1, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "https://iili.io/CrT5og4.webp", imageClass: "h-full" },
+    { id: 2, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "https://litter.catbox.moe/lfx2b6.webp", imageClass: "h-[80%]" },
+    { id: 3, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "", imageClass: "h-full" },
   ];
 
   const handleShirtScroll = () => {
@@ -1043,11 +1047,15 @@ export default function Landing() {
                   xmlns="http://www.w3.org/2000/svg"
                   preserveAspectRatio="none"
                 >
-                  <path
+                  <motion.path
                     d="M 1 6 C 30 4.5, 70 7, 99 5.5"
                     stroke="currentColor"
                     strokeWidth="4"
                     strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    whileInView={{ pathLength: 1 }}
+                    viewport={{ once: false, amount: 0.5 }}
+                    transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
                   />
                 </svg>
               </span>{" "}
@@ -1070,11 +1078,18 @@ export default function Landing() {
 
               {/* Imagen en el MEDIO */}
               <div className="w-full h-[270px] flex flex-col relative">
-                <FloatingBadge 
-                  text="Es gratis" 
-                  position="top-right" 
-                  className="absolute -top-[5px] -right-[10px] sm:-right-[4px] z-20 rotate-[6deg] pointer-events-none"
-                />
+                <div 
+                  className="absolute -top-[2px] -right-[10px] sm:-right-[4px] z-20 w-[100px] sm:w-[114px] pointer-events-none rotate-[2deg]"
+                >
+                  <img 
+                    src="https://iili.io/CU67SLX.webp" 
+                    alt="Es gratis" 
+                    className="w-full h-auto object-contain drop-shadow-sm scale-x-[0.98] scale-y-[0.82]"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist rotate-[2deg] pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                    <span>Es gratis</span>
+                  </div>
+                </div>
                 
                 {/* Línea curva punteada que conecta la etiqueta "Es gratis" con el cesto de la imagen */}
                 <svg 
@@ -1293,48 +1308,68 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Nueva Sección: Servicios adicionales */}
+      {/* Nueva Sección: Agrega a tu servicio */}
       <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
         <div className="w-full max-w-sm mx-auto text-left flex flex-col flex-1 h-full pb-2 pt-0">
           
           <div>
             <div className="w-full text-center pt-2 pb-[18px] select-none" id="soluciones-title-container">
               <h2 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-                Adicionales
+                Agrega a tu servicio
               </h2>
             </div>
 
             <div 
               role="region" 
               aria-roledescription="carousel"
-              className="px-0 sm:px-0 mt-3 w-full"
+              className="px-0 sm:px-0 mt-3 w-full relative group"
             >
+              {/* Botón Flecha Izquierda */}
+              <button
+                type="button"
+                onClick={() => scrollToSlide((currentSlide - 1 + 3) % 3)}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 text-[#333333] hover:text-[#0f55d8] active:scale-90 transition-all"
+                aria-label="Tarjeta anterior"
+              >
+                <ChevronLeft className="w-5 h-5 stroke-[2.25]" />
+              </button>
+
+              {/* Botón Flecha Derecha */}
+              <button
+                type="button"
+                onClick={() => scrollToSlide((currentSlide + 1) % 3)}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 text-[#333333] hover:text-[#0f55d8] active:scale-90 transition-all"
+                aria-label="Tarjeta siguiente"
+              >
+                <ChevronRight className="w-5 h-5 stroke-[2.25]" />
+              </button>
+
               <div 
                 ref={carouselRef}
                 onScroll={handleScroll}
-                className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-0 pb-2"
+                className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-0 pb-1"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
               >
                 {/* Slide 1 - Urgente */}
                 <div role="group" aria-roledescription="slide" aria-label="1 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-3.5 p-2.5 sm:p-3 pb-1">
+                  <div className="flex items-center gap-3 pt-1.5 pb-0.5 pl-7 pr-2.5 sm:pl-8 sm:pr-3">
                     <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1.5 rounded-full">
+                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1 rounded-full">
                         <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
                           +$20
                         </span>
                       </div>
                     </div>
-                    <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-snug mb-0.5">
+                    <div className="flex-1 space-y-0">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-tight mb-0.5">
                         Servicio urgente
                       </h4>
-                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-snug tracking-tight">
+                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-tight tracking-tight">
                         Tu ropa lista el mismo día.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-auto px-2.5 sm:px-3 pb-2 pt-0 w-full flex items-center justify-end gap-1.5">
+                  <div className="mt-auto px-2.5 sm:px-3 pb-1 pt-0 w-full flex items-center justify-end gap-1.5">
                     <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
                     <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Pídelo en recepción
@@ -1344,24 +1379,24 @@ export default function Landing() {
 
                 {/* Slide 2 - Suavizante premium */}
                 <div role="group" aria-roledescription="slide" aria-label="2 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-3.5 p-2.5 sm:p-3 pb-1">
+                  <div className="flex items-center gap-3 pt-1.5 pb-0.5 pl-7 pr-2.5 sm:pl-8 sm:pr-3">
                     <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1.5 rounded-full">
+                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1 rounded-full">
                         <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
                           +$10
                         </span>
                       </div>
                     </div>
-                    <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-snug mb-0.5">
+                    <div className="flex-1 space-y-0">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-tight mb-0.5">
                         Suavizante premium
                       </h4>
-                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-snug tracking-tight">
+                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-tight tracking-tight">
                         Aroma de larga duración.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-auto px-2.5 sm:px-3 pb-2 pt-0 w-full flex items-center justify-end gap-1.5">
+                  <div className="mt-auto px-2.5 sm:px-3 pb-1 pt-0 w-full flex items-center justify-end gap-1.5">
                     <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
                     <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Pídelo en recepción
@@ -1371,24 +1406,24 @@ export default function Landing() {
 
                 {/* Slide 3 - Ropa de cama */}
                 <div role="group" aria-roledescription="slide" aria-label="3 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-3.5 p-2.5 sm:p-3 pb-1">
-                    <div className="shrink-0 -mt-2">
-                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1.5 rounded-full">
+                  <div className="flex items-center gap-3 pt-1.5 pb-0.5 pl-7 pr-2.5 sm:pl-8 sm:pr-3">
+                    <div className="shrink-0">
+                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1 rounded-full">
                         <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
                           +$$$
                         </span>
                       </div>
                     </div>
-                    <div className="flex-1 space-y-0.5">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-snug mb-0.5">
+                    <div className="flex-1 space-y-0">
+                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-tight mb-0.5">
                         Ropa de cama
                       </h4>
-                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-snug tracking-tight">
+                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-tight tracking-tight">
                         Lavado de edredón, cobertor o sábana.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-auto px-2.5 sm:px-3 pb-2 pt-0 w-full flex items-center justify-end gap-1.5">
+                  <div className="mt-auto px-2.5 sm:px-3 pb-1 pt-0 w-full flex items-center justify-end gap-1.5">
                     <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
                     <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
                       Entrégalo por separado
@@ -1396,65 +1431,67 @@ export default function Landing() {
                   </div>
                 </div>
               </div>
-
-              {/* Carousel Controls (Puntos indicadores sin flechas alineados a la derecha) */}
-              <div className="flex items-center justify-end gap-1.5 mt-1 pb-0.5 pr-2">
-                {[0, 1, 2].map((i) => (
-                  <button
-                    key={i}
-                    onClick={() => scrollToSlide(i)}
-                    className={`w-1.5 h-1.5 rounded-full transition-colors ${currentSlide === i ? 'bg-[#0f55d8]' : 'bg-gray-300'}`}
-                    aria-label={`Go to slide ${i + 1}`}
-                  />
-                ))}
-              </div>
             </div>
           </div>
 
-          {/* Tarjeta inferior con carrusel de playeras estilo f4t3.co */}
-          <div className="w-full flex-1 my-3 bg-white rounded-lg border border-gray-100/50 shadow-none flex flex-col justify-between overflow-hidden relative p-2">
-            {/* Contenedor con scroll snap y side peek */}
-            <div 
-              ref={shirtCarouselRef}
-              onScroll={handleShirtScroll}
-              className="w-full flex-1 flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-1 items-stretch py-0.5 px-0.5"
-            >
-              {shirtProducts.map((product, idx) => (
-                <div 
-                  key={product.id}
-                  className="w-[75%] sm:w-[76%] shrink-0 snap-start snap-always h-full min-h-[170px] relative rounded-lg bg-[#f3f3f4] p-3 flex flex-col justify-between overflow-hidden border border-neutral-200/40 select-none group"
-                  style={{ scrollSnapStop: 'always' }}
-                >
-                  {/* Badges superiores izquierda */}
-                  <div className="flex flex-col gap-1 items-start z-10 pointer-events-none">
-                    <span className="px-1.5 py-0.5 border border-neutral-800 text-neutral-800 text-[9px] font-mono tracking-widest uppercase bg-transparent font-medium leading-none">
-                      {product.tag1}
-                    </span>
-                    <span className="px-1.5 py-0.5 border border-[#a81c1c] text-[#a81c1c] text-[9px] font-mono tracking-widest uppercase bg-transparent font-medium leading-none">
-                      {product.tag2}
-                    </span>
-                  </div>
+          {/* Texto introductorio y carrusel de playeras estilo f4t3.co */}
+          <div className="w-full mt-6 sm:mt-8 mb-2 flex flex-col gap-2">
+            <div className="px-1 text-center">
+              <h3 className="font-geist font-semibold text-[18px] text-[#333333] tracking-tight">
+                Además de lavar, estrena
+              </h3>
+            </div>
 
-                  {/* Área central para la imagen */}
-                  <div className="flex-1 flex items-center justify-center my-2 relative min-h-[100px]">
-                    {product.image ? (
-                      <img 
-                        src={product.image} 
-                        alt={`Playera ${idx + 1}`} 
-                        className="max-h-full max-w-full object-contain pointer-events-none drop-shadow-sm"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center gap-1.5 text-neutral-400 font-geist text-xs py-3 px-2 text-center border-2 border-dashed border-neutral-300/60 rounded-md w-full h-full bg-white/40">
-                        <Shirt className="w-6 h-6 stroke-[1.25] text-neutral-400 opacity-60" />
-                        <span className="text-[11px] font-medium text-neutral-400 tracking-wide">
-                          [ Imagen de Playera {idx + 1} ]
-                        </span>
-                      </div>
-                    )}
+            <div className="w-full bg-white rounded-none border border-gray-100/50 shadow-none flex flex-col overflow-hidden relative p-3 sm:p-4 gap-3">
+              <div className="px-1 text-left">
+                <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug tracking-tight">
+                  Pruébate gratis cualquier prenda
+                </p>
+              </div>
+
+              {/* Contenedor con scroll snap y side peek */}
+              <div 
+                ref={shirtCarouselRef}
+                onScroll={handleShirtScroll}
+                className="w-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-2 py-0.5 px-0.5"
+              >
+                {shirtProducts.map((product, idx) => (
+                  <div 
+                    key={product.id}
+                    className="w-[75%] sm:w-[76%] shrink-0 snap-start snap-always relative rounded-none bg-[#f3f3f4] p-2.5 flex flex-col overflow-hidden border border-neutral-200/40 select-none group"
+                    style={{ scrollSnapStop: 'always' }}
+                  >
+                    {/* Área central para la imagen */}
+                    <div className="flex items-center justify-center relative h-[235px] sm:h-[265px]">
+                      {product.image ? (
+                        <img 
+                          src={product.image} 
+                          alt={`Playera ${idx + 1}`} 
+                          className={`${product.imageClass || 'h-full'} w-auto object-contain pointer-events-none drop-shadow-sm`}
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = '/playera-negra.webp';
+                          }}
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center gap-1.5 text-neutral-400 font-geist text-xs py-3 px-2 text-center border-2 border-dashed border-neutral-300/60 rounded-none w-full h-full bg-white/40">
+                          <Shirt className="w-6 h-6 stroke-[1.25] text-neutral-400 opacity-60" />
+                          <span className="text-[11px] font-medium text-neutral-400 tracking-wide">
+                            [ Imagen de Playera {idx + 1} ]
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              <div className="px-1 text-left">
+                <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug tracking-tight">
+                  Si te gusta te la quedas<br />
+                  y lo incluimos en el cobro de tu lavado
+                </p>
+              </div>
             </div>
           </div>
 
@@ -1784,8 +1821,9 @@ export default function Landing() {
                     }}
                   >
                     <div 
-                      className="flex w-[300%] transform-gpu"
+                      className="flex transform-gpu"
                       style={{
+                        width: '300%',
                         transform: 
                           formStep === 2 ? 'translateX(-33.33333%)' : 
                           formStep === 3 ? 'translateX(-66.66666%)' : 'translateX(0%)',
@@ -1793,7 +1831,7 @@ export default function Landing() {
                       }}
                     >
                       {/* Paso 1: Nombre Completo */}
-                      <div ref={step1Ref} className="w-1/3 shrink-0 select-none px-0.5">
+                      <div ref={step1Ref} className="shrink-0 select-none px-0.5" style={{ width: '33.33333%', minWidth: '33.33333%' }}>
                         <form onSubmit={goToStep2} className="space-y-4 flex flex-col">
                           <div className="space-y-3">
                             <div className="space-y-1">
@@ -1831,7 +1869,7 @@ export default function Landing() {
                       </div>
 
                       {/* Paso 2: Teléfono */}
-                      <div ref={step2Ref} className="w-1/3 shrink-0 select-none px-0.5">
+                      <div ref={step2Ref} className="shrink-0 select-none px-0.5" style={{ width: '33.33333%', minWidth: '33.33333%' }}>
                         <form onSubmit={goToStep3} className="space-y-4 flex flex-col">
                           <div className="space-y-3">
                             <div className="space-y-1">
@@ -1885,7 +1923,7 @@ export default function Landing() {
                       </div>
 
                       {/* Paso 3: Dirección (Calle, número y colonia unificado) */}
-                      <div ref={step3Ref} className="w-1/3 shrink-0 select-none px-0.5">
+                      <div ref={step3Ref} className="shrink-0 select-none px-0.5" style={{ width: '33.33333%', minWidth: '33.33333%' }}>
                         <form onSubmit={submitStep3AndVerify} className="space-y-4 flex flex-col">
                           {gpsAutofillError && (
                             <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg">
