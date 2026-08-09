@@ -4,6 +4,8 @@ import { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "r
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
 import canvasLaundryBag from "../assets/images/IMG_8321.jpg";
+const productCardBg = "https://iili.io/C4NhYMb.webp";
+import sprayTagBg from "../assets/images/spray_tag_bg.png";
 import { db } from "../firebase";
 import { collection, doc, getDocs, updateDoc, setDoc, query, where } from "firebase/firestore";
 import { getColoniaDistance, asyncGetColoniaDistance, ORIGEN_LAVANDERIA } from "../utils/distance";
@@ -942,7 +944,7 @@ export default function Landing() {
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
             <div 
-              className="absolute top-[16px] -left-[4px] sm:-left-[2px] z-20 w-[100px] sm:w-[114px] pointer-events-none -rotate-[10deg]"
+              className="absolute top-[16px] left-[6px] sm:left-[10px] z-20 w-[100px] sm:w-[114px] pointer-events-none -rotate-[10deg]"
             >
               <img 
                 src="https://iili.io/CU67SLX.webp" 
@@ -1079,7 +1081,7 @@ export default function Landing() {
               {/* Imagen en el MEDIO */}
               <div className="w-full h-[270px] flex flex-col relative">
                 <div 
-                  className="absolute -top-[2px] -right-[10px] sm:-right-[4px] z-20 w-[100px] sm:w-[114px] pointer-events-none rotate-[2deg]"
+                  className="absolute -top-[10px] right-[4px] sm:right-[12px] z-20 w-[100px] sm:w-[114px] pointer-events-none rotate-[2deg]"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
@@ -1175,11 +1177,18 @@ export default function Landing() {
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
               <div className="w-full h-[270px] flex flex-col pt-2 relative">
-                <FloatingBadge 
-                  text="Cerca de ti" 
-                  position="top-right" 
-                  className="absolute -top-[12px] -right-[10px] sm:-right-[4px] z-20 rotate-[6deg] pointer-events-none"
-                />
+                <div 
+                  className="absolute -top-[10px] right-[3px] sm:right-[10px] z-20 w-[105px] sm:w-[120px] pointer-events-none rotate-0"
+                >
+                  <img 
+                    src="https://iili.io/CU67SLX.webp" 
+                    alt="Cerca de ti" 
+                    className="w-full h-auto object-contain drop-shadow-sm scale-x-[1.02] scale-y-[0.82] -rotate-[3deg]"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist rotate-0 pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                    <span>Cerca de ti</span>
+                  </div>
+                </div>
                 <div className="relative w-full flex-1 select-none overflow-visible bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
@@ -1308,14 +1317,14 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Nueva Sección: Agrega a tu servicio */}
+      {/* Nueva Sección: Adicionales */}
       <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
         <div className="w-full max-w-sm mx-auto text-left flex flex-col flex-1 h-full pb-2 pt-0">
           
           <div>
             <div className="w-full text-center pt-2 pb-[18px] select-none" id="soluciones-title-container">
               <h2 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-                Agrega a tu servicio
+                Adicionales
               </h2>
             </div>
 
@@ -1433,18 +1442,35 @@ export default function Landing() {
               </div>
             </div>
           </div>
-
           {/* Texto introductorio y carrusel de playeras estilo f4t3.co */}
-          <div className="w-full mt-6 sm:mt-8 mb-2 flex flex-col gap-2">
-            <div className="px-1 text-center">
-              <h3 className="font-geist font-semibold text-[18px] text-[#333333] tracking-tight">
-                Además de lavar, estrena
-              </h3>
+          <div className="w-full mt-3 sm:mt-5 mb-2 flex flex-col gap-1.5">
+            <div className="px-1 text-center flex justify-center items-center py-1.5">
+              <span className="relative inline-block px-3 py-1">
+                {/* Marca texto (highlighter background) */}
+                <span 
+                  className="absolute -inset-x-1 bottom-0.5 h-[72%] bg-sky-200/90 rounded-xs -rotate-0.5 z-0 pointer-events-none" 
+                  aria-hidden="true" 
+                />
+                <h3 className="relative z-10 font-geist text-zinc-900 text-[20px] sm:text-[24px] font-medium leading-none tracking-tight whitespace-nowrap text-center">
+                  Lava y estrena
+                </h3>
+              </span>
             </div>
 
-            <div className="w-full bg-white rounded-none border border-gray-100/50 shadow-none flex flex-col overflow-hidden relative p-3 sm:p-4 gap-3">
-              <div className="px-1 text-left">
-                <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug tracking-tight">
+            <div className="w-full rounded-lg border-0 shadow-none flex flex-col overflow-hidden relative p-4 sm:p-5 gap-3.5 bg-white">
+              {/* Background image for the general product card */}
+              <img 
+                src={productCardBg} 
+                alt="" 
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-95"
+              />
+              {/* Overlay suave solo en la esquina superior izquierda para igualar el tono claro de la esquina inferior izquierda */}
+              <div 
+                className="absolute top-0 left-0 w-[55%] h-[55%] pointer-events-none z-0 rounded-tl-lg bg-[radial-gradient(ellipse_at_top_left,rgba(223,220,248,0.92)_0%,rgba(223,220,248,0.5)_50%,transparent_80%)]" 
+              />
+
+              <div className="px-1 text-left relative z-10">
+                <p className="font-geist text-[#2b2b2b] text-[17px] font-semibold leading-snug tracking-tight">
                   Pruébate gratis cualquier prenda
                 </p>
               </div>
@@ -1453,7 +1479,7 @@ export default function Landing() {
               <div 
                 ref={shirtCarouselRef}
                 onScroll={handleShirtScroll}
-                className="w-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-2 py-0.5 px-0.5"
+                className="w-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-2 py-0.5 px-0.5 relative z-10"
               >
                 {shirtProducts.map((product, idx) => (
                   <div 
@@ -1486,8 +1512,8 @@ export default function Landing() {
                 ))}
               </div>
 
-              <div className="px-1 text-left">
-                <p className="font-geist text-[#333333] text-[17px] font-medium leading-snug tracking-tight">
+              <div className="px-1 text-left relative z-10">
+                <p className="font-geist text-[#2b2b2b] text-[17px] font-semibold leading-snug tracking-tight">
                   Si te gusta te la quedas<br />
                   y lo incluimos en el cobro de tu lavado
                 </p>
