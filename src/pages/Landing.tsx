@@ -7,7 +7,7 @@ import canvasLaundryBag from "../assets/images/IMG_8321.jpg";
 import suavizantePremiumBanner from "../assets/images/suavizante_premium_banner_1786327159198.jpg";
 import blackShirtProduct from "../assets/images/black_tshirt_1786147466172.jpg";
 import blueShirtProduct from "../assets/images/blue_shirt_product_1786050242741.jpg";
-const servicioUrgenteBanner = "https://i.ibb.co/5hCMp2QP/IMG-9176.webp";
+const servicioUrgenteBanner = "https://i.ibb.co/Zpk417q3/IMG-9181.webp";
 const suavizanteBannerUrl = "https://i.ibb.co/rRxjM5xb/IMG-9141.png";
 const ropaCamaBannerUrl = "https://i.ibb.co/V082zskj/IMG-9170.webp";
 const productCardBg = "https://iili.io/C4NhYMb.webp";
