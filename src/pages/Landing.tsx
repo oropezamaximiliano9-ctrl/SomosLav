@@ -4,7 +4,14 @@ import { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "r
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
 import canvasLaundryBag from "../assets/images/IMG_8321.jpg";
+import suavizantePremiumBanner from "../assets/images/suavizante_premium_banner_1786327159198.jpg";
+import blackShirtProduct from "../assets/images/black_tshirt_1786147466172.jpg";
+import blueShirtProduct from "../assets/images/blue_shirt_product_1786050242741.jpg";
+const servicioUrgenteBanner = "https://i.ibb.co/5hCMp2QP/IMG-9176.webp";
+const suavizanteBannerUrl = "https://i.ibb.co/rRxjM5xb/IMG-9141.png";
+const ropaCamaBannerUrl = "https://i.ibb.co/V082zskj/IMG-9170.webp";
 const productCardBg = "https://iili.io/C4NhYMb.webp";
+const shirtCardBg = "https://i.ibb.co/LhzkrHzZ/IMG-9166.png";
 import sprayTagBg from "../assets/images/spray_tag_bg.png";
 import { db } from "../firebase";
 import { collection, doc, getDocs, updateDoc, setDoc, query, where } from "firebase/firestore";
@@ -118,13 +125,14 @@ export default function Landing() {
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isCarouselInView, setIsCarouselInView] = useState(false);
 
   const shirtCarouselRef = useRef<HTMLDivElement>(null);
   const [currentShirtSlide, setCurrentShirtSlide] = useState(0);
 
   const shirtProducts = [
     { id: 1, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "https://iili.io/CrT5og4.webp", imageClass: "h-full" },
-    { id: 2, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "https://litter.catbox.moe/lfx2b6.webp", imageClass: "h-[80%]" },
+    { id: 2, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: blackShirtProduct || "/playera-negra.webp", imageClass: "h-full" },
     { id: 3, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "", imageClass: "h-full" },
   ];
 
@@ -164,6 +172,23 @@ export default function Landing() {
   };
 
   useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsCarouselInView(entry.isIntersecting);
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isCarouselInView) return;
+
     const timer = setInterval(() => {
       if (carouselRef.current) {
         const nextSlide = (currentSlide + 1) % 3;
@@ -172,7 +197,7 @@ export default function Landing() {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [currentSlide]);
+  }, [currentSlide, isCarouselInView]);
 
   useEffect(() => {
     localStorage.setItem("user_name", name);
@@ -1322,8 +1347,8 @@ export default function Landing() {
         <div className="w-full max-w-sm mx-auto text-left flex flex-col flex-1 h-full pb-2 pt-0">
           
           <div>
-            <div className="w-full text-center pt-2 pb-[18px] select-none" id="soluciones-title-container">
-              <h2 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
+            <div className="w-full text-center pt-2 pb-1 select-none" id="soluciones-title-container">
+              <h2 className="text-center text-[20px] sm:text-[24px] text-[#333333] font-medium font-geist leading-none tracking-tight">
                 Adicionales
               </h2>
             </div>
@@ -1331,7 +1356,7 @@ export default function Landing() {
             <div 
               role="region" 
               aria-roledescription="carousel"
-              className="px-0 sm:px-0 mt-3 w-full relative group"
+              className="px-0 sm:px-0 mt-1 w-full relative group"
             >
               {/* Botón Flecha Izquierda */}
               <button
@@ -1360,84 +1385,33 @@ export default function Landing() {
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
               >
                 {/* Slide 1 - Urgente */}
-                <div role="group" aria-roledescription="slide" aria-label="1 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-3 pt-1.5 pb-0.5 pl-7 pr-2.5 sm:pl-8 sm:pr-3">
-                    <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1 rounded-full">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
-                          +$20
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex-1 space-y-0">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-tight mb-0.5">
-                        Servicio urgente
-                      </h4>
-                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-tight tracking-tight">
-                        Tu ropa lista el mismo día.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-auto px-2.5 sm:px-3 pb-1 pt-0 w-full flex items-center justify-end gap-1.5">
-                    <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
-                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
-                      Pídelo en recepción
-                    </span>
-                  </div>
+                <div role="group" aria-roledescription="slide" aria-label="1 of 3" className="w-full shrink-0 snap-center bg-[#ded5c9] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
+                  <img 
+                    src={servicioUrgenteBanner} 
+                    alt="Servicio urgente: Tu ropa lista hoy +$20" 
+                    className="w-full h-full object-cover object-center rounded-lg block" 
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
 
                 {/* Slide 2 - Suavizante premium */}
-                <div role="group" aria-roledescription="slide" aria-label="2 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-3 pt-1.5 pb-0.5 pl-7 pr-2.5 sm:pl-8 sm:pr-3">
-                    <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1 rounded-full">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
-                          +$10
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex-1 space-y-0">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-tight mb-0.5">
-                        Suavizante premium
-                      </h4>
-                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-tight tracking-tight">
-                        Aroma de larga duración.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-auto px-2.5 sm:px-3 pb-1 pt-0 w-full flex items-center justify-end gap-1.5">
-                    <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
-                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
-                      Pídelo en recepción
-                    </span>
-                  </div>
+                <div role="group" aria-roledescription="slide" aria-label="2 of 3" className="w-full shrink-0 snap-center bg-[#f4ece3] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
+                  <img 
+                    src={suavizanteBannerUrl} 
+                    alt="Suavizante premium con aroma especial $10" 
+                    className="w-full h-full object-cover object-center rounded-lg block" 
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
 
                 {/* Slide 3 - Ropa de cama */}
-                <div role="group" aria-roledescription="slide" aria-label="3 of 3" className="w-full shrink-0 snap-center bg-white rounded-lg p-0 text-left relative overflow-hidden flex flex-col justify-between border border-gray-100/50 shadow-none">
-                  <div className="flex items-center gap-3 pt-1.5 pb-0.5 pl-7 pr-2.5 sm:pl-8 sm:pr-3">
-                    <div className="shrink-0">
-                      <div className="bg-[#0f55d8]/10 w-[58px] flex justify-center py-1 rounded-full">
-                        <span className="font-geist font-bold text-[#0f55d8] text-[16px] leading-none tracking-tight">
-                          +$$$
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex-1 space-y-0">
-                      <h4 className="font-geist font-semibold text-[#333333] text-[16px] leading-tight mb-0.5">
-                        Ropa de cama
-                      </h4>
-                      <p className="font-geist text-[#333333] text-[16px] font-medium leading-tight tracking-tight">
-                        Lavado de edredón, cobertor o sábana.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-auto px-2.5 sm:px-3 pb-1 pt-0 w-full flex items-center justify-end gap-1.5">
-                    <Info className="w-[13px] h-[13px] text-[#0f55d8] shrink-0" />
-                    <span className="font-geist text-[#4b6a9b] text-[13px] font-medium leading-snug text-right">
-                      Entrégalo por separado
-                    </span>
-                  </div>
+                <div role="group" aria-roledescription="slide" aria-label="3 of 3" className="w-full shrink-0 snap-center bg-[#e2edff] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
+                  <img 
+                    src={ropaCamaBannerUrl} 
+                    alt="Ropa de cama: Lavado de edredón, cobertor o sábana" 
+                    className="w-full h-full object-cover object-center rounded-lg block" 
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
               </div>
             </div>
@@ -1451,7 +1425,7 @@ export default function Landing() {
                   className="absolute -inset-x-1 bottom-0.5 h-[72%] bg-sky-200/90 rounded-xs -rotate-0.5 z-0 pointer-events-none" 
                   aria-hidden="true" 
                 />
-                <h3 className="relative z-10 font-geist text-zinc-900 text-[20px] sm:text-[24px] font-medium leading-none tracking-tight whitespace-nowrap text-center">
+                <h3 className="relative z-10 font-geist text-zinc-900 text-[22px] sm:text-[26px] font-medium leading-none tracking-tight whitespace-nowrap text-center">
                   Lava y estrena
                 </h3>
               </span>
@@ -1470,7 +1444,7 @@ export default function Landing() {
               />
 
               <div className="px-1 text-left relative z-10">
-                <p className="font-geist text-[#2b2b2b] text-[17px] font-semibold leading-snug tracking-tight">
+                <p className="font-geist text-[#2b2b2b] text-[19px] font-medium leading-snug tracking-tight">
                   Pruébate gratis cualquier prenda
                 </p>
               </div>
@@ -1496,7 +1470,7 @@ export default function Landing() {
                           className={`${product.imageClass || 'h-full'} w-auto object-contain pointer-events-none drop-shadow-sm`}
                           referrerPolicy="no-referrer"
                           onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = '/playera-negra.webp';
+                            (e.currentTarget as HTMLImageElement).src = blackShirtProduct || '/playera-negra.webp';
                           }}
                         />
                       ) : (
@@ -1513,9 +1487,9 @@ export default function Landing() {
               </div>
 
               <div className="px-1 text-left relative z-10">
-                <p className="font-geist text-[#2b2b2b] text-[17px] font-semibold leading-snug tracking-tight">
-                  Si te gusta te la quedas<br />
-                  y lo incluimos en el cobro de tu lavado
+                <p className="font-geist text-[#2b2b2b] text-[19px] font-medium leading-snug tracking-tight">
+                  Si te gusta te la quedas y<br />
+                  lo incluimos en el cobro de tu lavado
                 </p>
               </div>
             </div>
