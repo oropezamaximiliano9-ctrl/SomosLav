@@ -191,7 +191,7 @@ export default function Landing() {
 
     const timer = setInterval(() => {
       if (carouselRef.current) {
-        const nextSlide = (currentSlide + 1) % 3;
+        const nextSlide = (currentSlide + 1) % 2;
         scrollToSlide(nextSlide);
       }
     }, 5000);
@@ -1361,7 +1361,7 @@ export default function Landing() {
               {/* Botón Flecha Izquierda */}
               <button
                 type="button"
-                onClick={() => scrollToSlide((currentSlide - 1 + 3) % 3)}
+                onClick={() => scrollToSlide((currentSlide - 1 + 2) % 2)}
                 className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 text-[#333333] hover:text-[#0f55d8] active:scale-90 transition-all"
                 aria-label="Tarjeta anterior"
               >
@@ -1371,7 +1371,7 @@ export default function Landing() {
               {/* Botón Flecha Derecha */}
               <button
                 type="button"
-                onClick={() => scrollToSlide((currentSlide + 1) % 3)}
+                onClick={() => scrollToSlide((currentSlide + 1) % 2)}
                 className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 text-[#333333] hover:text-[#0f55d8] active:scale-90 transition-all"
                 aria-label="Tarjeta siguiente"
               >
@@ -1384,18 +1384,8 @@ export default function Landing() {
                 className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-0 pb-1"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
               >
-                {/* Slide 1 - Urgente */}
-                <div role="group" aria-roledescription="slide" aria-label="1 of 3" className="w-full shrink-0 snap-center bg-[#ded5c9] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
-                  <img 
-                    src={servicioUrgenteBanner} 
-                    alt="Servicio urgente: Tu ropa lista hoy +$20" 
-                    className="w-full h-full object-cover object-center rounded-lg block" 
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-
-                {/* Slide 2 - Suavizante premium */}
-                <div role="group" aria-roledescription="slide" aria-label="2 of 3" className="w-full shrink-0 snap-center bg-[#f4ece3] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
+                {/* Slide 1 - Suavizante premium */}
+                <div role="group" aria-roledescription="slide" aria-label="1 of 2" className="w-full shrink-0 snap-center bg-[#f4ece3] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
                   <img 
                     src={suavizanteBannerUrl} 
                     alt="Suavizante premium con aroma especial $10" 
@@ -1404,8 +1394,8 @@ export default function Landing() {
                   />
                 </div>
 
-                {/* Slide 3 - Ropa de cama */}
-                <div role="group" aria-roledescription="slide" aria-label="3 of 3" className="w-full shrink-0 snap-center bg-[#e2edff] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
+                {/* Slide 2 - Ropa de cama */}
+                <div role="group" aria-roledescription="slide" aria-label="2 of 2" className="w-full shrink-0 snap-center bg-[#e2edff] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
                   <img 
                     src={ropaCamaBannerUrl} 
                     alt="Ropa de cama: Lavado de edredón, cobertor o sábana" 
