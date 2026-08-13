@@ -77,32 +77,59 @@ function MainLayout() {
       return;
     }
 
-    const checkGuindaSection = () => {
+    let isSnapping = false;
+    let lastScrollTop = scrollContainerRef.current ? scrollContainerRef.current.scrollTop : 0;
+    let wasInGuindaSection = false;
+
+    const checkGuindaSection = (isScrollEvent = false) => {
       const guindaSection = document.getElementById("lava-estrena-section");
-      if (guindaSection) {
+      const container = scrollContainerRef.current;
+      if (guindaSection && container) {
+        const currentScrollTop = container.scrollTop;
+        const isScrollingDown = currentScrollTop > lastScrollTop;
+        if (isScrollEvent) {
+          lastScrollTop = currentScrollTop;
+        }
+
         const rect = guindaSection.getBoundingClientRect();
-        if (rect.top <= 100 && rect.bottom >= 50) {
+        const isInGuinda = rect.top <= 100 && rect.bottom >= 50;
+
+        if (isInGuinda) {
+          wasInGuindaSection = true;
           setHideNavbar(true);
           return;
+        }
+
+        // Fast snap trigger ONLY when scrolling downwards towards the last section (not when leaving/scrolling up)
+        if (isScrollEvent && isScrollingDown && rect.top > 0 && rect.top < window.innerHeight * 0.75 && !isSnapping && !wasInGuindaSection) {
+          isSnapping = true;
+          guindaSection.scrollIntoView({ behavior: 'auto' });
+          setTimeout(() => { isSnapping = false; }, 300);
+        }
+
+        if (rect.top > window.innerHeight * 0.4) {
+          wasInGuindaSection = false;
         }
       }
       setHideNavbar(false);
     };
 
     const container = scrollContainerRef.current;
+    const onScroll = () => checkGuindaSection(true);
+
     if (container) {
-      container.addEventListener("scroll", checkGuindaSection, { passive: true });
+      container.addEventListener("scroll", onScroll, { passive: true });
     }
 
-    window.addEventListener("scroll", checkGuindaSection, { passive: true });
-    const interval = setInterval(checkGuindaSection, 250);
-    checkGuindaSection();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const interval = setInterval(() => checkGuindaSection(false), 200);
+    checkGuindaSection(false);
 
     return () => {
       if (container) {
-        container.removeEventListener("scroll", checkGuindaSection);
+        container.removeEventListener("scroll", onScroll);
       }
-      window.removeEventListener("scroll", checkGuindaSection);
+      window.removeEventListener("scroll", onScroll);
       clearInterval(interval);
     };
   }, [isLandingPage, location.pathname]);
@@ -110,7 +137,7 @@ function MainLayout() {
   return (
     <div 
       ref={scrollContainerRef}
-      className={`w-full flex flex-col transition-colors duration-500 overflow-x-hidden ${
+      className={`w-full flex flex-col transition-colors duration-75 overflow-x-hidden ${
         hideNavbar ? "bg-[#4E0000]" : "bg-[#fdf0d5]"
       } ${
         isLandingPage ? "h-[100dvh] overflow-y-auto snap-y snap-mandatory" : "min-h-[100dvh] overflow-y-auto"
@@ -121,13 +148,13 @@ function MainLayout() {
 
       {/* Header - Always present, sticky below the top banner */}
       <header 
-        className={`sticky top-0 w-full z-50 transition-all duration-500 ${
+        className={`sticky top-0 w-full z-50 transition-all duration-75 ${
           hideNavbar 
             ? "bg-[#4E0000] text-white" 
             : "bg-[#fdf0d5]/95 backdrop-blur-md text-gray-900"
         }`}
       >
-        <div className={`max-w-sm mx-auto px-4 h-[50px] flex items-center justify-between transition-opacity duration-500 ${
+        <div className={`max-w-sm mx-auto px-4 h-[50px] flex items-center justify-between transition-opacity duration-75 ${
           hideNavbar ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}>
           <span 

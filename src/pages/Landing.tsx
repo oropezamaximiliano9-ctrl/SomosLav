@@ -1476,11 +1476,11 @@ export default function Landing() {
         </div>
       </section>
       {/* Sección Asimétrica Editorial (Playeras) */}
-      <section id="lava-estrena-section" className="w-full px-3 sm:px-6 pt-6 sm:pt-10 pb-12 sm:pb-20 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always min-h-[100dvh] min-h-[100svh]" style={{ scrollSnapAlign: 'start', minHeight: '100dvh' }}>
+      <section id="lava-estrena-section" className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-20 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always min-h-[100dvh] min-h-[100svh]" style={{ scrollSnapAlign: 'start', minHeight: '100dvh' }}>
         
-        <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-2 sm:pt-4">
+        <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-0">
           {/* Título Grande */}
-          <div className="mb-10 sm:mb-16 w-full px-1">
+          <div className="mb-8 sm:mb-12 w-full px-1">
             <h2 className="font-geist text-white text-[56px] sm:text-[72px] font-bold drop-shadow-sm leading-[0.88] tracking-[-0.03em] uppercase">
               Lava<br />
               Estrena
@@ -1491,25 +1491,13 @@ export default function Landing() {
             
             {/* Left Column - Elevated */}
           <div className="w-[48%] mt-4 sm:mt-8 relative">
-            <div className="w-full bg-white rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center p-0.5 border border-white/20">
-               <img 
-                  src="https://iili.io/CrT5og4.webp" 
-                  alt="Playera Blanca" 
-                  className="w-full h-full object-contain drop-shadow-sm scale-135 sm:scale-140"
-                  referrerPolicy="no-referrer"
-               />
+            <div className="w-full bg-white rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
             </div>
           </div>
           
           {/* Right Column - Pushed down */}
           <div className="w-[48%] mt-20 sm:mt-32 relative">
-            <div className="w-full bg-white rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center p-0.5 border border-white/20">
-               <img 
-                  src={blackShirtProduct || '/playera-negra.webp'} 
-                  alt="Playera Negra" 
-                  className="w-full h-full object-contain drop-shadow-md brightness-90 scale-135 sm:scale-140"
-                  referrerPolicy="no-referrer"
-               />
+            <div className="w-full bg-white rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
             </div>
           </div>
 
