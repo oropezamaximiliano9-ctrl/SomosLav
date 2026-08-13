@@ -68,9 +68,51 @@ function MainLayout() {
   const isLandingPage = location.pathname === "/";
   const showAlwaysNavbar = role === 'associate' || role === 'admin' || location.pathname === '/login' || !isLandingPage;
 
+  const [hideNavbar, setHideNavbar] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isLandingPage) {
+      setHideNavbar(false);
+      return;
+    }
+
+    const checkGuindaSection = () => {
+      const guindaSection = document.getElementById("lava-estrena-section");
+      if (guindaSection) {
+        const rect = guindaSection.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom >= 50) {
+          setHideNavbar(true);
+          return;
+        }
+      }
+      setHideNavbar(false);
+    };
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", checkGuindaSection, { passive: true });
+    }
+
+    window.addEventListener("scroll", checkGuindaSection, { passive: true });
+    const interval = setInterval(checkGuindaSection, 250);
+    checkGuindaSection();
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", checkGuindaSection);
+      }
+      window.removeEventListener("scroll", checkGuindaSection);
+      clearInterval(interval);
+    };
+  }, [isLandingPage, location.pathname]);
+
   return (
     <div 
-      className={`w-full flex flex-col bg-[#fdf0d5] overflow-x-hidden ${
+      ref={scrollContainerRef}
+      className={`w-full flex flex-col transition-colors duration-500 overflow-x-hidden ${
+        hideNavbar ? "bg-[#4E0000]" : "bg-[#fdf0d5]"
+      } ${
         isLandingPage ? "h-[100dvh] overflow-y-auto snap-y snap-mandatory" : "min-h-[100dvh] overflow-y-auto"
       }`}
       style={{ scrollBehavior: 'smooth', scrollPaddingTop: '50px' }}
@@ -78,8 +120,16 @@ function MainLayout() {
       {/* Top Banner removed */}
 
       {/* Header - Always present, sticky below the top banner */}
-      <header className="bg-[#fdf0d5]/95 backdrop-blur-md sticky top-0 w-full z-50">
-        <div className="max-w-sm mx-auto px-4 h-[50px] flex items-center justify-between">
+      <header 
+        className={`sticky top-0 w-full z-50 transition-all duration-500 ${
+          hideNavbar 
+            ? "bg-[#4E0000] text-white" 
+            : "bg-[#fdf0d5]/95 backdrop-blur-md text-gray-900"
+        }`}
+      >
+        <div className={`max-w-sm mx-auto px-4 h-[50px] flex items-center justify-between transition-opacity duration-500 ${
+          hideNavbar ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}>
           <span 
             onClick={handleClick}
             className="text-[20px] leading-none font-unbounded font-normal text-gray-900 select-none cursor-pointer relative -top-[1px]"
@@ -113,14 +163,14 @@ function MainLayout() {
             <img 
               src="https://i.ibb.co/3ynSFBH9/IMG-8932.webp" 
               alt="Somos Logo" 
-              className="h-[31px] w-auto object-contain select-none cursor-pointer" 
+              className="h-[31px] w-auto object-contain select-none cursor-pointer transition-all duration-300" 
             />
           </div>
         </div>
       </header>
 
       {/* Main Content Area - Mobile constrained with modern standard spacing */}
-      <main className={`flex-1 w-full max-w-sm mx-auto relative flex flex-col px-4 ${isLandingPage ? "pt-0 pb-0" : "pt-4 pb-4"}`}>
+      <main className={`flex-1 w-full relative flex flex-col ${isLandingPage ? "pt-0 pb-0 px-0" : "max-w-sm mx-auto px-4 pt-4 pb-4"}`}>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/cesto/:id" element={<BagFlow />} />

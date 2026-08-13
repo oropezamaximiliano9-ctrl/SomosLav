@@ -10,7 +10,6 @@ import blueShirtProduct from "../assets/images/blue_shirt_product_1786050242741.
 const servicioUrgenteBanner = "https://i.ibb.co/Zpk417q3/IMG-9181.webp";
 const suavizanteBannerUrl = "https://i.ibb.co/rRxjM5xb/IMG-9141.png";
 const ropaCamaBannerUrl = "https://i.ibb.co/V082zskj/IMG-9170.webp";
-const productCardBg = "https://iili.io/C4NhYMb.webp";
 const shirtCardBg = "https://i.ibb.co/LhzkrHzZ/IMG-9166.png";
 import sprayTagBg from "../assets/images/spray_tag_bg.png";
 import { db } from "../firebase";
@@ -962,7 +961,7 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-between snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
 
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-0">
+        <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0">
 
           <TypewriterTitle />
 
@@ -1058,7 +1057,7 @@ export default function Landing() {
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
+        <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
@@ -1170,7 +1169,7 @@ export default function Landing() {
       </section>
 
       <section className="relative w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
-        <div className="relative z-10 w-full max-w-sm mx-auto pt-0 font-sans">
+        <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
@@ -1344,7 +1343,7 @@ export default function Landing() {
 
       {/* Nueva Sección: Adicionales */}
       <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
-        <div className="w-full max-w-sm mx-auto text-left flex flex-col flex-1 h-full pb-2 pt-0">
+        <div className="w-full max-w-sm mx-auto px-4 text-left flex flex-col flex-1 h-full pb-2 pt-0">
           
           <div>
             <div className="w-full text-center pt-2 pb-1 select-none" id="soluciones-title-container">
@@ -1421,18 +1420,7 @@ export default function Landing() {
               </span>
             </div>
 
-            <div className="w-full rounded-lg border-0 shadow-none flex flex-col overflow-hidden relative p-4 sm:p-5 gap-3.5 bg-white">
-              {/* Background image for the general product card */}
-              <img 
-                src={productCardBg} 
-                alt="" 
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-95"
-              />
-              {/* Overlay suave solo en la esquina superior izquierda para igualar el tono claro de la esquina inferior izquierda */}
-              <div 
-                className="absolute top-0 left-0 w-[55%] h-[55%] pointer-events-none z-0 rounded-tl-lg bg-[radial-gradient(ellipse_at_top_left,rgba(223,220,248,0.92)_0%,rgba(223,220,248,0.5)_50%,transparent_80%)]" 
-              />
-
+            <div className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col overflow-hidden relative p-4 sm:p-5 gap-3.5 bg-white">
               <div className="px-1 text-left relative z-10">
                 <p className="font-geist text-[#2b2b2b] text-[19px] font-medium leading-snug tracking-tight">
                   Pruébate gratis cualquier prenda
@@ -1487,6 +1475,49 @@ export default function Landing() {
 
         </div>
       </section>
+      {/* Sección Asimétrica Editorial (Playeras) */}
+      <section id="lava-estrena-section" className="w-full px-3 sm:px-6 pt-6 sm:pt-10 pb-12 sm:pb-20 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always min-h-[100dvh] min-h-[100svh]" style={{ scrollSnapAlign: 'start', minHeight: '100dvh' }}>
+        
+        <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-2 sm:pt-4">
+          {/* Título Grande */}
+          <div className="mb-10 sm:mb-16 w-full px-1">
+            <h2 className="font-geist text-white text-[56px] sm:text-[72px] font-bold drop-shadow-sm leading-[0.88] tracking-[-0.03em] uppercase">
+              Lava<br />
+              Estrena
+            </h2>
+          </div>
+
+          <div className="w-full flex items-start justify-between gap-3 sm:gap-6 relative mt-12 sm:mt-20">
+            
+            {/* Left Column - Elevated */}
+          <div className="w-[48%] mt-4 sm:mt-8 relative">
+            <div className="w-full bg-white rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center p-0.5 border border-white/20">
+               <img 
+                  src="https://iili.io/CrT5og4.webp" 
+                  alt="Playera Blanca" 
+                  className="w-full h-full object-contain drop-shadow-sm scale-135 sm:scale-140"
+                  referrerPolicy="no-referrer"
+               />
+            </div>
+          </div>
+          
+          {/* Right Column - Pushed down */}
+          <div className="w-[48%] mt-20 sm:mt-32 relative">
+            <div className="w-full bg-white rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center p-0.5 border border-white/20">
+               <img 
+                  src={blackShirtProduct || '/playera-negra.webp'} 
+                  alt="Playera Negra" 
+                  className="w-full h-full object-contain drop-shadow-md brightness-90 scale-135 sm:scale-140"
+                  referrerPolicy="no-referrer"
+               />
+            </div>
+          </div>
+
+        </div>
+        </div>
+
+      </section>
+
 
 
 
@@ -1804,6 +1835,8 @@ export default function Landing() {
 
                   {/* Slider viewport */}
                   <div 
+                    ref={viewportRef}
+                    onScroll={(e) => { e.currentTarget.scrollLeft = 0; }}
                     className="w-full overflow-hidden relative mt-3"
                     style={{ 
                       height: typeof sliderHeight === "number" ? `${sliderHeight}px` : sliderHeight,
@@ -1811,17 +1844,20 @@ export default function Landing() {
                     }}
                   >
                     <div 
-                      className="flex transform-gpu"
+                      className="w-full flex transform-gpu"
                       style={{
-                        width: '300%',
                         transform: 
-                          formStep === 2 ? 'translateX(-33.33333%)' : 
-                          formStep === 3 ? 'translateX(-66.66666%)' : 'translateX(0%)',
+                          formStep === 2 ? 'translateX(-100%)' : 
+                          formStep === 3 ? 'translateX(-200%)' : 'translateX(0%)',
                         transition: 'transform 300ms cubic-bezier(0.32, 0.94, 0.6, 1)'
                       }}
                     >
                       {/* Paso 1: Nombre Completo */}
-                      <div ref={step1Ref} className="shrink-0 select-none px-0.5" style={{ width: '33.33333%', minWidth: '33.33333%' }}>
+                      <div 
+                        ref={step1Ref} 
+                        className={`w-full shrink-0 select-none px-0.5 transition-opacity duration-200 ${formStep !== 1 ? "pointer-events-none opacity-40" : "opacity-100"}`}
+                        aria-hidden={formStep !== 1}
+                      >
                         <form onSubmit={goToStep2} className="space-y-4 flex flex-col">
                           <div className="space-y-3">
                             <div className="space-y-1">
@@ -1833,6 +1869,7 @@ export default function Landing() {
                                   type="text"
                                   required
                                   autoComplete="name"
+                                  tabIndex={formStep === 1 ? 0 : -1}
                                   value={name}
                                   onChange={(e) => { setName(e.target.value); setFormError(null); }}
                                   onKeyDown={(e) => {
@@ -1850,6 +1887,7 @@ export default function Landing() {
 
                           <button
                             type="submit"
+                            tabIndex={formStep === 1 ? 0 : -1}
                             className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer"
                           >
                             <span className="font-geist">Continuar</span>
@@ -1859,7 +1897,11 @@ export default function Landing() {
                       </div>
 
                       {/* Paso 2: Teléfono */}
-                      <div ref={step2Ref} className="shrink-0 select-none px-0.5" style={{ width: '33.33333%', minWidth: '33.33333%' }}>
+                      <div 
+                        ref={step2Ref} 
+                        className={`w-full shrink-0 select-none px-0.5 transition-opacity duration-200 ${formStep !== 2 ? "pointer-events-none opacity-40" : "opacity-100"}`}
+                        aria-hidden={formStep !== 2}
+                      >
                         <form onSubmit={goToStep3} className="space-y-4 flex flex-col">
                           <div className="space-y-3">
                             <div className="space-y-1">
@@ -1882,6 +1924,7 @@ export default function Landing() {
                                   type="tel"
                                   required
                                   autoComplete="tel"
+                                  tabIndex={formStep === 2 ? 0 : -1}
                                   value={phone}
                                   onChange={(e) => { setPhone(e.target.value); setFormError(null); }}
                                   onBlur={handlePhoneBlur}
@@ -1904,6 +1947,7 @@ export default function Landing() {
 
                           <button
                             type="submit"
+                            tabIndex={formStep === 2 ? 0 : -1}
                             className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer"
                           >
                             <span className="font-geist">Continuar</span>
@@ -1913,7 +1957,11 @@ export default function Landing() {
                       </div>
 
                       {/* Paso 3: Dirección (Calle, número y colonia unificado) */}
-                      <div ref={step3Ref} className="shrink-0 select-none px-0.5" style={{ width: '33.33333%', minWidth: '33.33333%' }}>
+                      <div 
+                        ref={step3Ref} 
+                        className={`w-full shrink-0 select-none px-0.5 transition-opacity duration-200 ${formStep !== 3 ? "pointer-events-none opacity-40" : "opacity-100"}`}
+                        aria-hidden={formStep !== 3}
+                      >
                         <form onSubmit={submitStep3AndVerify} className="space-y-4 flex flex-col">
                           {gpsAutofillError && (
                             <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg">
@@ -1935,6 +1983,7 @@ export default function Landing() {
                                   type="text"
                                   required
                                   autoComplete="street-address"
+                                  tabIndex={formStep === 3 ? 0 : -1}
                                   value={addressCalle}
                                   onClick={handleAddressInputClick}
                                   onFocus={() => setShowColoniaSuggestions(true)}
@@ -1995,6 +2044,7 @@ export default function Landing() {
                           <button
                             type="submit"
                             disabled={loading}
+                            tabIndex={formStep === 3 ? 0 : -1}
                             className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                           >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
