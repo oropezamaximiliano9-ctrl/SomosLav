@@ -77,60 +77,62 @@ function MainLayout() {
       return;
     }
 
-    let isSnapping = false;
-    let lastScrollTop = scrollContainerRef.current ? scrollContainerRef.current.scrollTop : 0;
-    let wasInGuindaSection = false;
+    const guindaSection = document.getElementById("lava-estrena-section");
+    const container = scrollContainerRef.current;
 
-    const checkGuindaSection = (isScrollEvent = false) => {
-      const guindaSection = document.getElementById("lava-estrena-section");
-      const container = scrollContainerRef.current;
-      if (guindaSection && container) {
-        const currentScrollTop = container.scrollTop;
-        const isScrollingDown = currentScrollTop > lastScrollTop;
-        if (isScrollEvent) {
-          lastScrollTop = currentScrollTop;
+    if (!guindaSection || !container) return;
+
+    let isAutoScrolling = false;
+    let autoScrollTimeout: any = null;
+
+    // Use IntersectionObserver for navbar & background sync
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
+            setHideNavbar(true);
+          } else {
+            setHideNavbar(false);
+          }
         }
+      },
+      {
+        root: container,
+        threshold: [0, 0.1, 0.15, 0.25, 0.5, 0.8, 1.0],
+        rootMargin: "0px 0px 0px 0px"
+      }
+    );
 
+    observer.observe(guindaSection);
+
+    // Gently assist snapping when crossing into the section from above
+    let lastScrollTop = container.scrollTop;
+    const handleScroll = () => {
+      const currentScrollTop = container.scrollTop;
+      const isScrollingDown = currentScrollTop > lastScrollTop;
+      lastScrollTop = currentScrollTop;
+
+      if (!isAutoScrolling && isScrollingDown) {
         const rect = guindaSection.getBoundingClientRect();
-        const isInGuinda = rect.top <= 100 && rect.bottom >= 50;
-
-        if (isInGuinda) {
-          wasInGuindaSection = true;
-          setHideNavbar(true);
-          return;
-        }
-
-        // Fast snap trigger ONLY when scrolling downwards towards the last section (not when leaving/scrolling up)
-        if (isScrollEvent && isScrollingDown && rect.top > 0 && rect.top < window.innerHeight * 0.75 && !isSnapping && !wasInGuindaSection) {
-          isSnapping = true;
-          guindaSection.scrollIntoView({ behavior: 'auto' });
-          setTimeout(() => { isSnapping = false; }, 300);
-        }
-
-        if (rect.top > window.innerHeight * 0.4) {
-          wasInGuindaSection = false;
+        // As soon as the top edge of the guinda section appears anywhere at the bottom edge (>= 88-95% of viewport)
+        if (rect.top > 20 && rect.top < window.innerHeight * 0.95) {
+          isAutoScrolling = true;
+          guindaSection.scrollIntoView({ behavior: 'smooth' });
+          clearTimeout(autoScrollTimeout);
+          autoScrollTimeout = setTimeout(() => {
+            isAutoScrolling = false;
+          }, 450);
         }
       }
-      setHideNavbar(false);
     };
 
-    const container = scrollContainerRef.current;
-    const onScroll = () => checkGuindaSection(true);
-
-    if (container) {
-      container.addEventListener("scroll", onScroll, { passive: true });
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    const interval = setInterval(() => checkGuindaSection(false), 200);
-    checkGuindaSection(false);
+    container.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      if (container) {
-        container.removeEventListener("scroll", onScroll);
-      }
-      window.removeEventListener("scroll", onScroll);
-      clearInterval(interval);
+      observer.disconnect();
+      container.removeEventListener("scroll", handleScroll);
+      clearTimeout(autoScrollTimeout);
     };
   }, [isLandingPage, location.pathname]);
 

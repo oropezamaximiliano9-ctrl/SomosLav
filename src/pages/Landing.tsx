@@ -1476,7 +1476,11 @@ export default function Landing() {
         </div>
       </section>
       {/* Sección Asimétrica Editorial (Playeras) */}
-      <section id="lava-estrena-section" className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-20 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always min-h-[100dvh] min-h-[100svh]" style={{ scrollSnapAlign: 'start', minHeight: '100dvh' }}>
+      <section 
+        id="lava-estrena-section" 
+        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-20 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always min-h-[100dvh] min-h-[100svh]" 
+        style={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100dvh' }}
+      >
         
         <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-0">
           {/* Título Grande */}
