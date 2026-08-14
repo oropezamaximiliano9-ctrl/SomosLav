@@ -85,38 +85,26 @@ function MainLayout() {
     let isAutoScrolling = false;
     let autoScrollTimeout: any = null;
 
-    // Use IntersectionObserver for navbar & background sync
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry) {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
-            setHideNavbar(true);
-          } else {
-            setHideNavbar(false);
-          }
-        }
-      },
-      {
-        root: container,
-        threshold: [0, 0.1, 0.15, 0.25, 0.5, 0.8, 1.0],
-        rootMargin: "0px 0px 0px 0px"
-      }
-    );
-
-    observer.observe(guindaSection);
-
-    // Gently assist snapping when crossing into the section from above
+    // Assist snapping and sync navbar based on exact section presence
     let lastScrollTop = container.scrollTop;
     const handleScroll = () => {
       const currentScrollTop = container.scrollTop;
       const isScrollingDown = currentScrollTop > lastScrollTop;
-      lastScrollTop = currentScrollTop;
 
-      if (!isAutoScrolling && isScrollingDown) {
-        const rect = guindaSection.getBoundingClientRect();
-        // As soon as the top edge of the guinda section appears anywhere at the bottom edge (>= 88-95% of viewport)
-        if (rect.top > 20 && rect.top < window.innerHeight * 0.95) {
+      const rect = guindaSection.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // Directional, instantaneous navbar visibility
+      if (isScrollingDown) {
+        // Al bajar: se oculta en cuanto la sección guinda entra en la zona media/baja
+        if (rect.top <= viewportHeight * 0.65 && rect.bottom >= 80) {
+          setHideNavbar(true);
+        } else {
+          setHideNavbar(false);
+        }
+
+        // Guía suave al 90% de pantalla al descender
+        if (!isAutoScrolling && rect.top > 20 && rect.top < viewportHeight * 0.90) {
           isAutoScrolling = true;
           guindaSection.scrollIntoView({ behavior: 'smooth' });
           clearTimeout(autoScrollTimeout);
@@ -124,13 +112,24 @@ function MainLayout() {
             isAutoScrolling = false;
           }, 450);
         }
+      } else {
+        // Al subir hacia la sección anterior: reaparece tras retroceder 15% de la pantalla
+        if (rect.top > viewportHeight * 0.15 || rect.bottom < 80) {
+          setHideNavbar(false);
+        } else {
+          setHideNavbar(true);
+        }
       }
+
+      lastScrollTop = currentScrollTop;
     };
+
+    // Initial check
+    handleScroll();
 
     container.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      observer.disconnect();
       container.removeEventListener("scroll", handleScroll);
       clearTimeout(autoScrollTimeout);
     };

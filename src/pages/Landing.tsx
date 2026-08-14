@@ -122,82 +122,6 @@ export default function Landing() {
   const [verificationProgress, setVerificationProgress] = useState(0);
   const [calculatedDistance, setCalculatedDistance] = useState<number>(() => getColoniaDistance(addressColonia || ""));
 
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isCarouselInView, setIsCarouselInView] = useState(false);
-
-  const shirtCarouselRef = useRef<HTMLDivElement>(null);
-  const [currentShirtSlide, setCurrentShirtSlide] = useState(0);
-
-  const shirtProducts = [
-    { id: 1, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "https://iili.io/CrT5og4.webp", imageClass: "h-full" },
-    { id: 2, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: blackShirtProduct || "/playera-negra.webp", imageClass: "h-full" },
-    { id: 3, tag1: "NEW ARRIVAL", tag2: "25% OFF", image: "", imageClass: "h-full" },
-  ];
-
-  const handleShirtScroll = () => {
-    if (shirtCarouselRef.current) {
-      const scrollPosition = shirtCarouselRef.current.scrollLeft;
-      const slideWidth = shirtCarouselRef.current.clientWidth * 0.76;
-      setCurrentShirtSlide(Math.round(scrollPosition / slideWidth));
-    }
-  };
-
-  const scrollToShirtSlide = (index: number) => {
-    if (shirtCarouselRef.current) {
-      const slideWidth = shirtCarouselRef.current.clientWidth * 0.76;
-      shirtCarouselRef.current.scrollTo({
-        left: index * slideWidth,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  const handleScroll = () => {
-    if (carouselRef.current) {
-      const scrollPosition = carouselRef.current.scrollLeft;
-      const slideWidth = carouselRef.current.clientWidth;
-      setCurrentSlide(Math.round(scrollPosition / slideWidth));
-    }
-  };
-
-  const scrollToSlide = (index: number) => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollTo({
-        left: index * carouselRef.current.clientWidth,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsCarouselInView(entry.isIntersecting);
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isCarouselInView) return;
-
-    const timer = setInterval(() => {
-      if (carouselRef.current) {
-        const nextSlide = (currentSlide + 1) % 2;
-        scrollToSlide(nextSlide);
-      }
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [currentSlide, isCarouselInView]);
-
   useEffect(() => {
     localStorage.setItem("user_name", name);
     localStorage.setItem("user_phone", phone);
@@ -1341,171 +1265,41 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Nueva Sección: Adicionales */}
-      <section className="w-full px-0 pt-0 flex flex-col justify-between pb-0 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="servicios-adicionales-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
-        <div className="w-full max-w-sm mx-auto px-4 text-left flex flex-col flex-1 h-full pb-2 pt-0">
-          
-          <div>
-            <div className="w-full text-center pt-2 pb-1 select-none" id="soluciones-title-container">
-              <h2 className="text-center text-[20px] sm:text-[24px] text-[#333333] font-medium font-geist leading-none tracking-tight">
-                Adicionales
-              </h2>
-            </div>
-
-            <div 
-              role="region" 
-              aria-roledescription="carousel"
-              className="px-0 sm:px-0 mt-1 w-full relative group"
-            >
-              {/* Botón Flecha Izquierda */}
-              <button
-                type="button"
-                onClick={() => scrollToSlide((currentSlide - 1 + 2) % 2)}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 text-[#333333] hover:text-[#0f55d8] active:scale-90 transition-all"
-                aria-label="Tarjeta anterior"
-              >
-                <ChevronLeft className="w-5 h-5 stroke-[2.25]" />
-              </button>
-
-              {/* Botón Flecha Derecha */}
-              <button
-                type="button"
-                onClick={() => scrollToSlide((currentSlide + 1) % 2)}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 text-[#333333] hover:text-[#0f55d8] active:scale-90 transition-all"
-                aria-label="Tarjeta siguiente"
-              >
-                <ChevronRight className="w-5 h-5 stroke-[2.25]" />
-              </button>
-
-              <div 
-                ref={carouselRef}
-                onScroll={handleScroll}
-                className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-0 pb-1"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
-              >
-                {/* Slide 1 - Suavizante premium */}
-                <div role="group" aria-roledescription="slide" aria-label="1 of 2" className="w-full shrink-0 snap-center bg-[#f4ece3] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
-                  <img 
-                    src={suavizanteBannerUrl} 
-                    alt="Suavizante premium con aroma especial $10" 
-                    className="w-full h-full object-cover object-center rounded-lg block" 
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-
-                {/* Slide 2 - Ropa de cama */}
-                <div role="group" aria-roledescription="slide" aria-label="2 of 2" className="w-full shrink-0 snap-center bg-[#e2edff] rounded-lg p-0 relative overflow-hidden flex items-center justify-center border border-gray-100/50 shadow-none h-[78px] sm:h-[82px]">
-                  <img 
-                    src={ropaCamaBannerUrl} 
-                    alt="Ropa de cama: Lavado de edredón, cobertor o sábana" 
-                    className="w-full h-full object-cover object-center rounded-lg block" 
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Texto introductorio y carrusel de playeras estilo f4t3.co */}
-          <div className="w-full mt-3 sm:mt-5 mb-2 flex flex-col gap-1.5">
-            <div className="px-1 text-center flex justify-center items-center py-1.5">
-              <span className="relative inline-block px-3 py-1">
-                {/* Marca texto (highlighter background) */}
-                <span 
-                  className="absolute -inset-x-1 bottom-0.5 h-[72%] bg-sky-200/90 rounded-xs -rotate-0.5 z-0 pointer-events-none" 
-                  aria-hidden="true" 
-                />
-                <h3 className="relative z-10 font-geist text-zinc-900 text-[22px] sm:text-[26px] font-medium leading-none tracking-tight whitespace-nowrap text-center">
-                  Lava y estrena
-                </h3>
-              </span>
-            </div>
-
-            <div className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col overflow-hidden relative p-4 sm:p-5 gap-3.5 bg-white">
-              <div className="px-1 text-left relative z-10">
-                <p className="font-geist text-[#2b2b2b] text-[19px] font-medium leading-snug tracking-tight">
-                  Pruébate gratis cualquier prenda
-                </p>
-              </div>
-
-              {/* Contenedor con scroll snap y side peek */}
-              <div 
-                ref={shirtCarouselRef}
-                onScroll={handleShirtScroll}
-                className="w-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-2 py-0.5 px-0.5 relative z-10"
-              >
-                {shirtProducts.map((product, idx) => (
-                  <div 
-                    key={product.id}
-                    className="w-[75%] sm:w-[76%] shrink-0 snap-start snap-always relative rounded-none bg-[#f3f3f4] p-2.5 flex flex-col overflow-hidden border border-neutral-200/40 select-none group"
-                    style={{ scrollSnapStop: 'always' }}
-                  >
-                    {/* Área central para la imagen */}
-                    <div className="flex items-center justify-center relative h-[235px] sm:h-[265px]">
-                      {product.image ? (
-                        <img 
-                          src={product.image} 
-                          alt={`Playera ${idx + 1}`} 
-                          className={`${product.imageClass || 'h-full'} w-auto object-contain pointer-events-none drop-shadow-sm`}
-                          referrerPolicy="no-referrer"
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = blackShirtProduct || '/playera-negra.webp';
-                          }}
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center gap-1.5 text-neutral-400 font-geist text-xs py-3 px-2 text-center border-2 border-dashed border-neutral-300/60 rounded-none w-full h-full bg-white/40">
-                          <Shirt className="w-6 h-6 stroke-[1.25] text-neutral-400 opacity-60" />
-                          <span className="text-[11px] font-medium text-neutral-400 tracking-wide">
-                            [ Imagen de Playera {idx + 1} ]
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="px-1 text-left relative z-10">
-                <p className="font-geist text-[#2b2b2b] text-[19px] font-medium leading-snug tracking-tight">
-                  Si te gusta te la quedas y<br />
-                  lo incluimos en el cobro de tu lavado
-                </p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
       {/* Sección Asimétrica Editorial (Playeras) */}
       <section 
         id="lava-estrena-section" 
-        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-20 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always min-h-[100dvh] min-h-[100svh]" 
-        style={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100dvh' }}
+        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-0 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always h-[100dvh] max-h-[100dvh] overflow-hidden" 
+        style={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', height: '100dvh' }}
       >
         
         <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-0">
-          {/* Título Grande */}
-          <div className="mb-8 sm:mb-12 w-full px-1">
-            <h2 className="font-geist text-white text-[56px] sm:text-[72px] font-bold drop-shadow-sm leading-[0.88] tracking-[-0.03em] uppercase">
-              Lava<br />
+          {/* Título Grande y Subtítulo */}
+          <div className="mb-4 sm:mb-8 w-full px-1">
+            <h2 className="font-geist text-white text-[56px] sm:text-[72px] font-bold drop-shadow-sm leading-[0.95] tracking-[-0.03em] uppercase">
+              Lava <span className="font-serif italic font-light lowercase text-[0.6em] text-white/85 tracking-normal inline-block align-middle transform -translate-y-1 sm:-translate-y-1.5 ml-1">y</span><br />
               Estrena
             </h2>
+            <p className="mt-3.5 sm:mt-4 text-white/90 text-[17px] sm:text-xl font-medium tracking-tight leading-snug">
+              Pruébate gratis cualquier prenda<br />
+              y elige la que te guste
+            </p>
           </div>
 
           <div className="w-full flex items-start justify-between gap-3 sm:gap-6 relative mt-12 sm:mt-20">
             
             {/* Left Column - Elevated */}
-          <div className="w-[48%] mt-4 sm:mt-8 relative">
-            <div className="w-full bg-white rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+            <div className="w-[48%] mt-4 sm:mt-8 relative">
+              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+              </div>
             </div>
-          </div>
-          
-          {/* Right Column - Pushed down */}
-          <div className="w-[48%] mt-20 sm:mt-32 relative">
-            <div className="w-full bg-white rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+            
+            {/* Right Column - Pushed down */}
+            <div className="w-[48%] mt-20 sm:mt-32 relative">
+              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+              </div>
             </div>
-          </div>
 
-        </div>
+          </div>
         </div>
 
       </section>
