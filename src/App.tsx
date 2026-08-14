@@ -103,8 +103,8 @@ function MainLayout() {
           setHideNavbar(false);
         }
 
-        // Guía suave al 90% de pantalla al descender
-        if (!isAutoScrolling && rect.top > 20 && rect.top < viewportHeight * 0.90) {
+        // Guía suave al 85% de pantalla al descender
+        if (!isAutoScrolling && rect.top > 20 && rect.top < viewportHeight * 0.85) {
           isAutoScrolling = true;
           guindaSection.scrollIntoView({ behavior: 'smooth' });
           clearTimeout(autoScrollTimeout);

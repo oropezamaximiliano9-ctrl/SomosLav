@@ -1280,7 +1280,7 @@ export default function Landing() {
               Estrena
             </h2>
             <p className="mt-3.5 sm:mt-4 text-white/90 text-[17px] sm:text-xl font-medium tracking-tight leading-snug">
-              Pruébatelo todo en casa<br />
+              Pruébatelo en casa<br />
               y quédate solo con lo que te guste
             </p>
           </div>
