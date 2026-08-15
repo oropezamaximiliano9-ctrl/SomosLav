@@ -1268,8 +1268,8 @@ export default function Landing() {
       {/* Sección Asimétrica Editorial (Playeras) */}
       <section 
         id="lava-estrena-section" 
-        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-0 flex flex-col justify-start items-center bg-[#4E0000] snap-start snap-always h-[100dvh] max-h-[100dvh] overflow-hidden" 
-        style={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', height: '100dvh' }}
+        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-36 sm:pb-48 flex flex-col justify-start items-center bg-[#4E0000] snap-start min-h-[150dvh] sm:min-h-[160dvh]" 
+        style={{ scrollSnapAlign: 'start' }}
       >
         
         <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-0">
@@ -1280,21 +1280,31 @@ export default function Landing() {
               Estrena
             </h2>
             <p className="mt-3.5 sm:mt-4 text-white/90 text-[17px] sm:text-xl font-medium tracking-tight leading-snug">
-              Pruébatelo en casa<br />
-              y quédate solo con lo que te guste
+              Pruébate todo en casa<br />
+              quédate solo con lo que te guste
             </p>
           </div>
 
           <div className="w-full flex items-start justify-between gap-3 sm:gap-6 relative mt-12 sm:mt-20">
             
-            {/* Left Column - Elevated */}
-            <div className="w-[48%] mt-4 sm:mt-8 relative">
+            {/* Left Column - Elevated (Card 1 & Card 3) */}
+            <div className="w-[48%] mt-4 sm:mt-8 flex flex-col gap-6 sm:gap-8 relative">
+              {/* Card 1 */}
               <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+              </div>
+
+              {/* Card 3 - Continuing the sequence */}
+              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_8px_22px_rgba(0,0,0,0.22)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
               </div>
             </div>
             
-            {/* Right Column - Pushed down */}
-            <div className="w-[48%] mt-20 sm:mt-32 relative">
+            {/* Right Column - Pushed down (Card 2 & Card 4) */}
+            <div className="w-[48%] mt-20 sm:mt-32 flex flex-col gap-6 sm:gap-8 relative">
+              {/* Card 2 */}
+              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+              </div>
+
+              {/* Card 4 - Beside Card 3 */}
               <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
               </div>
             </div>
@@ -1973,8 +1983,6 @@ export default function Landing() {
         </div>
       )}
 
-      {/* Spacer to prevent Safari rubber-band snap glitch on the last section */}
-      <div className="h-0 w-full shrink-0 bg-transparent snap-end" style={{ scrollSnapAlign: 'end' }} />
     </div>
   );
 }

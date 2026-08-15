@@ -84,36 +84,111 @@ function MainLayout() {
 
     let isAutoScrolling = false;
     let autoScrollTimeout: any = null;
-
-    // Assist snapping and sync navbar based on exact section presence
+    let touchStartY = 0;
+    let touchStartedInsideGuinda = false;
+    let momentumRestrictedToGuinda = false;
     let lastScrollTop = container.scrollTop;
+
+    const getGuindaOffsetTop = () => guindaSection.offsetTop;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      const guindaTop = getGuindaOffsetTop();
+      // Solo consideramos que empezó dentro si está claramente más abajo del tope
+      if (container.scrollTop > guindaTop + 15) {
+        touchStartedInsideGuinda = true;
+        momentumRestrictedToGuinda = true;
+      } else {
+        touchStartedInsideGuinda = false;
+        momentumRestrictedToGuinda = false;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!touchStartedInsideGuinda) return;
+
+      const currentY = e.touches[0].clientY;
+      const isDraggingDown = currentY > touchStartY; // Arrastrar hacia abajo = scroll up hacia sección anterior
+      const guindaTop = getGuindaOffsetTop();
+
+      // Si inició dentro de la sección y al subir llega al tope en este mismo gesto, frenar en el tope
+      if (isDraggingDown && container.scrollTop <= guindaTop) {
+        container.scrollTop = guindaTop;
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      const guindaTop = getGuindaOffsetTop();
+      if (container.scrollTop <= guindaTop + 5) {
+        if (touchStartedInsideGuinda) {
+          container.scrollTop = guindaTop;
+        }
+        container.style.scrollSnapType = 'y mandatory';
+        momentumRestrictedToGuinda = false;
+      }
+      touchStartedInsideGuinda = false;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      const guindaTop = getGuindaOffsetTop();
+
+      // Si scrolleamos hacia arriba desde adentro de la sección guinda
+      if (container.scrollTop > guindaTop + 10 && e.deltaY < 0) {
+        if (container.scrollTop + e.deltaY <= guindaTop) {
+          e.preventDefault();
+          container.scrollTop = guindaTop;
+          container.style.scrollSnapType = 'y mandatory';
+        }
+      }
+    };
+
     const handleScroll = () => {
       const currentScrollTop = container.scrollTop;
       const isScrollingDown = currentScrollTop > lastScrollTop;
-
+      const guindaTop = getGuindaOffsetTop();
       const rect = guindaSection.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      // Directional, instantaneous navbar visibility
+      // Si venía de un scroll/momentum que inició dentro de la sección guinda y llegó al tope
+      if (momentumRestrictedToGuinda && currentScrollTop < guindaTop) {
+        container.scrollTop = guindaTop;
+        momentumRestrictedToGuinda = false;
+      }
+
+      // Desactivar scroll snap dentro de la sección guinda (> guindaTop + 10) para desplazamiento libre
+      // En el tope o por encima (<= guindaTop + 5), activar scroll snap para transiciones limpias entre secciones
+      if (container.scrollTop > guindaTop + 10) {
+        if (container.style.scrollSnapType !== 'none') {
+          container.style.scrollSnapType = 'none';
+        }
+      } else {
+        if (container.style.scrollSnapType !== 'y mandatory') {
+          container.style.scrollSnapType = 'y mandatory';
+        }
+      }
+
+      // Visibilidad del Navbar y guía rápida de entrada
       if (isScrollingDown) {
-        // Al bajar: se oculta en cuanto la sección guinda entra en la zona media/baja
         if (rect.top <= viewportHeight * 0.65 && rect.bottom >= 80) {
           setHideNavbar(true);
         } else {
           setHideNavbar(false);
         }
 
-        // Guía suave al 85% de pantalla al descender
-        if (!isAutoScrolling && rect.top > 20 && rect.top < viewportHeight * 0.85) {
+        // Snap rápido y fluido al entrar a la sección ÚNICAMENTE desde arriba (fuera de la sección)
+        if (!isAutoScrolling && currentScrollTop < guindaTop - 20 && rect.top > 20 && rect.top < viewportHeight * 0.85) {
           isAutoScrolling = true;
           guindaSection.scrollIntoView({ behavior: 'smooth' });
           clearTimeout(autoScrollTimeout);
           autoScrollTimeout = setTimeout(() => {
             isAutoScrolling = false;
-          }, 450);
+          }, 400);
         }
       } else {
-        // Al subir hacia la sección anterior: reaparece tras retroceder 15% de la pantalla
+        // Al subir hacia la sección anterior: reaparece tras salir de la sección guinda
         if (rect.top > viewportHeight * 0.15 || rect.bottom < 80) {
           setHideNavbar(false);
         } else {
@@ -121,17 +196,25 @@ function MainLayout() {
         }
       }
 
-      lastScrollTop = currentScrollTop;
+      lastScrollTop = container.scrollTop;
     };
 
     // Initial check
     handleScroll();
 
     container.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener("touchstart", handleTouchStart, { passive: true });
+    container.addEventListener("touchmove", handleTouchMove, { passive: false });
+    container.addEventListener("touchend", handleTouchEnd, { passive: true });
+    container.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       container.removeEventListener("scroll", handleScroll);
       clearTimeout(autoScrollTimeout);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
+      container.removeEventListener("wheel", handleWheel);
     };
   }, [isLandingPage, location.pathname]);
 
