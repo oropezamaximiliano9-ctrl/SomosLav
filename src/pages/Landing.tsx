@@ -1029,14 +1029,14 @@ export default function Landing() {
               {/* Imagen en el MEDIO */}
               <div className="w-full h-[270px] flex flex-col relative">
                 <div 
-                  className="absolute -top-[10px] right-[4px] sm:right-[12px] z-20 w-[100px] sm:w-[114px] pointer-events-none rotate-[2deg]"
+                  className="absolute -top-[10px] right-[4px] sm:right-[12px] z-20 w-[100px] sm:w-[114px] pointer-events-none"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
                     alt="Es gratis" 
-                    className="w-full h-auto object-contain drop-shadow-sm scale-x-[0.98] scale-y-[0.82]"
+                    className="w-full h-auto object-contain drop-shadow-sm scale-x-[0.98] scale-y-[0.82] -rotate-[3deg]"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist rotate-[2deg] pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
                     <span>Es gratis</span>
                   </div>
                 </div>
@@ -1126,14 +1126,14 @@ export default function Landing() {
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
               <div className="w-full h-[270px] flex flex-col pt-2 relative">
                 <div 
-                  className="absolute -top-[10px] right-[3px] sm:right-[10px] z-20 w-[105px] sm:w-[120px] pointer-events-none rotate-0"
+                  className="absolute -top-[10px] right-[3px] sm:right-[10px] z-20 w-[105px] sm:w-[120px] pointer-events-none"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
                     alt="Cerca de ti" 
                     className="w-full h-auto object-contain drop-shadow-sm scale-x-[1.02] scale-y-[0.82] -rotate-[3deg]"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist rotate-0 pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
                     <span>Cerca de ti</span>
                   </div>
                 </div>
