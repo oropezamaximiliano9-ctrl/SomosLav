@@ -84,6 +84,7 @@ function MainLayout() {
 
     let isAutoScrolling = false;
     let autoScrollTimeout: any = null;
+    let scrollEndTimer: any = null;
     let touchStartY = 0;
     let touchStartedInsideGuinda = false;
     let momentumRestrictedToGuinda = false;
@@ -158,6 +159,18 @@ function MainLayout() {
         momentumRestrictedToGuinda = false;
       }
 
+      // Auto-corrección de reposo:
+      // Si un deslizamiento excepcionalmente suave o con micro-inercia se detiene flotando en un margen ambiguo justo por encima del tope,
+      // el sistema ejecuta de inmediato un ajuste suave alineándolo al inicio exacto de la sección guinda sin saltos ni cortes
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => {
+        const top = container.scrollTop;
+        const gTop = getGuindaOffsetTop();
+        if (top > gTop - 90 && top < gTop) {
+          container.scrollTo({ top: gTop, behavior: 'smooth' });
+        }
+      }, 80);
+
       // Desactivar scroll snap dentro de la sección guinda (> guindaTop + 10) para desplazamiento libre
       // En el tope o por encima (<= guindaTop + 5), activar scroll snap para transiciones limpias entre secciones
       if (container.scrollTop > guindaTop + 10) {
@@ -179,7 +192,7 @@ function MainLayout() {
         }
 
         // Snap rápido y fluido al entrar a la sección ÚNICAMENTE desde arriba (fuera de la sección)
-        if (!isAutoScrolling && currentScrollTop < guindaTop - 20 && rect.top > 20 && rect.top < viewportHeight * 0.85) {
+        if (!isAutoScrolling && currentScrollTop < guindaTop - 20 && rect.top > 20 && rect.top < viewportHeight * 0.80) {
           isAutoScrolling = true;
           guindaSection.scrollIntoView({ behavior: 'smooth' });
           clearTimeout(autoScrollTimeout);
@@ -188,8 +201,8 @@ function MainLayout() {
           }, 400);
         }
       } else {
-        // Al subir hacia la sección anterior: reaparece tras salir de la sección guinda
-        if (rect.top > viewportHeight * 0.15 || rect.bottom < 80) {
+        // Al subir hacia la sección anterior: reaparece tras salir de la sección guinda (20% de la ventana)
+        if (rect.top > viewportHeight * 0.20 || rect.bottom < 80) {
           setHideNavbar(false);
         } else {
           setHideNavbar(true);
@@ -211,6 +224,7 @@ function MainLayout() {
     return () => {
       container.removeEventListener("scroll", handleScroll);
       clearTimeout(autoScrollTimeout);
+      clearTimeout(scrollEndTimer);
       container.removeEventListener("touchstart", handleTouchStart);
       container.removeEventListener("touchmove", handleTouchMove);
       container.removeEventListener("touchend", handleTouchEnd);
