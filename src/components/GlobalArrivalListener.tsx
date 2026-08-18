@@ -21,10 +21,7 @@ export default function GlobalArrivalListener({ userRole }: ArrivalListenerProps
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Only associates and admins should listen to customer arrival events
-    if (userRole !== "associate" && userRole !== "admin") return;
-
-    const initialLoadTime = Date.now();
+    let initialLoad = true;
     const q = query(
       collection(db, "arrival_notices"),
       orderBy("createdAt", "desc"),
@@ -32,58 +29,61 @@ export default function GlobalArrivalListener({ userRole }: ArrivalListenerProps
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
+      // Avoid firing for old historical records loaded on initial mount
+      if (initialLoad) {
+        initialLoad = false;
+        return;
+      }
+
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
+        if (change.type === "added" || change.type === "modified") {
           const data = change.doc.data();
-          const docCreatedTime = new Date(data.createdAt || data.timestamp).getTime();
+          if (data.status === "dismissed" || data.status === "attended") return;
 
-          // If the event happened recently (after app loaded or within the last 60s)
-          if (docCreatedTime > initialLoadTime - 5000) {
-            const timeStr = new Date(data.timestamp || data.createdAt).toLocaleTimeString("es-MX", {
-              hour: "2-digit",
-              minute: "2-digit"
-            });
+          const timeStr = new Date(data.timestamp || data.createdAt || Date.now()).toLocaleTimeString("es-MX", {
+            hour: "2-digit",
+            minute: "2-digit"
+          });
 
-            // Play notification sound if possible
-            try {
-              const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-              const osc = audioCtx.createOscillator();
-              const gain = audioCtx.createGain();
-              osc.type = "sine";
-              osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-              osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
-              gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-              gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-              osc.connect(gain);
-              gain.connect(audioCtx.destination);
-              osc.start();
-              osc.stop(audioCtx.currentTime + 0.6);
-            } catch (e) {
-              // AudioContext might require user gesture first
-            }
-
-            // Trigger native device push / local notification
-            triggerLocalNotification(
-              "🧺 ¡Cliente en Camino! - SOMOS",
-              `${data.userName || "Cliente"} va en camino a dejar el cesto #${data.bagId} (${data.deliveryPreference || "Estándar"}).`,
-              `/cesto/${data.bagId}`
-            );
-
-            // Trigger floating in-app popup for associate
-            setActiveAlert({
-              id: change.doc.id,
-              bagId: data.bagId,
-              userName: data.userName || "Cliente Registrado",
-              deliveryPreference: data.deliveryPreference || "Estándar (48 h)",
-              timeStr
-            });
+          // Play audio chime
+          try {
+            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.6);
+          } catch (e) {
+            console.warn("Chime playback error:", e);
           }
+
+          // Trigger native device push / local notification
+          triggerLocalNotification(
+            "🧺 ¡Cliente en Camino! - SOMOS",
+            `${data.userName || "Cliente"} va en camino a dejar su cesto #${data.bagId || ""} (${data.deliveryPreference || "Estándar"}).`,
+            `/cesto/${data.bagId}`
+          );
+
+          // Trigger floating in-app popup
+          setActiveAlert({
+            id: change.doc.id,
+            bagId: data.bagId,
+            userName: data.userName || "Cliente Registrado",
+            deliveryPreference: data.deliveryPreference || "Estándar (48 h)",
+            timeStr
+          });
         }
       });
     });
 
     return () => unsubscribe();
-  }, [userRole]);
+  }, []);
 
   if (!activeAlert) return null;
 

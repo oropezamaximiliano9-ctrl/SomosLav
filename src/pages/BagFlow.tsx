@@ -7,6 +7,7 @@ import { toBlob } from "html-to-image";
 import { db } from "../firebase";
 import { doc, getDoc, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
 import { getColoniaDistance } from "../utils/distance";
+import { triggerLocalNotification } from "../utils/pushNotifications";
 
 export default function BagFlow() {
   const { id } = useParams<{ id: string }>();
@@ -175,6 +176,31 @@ export default function BagFlow() {
     const userName = bag.user.name || "Cliente";
     const userPhone = bag.user.phone || "";
     const deliveryPref = bag.user.deliveryPreference || "Estándar (48 h)";
+
+    // 1. Play immediate audio feedback
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.6);
+    } catch (e) {
+      console.warn("Audio feedback error:", e);
+    }
+
+    // 2. Trigger native Push / Local Notification immediately on this device
+    triggerLocalNotification(
+      "🧺 ¡Cliente en Camino! - SOMOS",
+      `${userName} va en camino a dejar el cesto #${id} (${deliveryPref}).`,
+      `/cesto/${id}`
+    );
 
     try {
       const noticeId = `notice_${id}_${Date.now()}`;
