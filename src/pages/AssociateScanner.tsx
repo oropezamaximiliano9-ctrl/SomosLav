@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { RoleContext } from "../App";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { extractBagId } from "../utils/qr";
+import PushNotificationBanner from "../components/PushNotificationBanner";
 
 export default function AssociateScanner() {
   const [searchParams] = useSearchParams();
@@ -24,11 +25,16 @@ export default function AssociateScanner() {
   return (
     <div className="flex-1 flex flex-col pt-4 animate-in fade-in h-full pb-12 overflow-y-auto px-4">
       
+      {/* Push Notification prompt for Associates */}
+      <div className="w-full max-w-md mx-auto">
+        <PushNotificationBanner userRole={role} userName="Asociado Sucursal" />
+      </div>
+
       {/* Upper Navigation Action */}
-      <div className="mb-4 mt-2 shrink-0">
+      <div className="mb-4 mt-1 shrink-0 w-full max-w-md mx-auto">
         <Link 
           to="/associate/link" 
-          className="flex items-center justify-center px-6 py-3 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-bold rounded-xl transition-all w-full text-sm"
+          className="flex items-center justify-center px-6 py-3 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-bold rounded-xl transition-all w-full text-sm shadow-xs"
         >
           <span>Vincular Pre-registro</span>
         </Link>

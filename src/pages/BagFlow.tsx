@@ -41,6 +41,10 @@ export default function BagFlow() {
   const [transportKm, setTransportKm] = useState("");
   const [startingProcess, setStartingProcess] = useState(false);
 
+  // Customer arrival notification state
+  const [notifyingArrival, setNotifyingArrival] = useState(false);
+  const [arrivalNotified, setArrivalNotified] = useState(false);
+
   useEffect(() => {
     if (bag) {
       if (bag.user) {
@@ -95,6 +99,7 @@ export default function BagFlow() {
       const bagData = bagSnap.data() as any;
       let userData: any = null;
       let activeOrder: any = null;
+      let latestNotice: any = null;
 
       if (bagData.status === "assigned" && bagData.userId) {
         const userSnap = await getDoc(doc(db, "users", bagData.userId));
@@ -112,9 +117,27 @@ export default function BagFlow() {
             }
           }
         });
+        // Check if there is an active arrival notice for this bag (created recently)
+        const noticesSnap = await getDocs(collection(db, "arrival_notices"));
+        let latestNoticeTime = 0;
+        noticesSnap.forEach((nSnap) => {
+          const nData = nSnap.data();
+          if (nData.bagId === id && nData.status !== "dismissed" && nData.status !== "attended") {
+            const time = nData.timestamp ? new Date(nData.timestamp).getTime() : 0;
+            // Only consider recent notices within the last 4 hours
+            if (time > latestNoticeTime && (Date.now() - time) < 4 * 60 * 60 * 1000) {
+              latestNoticeTime = time;
+              latestNotice = { id: nSnap.id, ...nData };
+            }
+          }
+        });
+
+        if (latestNotice) {
+          setArrivalNotified(true);
+        }
       }
 
-      const mergedBag = { ...bagData, user: userData, activeOrder };
+      const mergedBag = { ...bagData, user: userData, activeOrder, activeArrivalNotice: latestNotice };
       setBag(mergedBag);
 
       // If there is an active order in the DB, pre-populate receipt view so the ticket is ready on demand, but do not force redirect
@@ -142,6 +165,35 @@ export default function BagFlow() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleNotifyArrival = async (statusType: 'on_the_way' | 'arrived' = 'on_the_way') => {
+    if (!id || !bag?.user) return;
+    setNotifyingArrival(true);
+
+    const userName = bag.user.name || "Cliente";
+    const userPhone = bag.user.phone || "";
+    const deliveryPref = bag.user.deliveryPreference || "Estándar (48 h)";
+
+    try {
+      const noticeId = `notice_${id}_${Date.now()}`;
+      await setDoc(doc(db, "arrival_notices", noticeId), {
+        id: noticeId,
+        bagId: id,
+        userId: bag.user.id || bag.userId,
+        userName,
+        userPhone,
+        deliveryPreference: deliveryPref,
+        status: statusType,
+        timestamp: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+      });
+      setArrivalNotified(true);
+    } catch (err: any) {
+      alert("Error al enviar aviso: " + (err.message || "Intenta de nuevo"));
+    } finally {
+      setNotifyingArrival(false);
     }
   };
 
@@ -391,47 +443,108 @@ export default function BagFlow() {
 
   // FLUJO 2: ASSIGNED BAG
   if (role === 'customer') {
+    const isEnCamino = bag.activeArrivalNotice?.status === 'on_the_way';
+    const isLlegue = bag.activeArrivalNotice?.status === 'arrived';
+    const clientFirstName = bag.user?.name?.split(' ')[0] || "Cliente";
+
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 animate-in fade-in">
-        <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-2 border border-green-100">
-          <Package className="w-10 h-10 text-green-600" />
-        </div>
-        <div className="space-y-3">
-          <div className="inline-block px-3 py-1 bg-gray-100 rounded-full text-xs font-semibold uppercase tracking-widest text-gray-500">
-            Tu cesto
+      <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full animate-in fade-in">
+        
+        {/* Header Badge */}
+        <div className="space-y-1.5 pt-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-[#0f55d8] border border-blue-100 rounded-full text-[11px] font-bold tracking-widest uppercase">
+            <Sparkles className="w-3.5 h-3.5 text-[#0f55d8]" />
+            <span>Cesto Inteligente #{id}</span>
           </div>
-          <h2 className="text-3xl font-light">Hola, {bag.user?.name?.split(' ')[0]}</h2>
-          <p className="text-gray-500 text-sm max-w-[260px] mx-auto leading-relaxed">
-            Puedes depositar este cesto en cualquier punto SOMOS. Nosotros nos encargamos del resto.
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Hola, {clientFirstName} 👋
+          </h2>
+          <p className="text-xs text-slate-500 max-w-[280px] mx-auto leading-relaxed">
+            ¿Vas a dejar tu ropa en sucursal? Avísanos para que nuestro equipo esté listo para recibirte.
           </p>
         </div>
-        
-        <div className="card w-full max-w-sm mt-4 p-5 border border-gray-100 rounded-none bg-white space-y-3">
-          <label className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block text-center">Tus Datos de Entrega</label>
-          <div className="bg-blue-50 text-blue-700 py-3 rounded-none text-center border border-blue-100">
-            <p className="font-bold notranslate" translate="no">{bag.user?.deliveryPreference || 'Estándar (48 h)'}</p>
-            {(bag.user?.addressColonia || bag.user?.addressCalle) && (
-              <div className="mt-2 pt-2 border-t border-blue-200/50 flex flex-col items-center px-4">
-                 <span className="text-[10px] uppercase tracking-widest font-bold opacity-70 mb-1">Domicilio</span>
-                 <p className="text-xs font-semibold opacity-90 pb-1">
-                   {bag.user?.addressCalle} {bag.user?.addressNumero}, Col. {bag.user?.addressColonia}
-                 </p>
-              </div>
-            )}
+
+        {/* Action Card: Voy en camino */}
+        <div className="w-full bg-white border border-slate-100 rounded-3xl p-5 shadow-xs space-y-4 text-left">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 block">Titular</span>
+              <p className="text-sm font-bold text-slate-800">{bag.user?.name || "Cliente Registrado"}</p>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 block">Servicio Habitual</span>
+              <p className="text-xs font-bold text-[#0f55d8]">{bag.user?.deliveryPreference || "Estándar (48 h)"}</p>
+            </div>
           </div>
+
+          {/* Status feedback if already notified */}
+          {arrivalNotified || isEnCamino || isLlegue ? (
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-4 text-center space-y-2"
+            >
+              <div className="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto shadow-xs">
+                <Check className="w-5 h-5 stroke-[2.5]" />
+              </div>
+              <div className="space-y-0.5">
+                <h4 className="text-sm font-extrabold text-emerald-900">¡Aviso enviado a recepción!</h4>
+                <p className="text-xs text-emerald-700 font-medium leading-relaxed">
+                  Nuestro personal ya tiene la alerta en pantalla y estará listo para recibir tu cesto al llegar.
+                </p>
+              </div>
+              <div className="pt-1 flex justify-center items-center gap-1.5 text-[11px] font-bold text-emerald-800">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span>Asociado en espera de tu llegada</span>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => handleNotifyArrival("on_the_way")}
+                disabled={notifyingArrival}
+                className="w-full py-4 px-4 bg-[#0f55d8] hover:bg-[#0c4ab9] active:scale-[0.98] text-white rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 shadow-md shadow-blue-500/20 transition-all cursor-pointer select-none"
+              >
+                {notifyingArrival ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Enviando aviso...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-xl">🏃‍♂️</span>
+                    <span>Voy en camino a dejar mi ropa</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="w-full max-w-sm mt-8 pt-8 border-t border-dashed border-gray-200">
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-center">
-            <span className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Acceso de Personal SOMOS</span>
-            <p className="text-xs text-slate-500 mb-3.5 leading-relaxed">
-              Si eres asociado de SOMOS y abriste este enlace desde la cámara del celular, presiona el botón para activar tu vista de trabajo.
+        {/* Info Box */}
+        <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left space-y-1.5">
+          <div className="flex items-center gap-1.5 text-slate-700 font-bold text-xs">
+            <Info className="w-4 h-4 text-[#0f55d8] shrink-0" />
+            <span>Entrega rápida sin filas</span>
+          </div>
+          <p className="text-[11px] text-slate-500 leading-relaxed">
+            Al escanear tu cesto y avisar, el asociado prepara tu orden automáticamente. Solo dejas el cesto y listo.
+          </p>
+        </div>
+
+        {/* Acceso de Personal SOMOS */}
+        <div className="w-full max-w-sm pt-4 border-t border-dashed border-gray-200">
+          <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-3.5 text-center">
+            <span className="text-[9px] uppercase tracking-widest font-extrabold text-slate-400 block mb-1">Personal de Operaciones SOMOS</span>
+            <p className="text-[11px] text-slate-500 mb-2.5 leading-relaxed">
+              ¿Eres asociado y escaneaste este cesto con la cámara?
             </p>
             <button
               onClick={() => setRole('associate')}
-              className="w-full bg-[#0f55d8] text-white py-3 px-4 rounded-xl font-bold text-sm hover:-translate-y-0.5 transition-all outline-none"
+              className="w-full bg-slate-900 hover:bg-black text-white py-2.5 px-3 rounded-xl font-bold text-xs transition-all outline-none cursor-pointer"
             >
-              Activar Panel Asociado
+              Cambiar a Vista de Operaciones
             </button>
           </div>
         </div>

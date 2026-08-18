@@ -16,6 +16,7 @@ import AssociateSchedule from "./pages/AssociateSchedule";
 import AssociateAssignPreRegistered from "./pages/AssociateAssignPreRegistered";
 import AssociateSimulator from "./pages/AssociateSimulator";
 import FlowSimulator from "./components/FlowSimulator";
+import GlobalArrivalListener from "./components/GlobalArrivalListener";
 
 interface RoleContextType {
   role: 'customer' | 'associate' | 'admin';
@@ -307,6 +308,8 @@ function MainLayout() {
           <Route path="/simulator" element={<AssociateSimulator />} />
         </Routes>
         
+        {/* Global listener for customer arrivals with sound & alerts */}
+        <GlobalArrivalListener userRole={role} />
       </main>
 
       {/* Menú de herramientas del asociado que se despliega desde el lado */}

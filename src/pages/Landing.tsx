@@ -389,6 +389,7 @@ export default function Landing() {
   const [selectedLocationName, setSelectedLocationName] = useState<string>("Ubicación Palmas");
   
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [showLavaCta, setShowLavaCta] = useState(false);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [formError, setFormError] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
@@ -507,6 +508,29 @@ export default function Landing() {
     setDirection("forward");
     setFormError(null);
   };
+
+  useEffect(() => {
+    const section = document.getElementById("lava-estrena-section");
+    if (!section) return;
+
+    const checkVisibility = () => {
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      if (rect.top <= viewportHeight * 0.65 && rect.bottom >= 80) {
+        setShowLavaCta(true);
+      } else {
+        setShowLavaCta(false);
+      }
+    };
+
+    const container = section.closest(".overflow-y-auto") || window;
+    container.addEventListener("scroll", checkVisibility, { passive: true });
+    checkVisibility();
+
+    return () => {
+      container.removeEventListener("scroll", checkVisibility);
+    };
+  }, []);
 
   const handlePhoneBlur = async () => {
     if (!phone || phone.length < 5) return;
@@ -958,7 +982,7 @@ export default function Landing() {
                 
                 <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start ml-2">
                   <button 
-                     onClick={openBottomSheet}
+                    onClick={openBottomSheet}
                     className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Quiero mi cesto</span>
@@ -1291,6 +1315,9 @@ export default function Landing() {
             <div className="w-[48%] mt-4 sm:mt-8 flex flex-col gap-6 sm:gap-8 relative">
               {/* Card 1 */}
               <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+                <span className="font-geist text-neutral-800/35 text-base sm:text-lg font-medium tracking-wider select-none">
+                  ropa
+                </span>
               </div>
 
               {/* Card 3 - Continuing the sequence */}
@@ -1302,6 +1329,9 @@ export default function Landing() {
             <div className="w-[48%] mt-20 sm:mt-32 flex flex-col gap-6 sm:gap-8 relative">
               {/* Card 2 */}
               <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
+                <span className="font-geist text-neutral-800/35 text-base sm:text-lg font-medium tracking-wider select-none">
+                  lentes
+                </span>
               </div>
 
               {/* Card 4 - Beside Card 3 */}
@@ -1314,9 +1344,21 @@ export default function Landing() {
 
       </section>
 
-
-
-
+      {/* CTA inferior flotante estilo minimalista (visible únicamente en la sección 'Lava y Estrena') */}
+      <div 
+        className={`fixed bottom-2 sm:bottom-3 left-0 right-0 z-30 px-3 sm:px-4 flex justify-center pointer-events-none transition-all duration-300 ease-out pb-[env(safe-area-inset-bottom,0px)] ${
+          showLavaCta && !isBottomSheetOpen 
+            ? "opacity-100 translate-y-0" 
+            : "opacity-0 translate-y-6 pointer-events-none"
+        }`}
+      >
+        <button
+          onClick={openBottomSheet}
+          className="w-auto px-7 h-[50px] sm:h-[52px] bg-[#222222] hover:bg-[#1a1a1a] active:scale-[0.98] text-white rounded-[22px] font-semibold font-geist text-[17px] tracking-tight flex items-center justify-center gap-2 shadow-[0_14px_35px_rgba(0,0,0,0.5),0_3px_10px_rgba(0,0,0,0.3)] border border-white/15 pointer-events-auto transition-all cursor-pointer select-none whitespace-nowrap"
+        >
+          <span>Quiero mi cesto gratis</span>
+        </button>
+      </div>
 
       {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}
       <div 

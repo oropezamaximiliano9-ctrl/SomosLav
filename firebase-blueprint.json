@@ -67,6 +67,23 @@
         "value": { "type": "string" }
       },
       "required": ["key", "value"]
+    },
+    "ArrivalNotice": {
+      "title": "ArrivalNotice",
+      "description": "Customer notice that they are on their way or have arrived to drop off laundry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bagId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhone": { "type": "string" },
+        "deliveryPreference": { "type": "string" },
+        "status": { "type": "string", "enum": ["on_the_way", "arrived", "attended", "dismissed"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "bagId", "userId", "status"]
     }
   },
   "firestore": {
@@ -89,6 +106,10 @@
     "settings": {
       "schema": "Setting",
       "description": "System configuration parameters"
+    },
+    "arrival_notices": {
+      "schema": "ArrivalNotice",
+      "description": "Real-time client arrival alerts for associates"
     }
   }
 }

@@ -1,0 +1,24 @@
+{
+  "name": "SOMOS Lavandería",
+  "short_name": "SOMOS",
+  "description": "Sistema de gestión y recepción de cestos inteligentes SOMOS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f55d8",
+  "theme_color": "#0f55d8",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
