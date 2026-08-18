@@ -4,9 +4,11 @@ import App from './App.tsx';
 import './index.css';
 import { registerServiceWorker } from './utils/pushNotifications';
 
-// Register PWA Service Worker
+// Register PWA Service Worker safely after window load
 if (typeof window !== 'undefined') {
-  registerServiceWorker();
+  window.addEventListener('load', () => {
+    registerServiceWorker();
+  });
 }
 
 createRoot(document.getElementById('root')!).render(

@@ -71,28 +71,35 @@ export async function requestNotificationPermissionAndSubscribe(
 }
 
 // Trigger in-browser notification alert for active tab or service worker
-export function triggerLocalNotification(title: string, body: string, url: string = "/associate-scanner") {
+export async function triggerLocalNotification(title: string, body: string, url: string = "/associate-scanner") {
   if (!("Notification" in window) || Notification.permission !== "granted") return;
 
-  if (navigator.serviceWorker?.controller) {
-    navigator.serviceWorker.ready.then((registration) => {
-      registration.showNotification(title, {
-        body,
-        icon: "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp",
-        badge: "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp",
-        tag: `arrival-${Date.now()}`,
-        renotify: true,
-        data: { url }
-      } as NotificationOptions);
-    });
-  } else {
-    try {
-      new Notification(title, {
-        body,
-        icon: "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp"
-      });
-    } catch (e) {
-      console.warn("Direct Notification constructor failed:", e);
+  try {
+    if ("serviceWorker" in navigator) {
+      const reg = await navigator.serviceWorker.ready;
+      if (reg && reg.showNotification) {
+        await reg.showNotification(title, {
+          body,
+          icon: "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp",
+          badge: "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp",
+          tag: `arrival-${Date.now()}`,
+          renotify: true,
+          data: { url }
+        } as NotificationOptions);
+        return;
+      }
     }
+  } catch (err) {
+    console.warn("ServiceWorker showNotification failed, trying fallback:", err);
+  }
+
+  // Desktop / Safari direct fallback (when supported)
+  try {
+    new Notification(title, {
+      body,
+      icon: "https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp"
+    });
+  } catch (e) {
+    console.warn("Direct Notification constructor failed:", e);
   }
 }

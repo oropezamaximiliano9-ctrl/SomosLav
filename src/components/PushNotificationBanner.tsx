@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Bell, BellRing, Check, ShieldAlert, Smartphone } from "lucide-react";
-import { requestNotificationPermissionAndSubscribe } from "../utils/pushNotifications";
+import { requestNotificationPermissionAndSubscribe, triggerLocalNotification } from "../utils/pushNotifications";
 
 interface PushNotificationBannerProps {
   userId?: string;
@@ -46,9 +46,39 @@ export default function PushNotificationBanner({
     }
   };
 
+  const [testSent, setTestSent] = useState(false);
+
+  const handleTestNotification = async () => {
+    setTestSent(true);
+    // Play test chime
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.6);
+    } catch (e) {
+      console.warn("Audio test failed:", e);
+    }
+
+    await triggerLocalNotification(
+      "🧺 ¡Prueba de Alerta Exitosa! - SOMOS",
+      "Las notificaciones push en tu iPhone están funcionando correctamente."
+    );
+
+    setTimeout(() => setTestSent(false), 3000);
+  };
+
   if (subscribed && permission === "granted") {
     return (
-      <div className="bg-emerald-50/90 border border-emerald-200/80 rounded-2xl p-3 px-4 flex items-center justify-between shadow-2xs mb-4 animate-in fade-in">
+      <div className="bg-emerald-50/90 border border-emerald-200/80 rounded-2xl p-3 px-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs mb-4 animate-in fade-in">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
             <Check className="w-4 h-4 stroke-[3]" />
@@ -58,6 +88,14 @@ export default function PushNotificationBanner({
             <p className="text-[11px] text-emerald-700 font-medium">Este celular sonará cuando un cliente avise que viene en camino.</p>
           </div>
         </div>
+        <button
+          type="button"
+          onClick={handleTestNotification}
+          disabled={testSent}
+          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded-xl shadow-xs transition-colors cursor-pointer shrink-0"
+        >
+          <span>{testSent ? "¡Enviando alerta...!" : "Probar notificación ahora"}</span>
+        </button>
       </div>
     );
   }
