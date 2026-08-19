@@ -75,7 +75,7 @@ export default function GlobalArrivalListener({ userRole }: ArrivalListenerProps
             id: change.doc.id,
             bagId: data.bagId,
             userName: data.userName || "Cliente Registrado",
-            deliveryPreference: data.deliveryPreference || "Estándar (48 h)",
+            deliveryPreference: data.deliveryPreference || "24 horas",
             timeStr
           });
         }

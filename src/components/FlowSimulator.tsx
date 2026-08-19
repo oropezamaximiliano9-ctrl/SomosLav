@@ -140,7 +140,7 @@ export default function FlowSimulator() {
       const userData: any = {
         name: "Jaime Hernández",
         phone: phone,
-        deliveryPreference: "Estándar (48 h)",
+        deliveryPreference: "24 horas",
         addressColonia: "Las Palmas",
         addressCalle: "Paseo de las Palmas",
         addressNumero: "209",
@@ -247,7 +247,7 @@ export default function FlowSimulator() {
       const userData: any = {
         name: "Jaime Hernández",
         phone: phone,
-        deliveryPreference: "Estándar (48 h)",
+        deliveryPreference: "24 horas",
         addressColonia: "Las Palmas",
         addressCalle: "Paseo de las Palmas",
         addressNumero: "209",
@@ -304,7 +304,7 @@ export default function FlowSimulator() {
       });
 
       const orderId = nextIdVal.toString();
-      const finalDeliveryType = user.deliveryPreference || "Estándar (48 h)";
+      const finalDeliveryType = user.deliveryPreference || "24 horas";
 
       for (const oSnap of ordersSnap.docs) {
         const data = oSnap.data();
@@ -346,7 +346,7 @@ export default function FlowSimulator() {
         userId: "USR-jaime123",
         userName: "Jaime Hernández",
         userPhone: "9212393938",
-        deliveryPreference: "Estándar (48 h)",
+        deliveryPreference: "24 horas",
         status: "on_the_way",
         timestamp: new Date().toISOString(),
         createdAt: new Date().toISOString()
@@ -415,231 +415,166 @@ export default function FlowSimulator() {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full bg-white text-slate-800 p-5 flex flex-col items-stretch space-y-5 font-sans select-none"
+      className="w-full bg-white text-slate-800 p-5 flex flex-col items-stretch space-y-4 font-sans select-none"
     >
-      {/* Simulation Deck Header */}
-      <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-        <div className="flex flex-col text-left">
-          <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#0f55d8] flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#0f55d8] animate-pulse"></span>
-            Simulador de Ecosistema QR
+      {/* Simulation Steps Deck */}
+      <div className="space-y-3 text-left">
+        {/* Step 1 */}
+        <div className="p-3.5 rounded-2xl border border-slate-100 bg-white shadow-2xs flex items-start gap-3">
+          <span className={`w-6 h-6 rounded-full shrink-0 flex items-center justify-center font-bold text-xs border mt-0.5 ${
+            currentStep > 1 ? "bg-[#0f55d8] text-white border-[#0f55d8]" : "bg-blue-50 text-[#0f55d8] border-[#0f55d8]"
+          }`}>
+            {currentStep > 1 ? <Check className="w-3.5 h-3.5" /> : "1"}
           </span>
-          <span className="text-xs font-semibold text-slate-500">
-            Cesto de Pruebas: <strong className="text-slate-800">CESTO-001</strong>
-          </span>
-        </div>
-        <button
-          onClick={resetDemo}
-          disabled={loading}
-          type="button"
-          className="p-1.5 px-3 text-[10px] font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 rounded-lg flex items-center gap-1 transition-colors disabled:opacity-40 cursor-pointer"
-        >
-          <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} />
-          <span>Reiniciar Datos</span>
-        </button>
-      </div>
-
-      {/* Mode Switcher Tabs */}
-      <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-2xl">
-        <button
-          type="button"
-          onClick={() => setActiveTab("client")}
-          className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-            activeTab === "client"
-              ? "bg-white text-[#0f55d8] shadow-xs"
-              : "text-slate-600 hover:text-slate-900"
-          }`}
-        >
-          <Smartphone className="w-3.5 h-3.5" />
-          <span>Vista Cliente (Escaneo)</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("associate")}
-          className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-            activeTab === "associate"
-              ? "bg-white text-[#0f55d8] shadow-xs"
-              : "text-slate-600 hover:text-slate-900"
-          }`}
-        >
-          <ShieldAlert className="w-3.5 h-3.5" />
-          <span>Vista Operaciones / Asociado</span>
-        </button>
-      </div>
-
-      {/* TAB 1: CLIENT ESCANEO PERSPECTIVE */}
-      {activeTab === "client" && (
-        <div className="space-y-4 text-left animate-in fade-in">
-          {/* Interactive Action Cards */}
-          <div className="space-y-3">
-            <div className="border border-slate-200/80 rounded-2xl p-4 bg-white shadow-2xs space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400 block">Acción</span>
-                  <h4 className="text-sm font-bold text-slate-900">Pantalla del Cliente</h4>
-                </div>
-                <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-[10px] font-bold">
-                  /cesto/CESTO-001
-                </span>
-              </div>
-
-              <button
-                type="button"
-                onClick={openClientScanView}
-                disabled={loading}
-                className="w-full py-3.5 px-4 bg-[#0f55d8] hover:bg-[#0c4ab9] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
-              >
-                <Smartphone className="w-4 h-4" />
-                <span>Simular Escaneo como Cliente 📱</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-auto" />
-              </button>
+          <div className="flex-1">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-900">Pre-registro de Jaime</span>
+              {currentStep === 1 && (
+                <button
+                  type="button"
+                  onClick={runStep1}
+                  disabled={loading}
+                  className="text-[11px] font-bold px-3 py-1 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-lg cursor-pointer transition-colors"
+                >
+                  Pre-registrar
+                </button>
+              )}
             </div>
+            <span className="text-[11px] text-slate-500">
+              {currentStep > 1 ? "✓ Registrado en base de datos." : "Simula registro online de cliente nuevo."}
+            </span>
           </div>
         </div>
-      )}
 
-      {/* TAB 2: ASSOCIATE / OPS PERSPECTIVE */}
-      {activeTab === "associate" && (
-        <div className="space-y-4 text-left animate-in fade-in">
-          {/* Steps Timeline */}
-          <div className="space-y-3">
-            {/* Step 1 */}
-            <div className="p-3 rounded-2xl border border-slate-100 bg-white flex items-start gap-3">
-              <span className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center font-bold text-[10px] border mt-0.5 ${
-                currentStep > 1 ? "bg-[#0f55d8] text-white border-[#0f55d8]" : "bg-blue-50 text-[#0f55d8] border-[#0f55d8]"
-              }`}>
-                {currentStep > 1 ? <Check className="w-3 h-3" /> : "1"}
-              </span>
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-900">Pre-registro de Jaime</span>
-                  {currentStep === 1 && (
-                    <button
-                      onClick={runStep1}
-                      disabled={loading}
-                      className="text-[10px] font-bold px-2.5 py-1 bg-[#0f55d8] text-white rounded-lg cursor-pointer"
-                    >
-                      Pre-registrar
-                    </button>
-                  )}
+        {/* Step 2 */}
+        <div className="p-3.5 rounded-2xl border border-slate-100 bg-white shadow-2xs flex items-start gap-3">
+          <span className={`w-6 h-6 rounded-full shrink-0 flex items-center justify-center font-bold text-xs border mt-0.5 ${
+            currentStep > 2 ? "bg-[#0f55d8] text-white border-[#0f55d8]" : currentStep === 2 ? "bg-blue-50 text-[#0f55d8] border-[#0f55d8]" : "bg-slate-100 text-slate-400 border-slate-200"
+          }`}>
+            {currentStep > 2 ? <Check className="w-3.5 h-3.5" /> : "2"}
+          </span>
+          <div className="flex-1">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-900">Vincular CESTO-001</span>
+              {currentStep === 2 && (
+                <div className="flex gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/associate/link?bagId=CESTO-001&phone=9212393938")}
+                    className="text-[10px] font-bold px-2.5 py-1 border border-slate-200 hover:bg-slate-50 rounded-lg bg-white cursor-pointer"
+                  >
+                    Pantalla 🔍
+                  </button>
+                  <button
+                    type="button"
+                    onClick={runStep2Auto}
+                    disabled={loading}
+                    className="text-[10px] font-bold px-2.5 py-1 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-lg cursor-pointer"
+                  >
+                    Auto ⚡
+                  </button>
                 </div>
-                <span className="text-[10px] text-slate-400">
-                  {currentStep > 1 ? "✓ Registrado en base de datos." : "Simula registro online."}
-                </span>
-              </div>
+              )}
             </div>
-
-            {/* Step 2 */}
-            <div className="p-3 rounded-2xl border border-slate-100 bg-white flex items-start gap-3">
-              <span className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center font-bold text-[10px] border mt-0.5 ${
-                currentStep > 2 ? "bg-[#0f55d8] text-white border-[#0f55d8]" : currentStep === 2 ? "bg-blue-50 text-[#0f55d8] border-[#0f55d8]" : "bg-slate-100 text-slate-400 border-slate-200"
-              }`}>
-                {currentStep > 2 ? <Check className="w-3 h-3" /> : "2"}
-              </span>
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-900">Vincular CESTO-001</span>
-                  {currentStep === 2 && (
-                    <div className="flex gap-1">
-                      <button
-                        onClick={() => navigate("/associate/link?bagId=CESTO-001&phone=9212393938")}
-                        className="text-[9px] font-bold px-2 py-0.5 border border-slate-200 rounded-lg bg-white"
-                      >
-                        Pantalla 🔍
-                      </button>
-                      <button
-                        onClick={runStep2Auto}
-                        disabled={loading}
-                        className="text-[9px] font-bold px-2 py-0.5 bg-[#0f55d8] text-white rounded-lg"
-                      >
-                        Auto ⚡
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <span className="text-[10px] text-slate-400">
-                  {currentStep > 2 ? "✓ Cesto asignado a Jaime." : "Asocia el cesto al cliente."}
-                </span>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="p-3 rounded-2xl border border-slate-100 bg-white flex items-start gap-3">
-              <span className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center font-bold text-[10px] border mt-0.5 ${
-                currentStep > 3 ? "bg-[#0f55d8] text-white border-[#0f55d8]" : currentStep === 3 ? "bg-blue-50 text-[#0f55d8] border-[#0f55d8]" : "bg-slate-100 text-slate-400 border-slate-200"
-              }`}>
-                {currentStep > 3 ? <Check className="w-3 h-3" /> : "3"}
-              </span>
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-900">Recepción y Ticket</span>
-                  {currentStep === 3 && (
-                    <div className="flex gap-1">
-                      <button
-                        onClick={openAssociateScanView}
-                        className="text-[9px] font-bold px-2 py-0.5 border border-slate-200 rounded-lg bg-white"
-                      >
-                        Ver 🧺
-                      </button>
-                      <button
-                        onClick={runStep3Auto}
-                        disabled={loading}
-                        className="text-[9px] font-bold px-2 py-0.5 bg-emerald-600 text-white rounded-lg"
-                      >
-                        Crear Orden ⚡
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <span className="text-[10px] text-slate-400">
-                  {currentStep > 3 ? "✓ Orden generada con ticket." : "Recepción en mostrador."}
-                </span>
-              </div>
-            </div>
-
-            {/* Step 4 */}
-            <div className="p-3 rounded-2xl border border-slate-100 bg-white flex items-start gap-3">
-              <span className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center font-bold text-[10px] border mt-0.5 ${
-                currentStep >= 4 ? "bg-emerald-600 border-emerald-600 text-white font-black" : "bg-slate-100 text-slate-400 border-slate-200"
-              }`}>
-                {currentStep >= 4 ? <Check className="w-3 h-3" /> : "4"}
-              </span>
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-900">Pesaje & Entrega</span>
-                  {currentStep >= 4 && (
-                    <button
-                      type="button"
-                      onClick={openAssociateScanView}
-                      className="text-[9px] font-bold px-2.5 py-0.5 bg-[#0f55d8] text-white rounded-lg"
-                    >
-                      Ir a Orden #{activeOrderId} 📦
-                    </button>
-                  )}
-                </div>
-                <span className="text-[10px] text-slate-400">
-                  {currentStep >= 4 ? "✓ Pantalla operativa de pesaje y entrega." : "Pendiente."}
-                </span>
-              </div>
-            </div>
+            <span className="text-[11px] text-slate-500">
+              {currentStep > 2 ? "✓ Cesto asignado a Jaime." : "Asocia el cesto al cliente."}
+            </span>
           </div>
         </div>
-      )}
+
+        {/* Step 3 */}
+        <div className="p-3.5 rounded-2xl border border-slate-100 bg-white shadow-2xs flex items-start gap-3">
+          <span className={`w-6 h-6 rounded-full shrink-0 flex items-center justify-center font-bold text-xs border mt-0.5 ${
+            currentStep > 3 ? "bg-[#0f55d8] text-white border-[#0f55d8]" : currentStep === 3 ? "bg-blue-50 text-[#0f55d8] border-[#0f55d8]" : "bg-slate-100 text-slate-400 border-slate-200"
+          }`}>
+            {currentStep > 3 ? <Check className="w-3.5 h-3.5" /> : "3"}
+          </span>
+          <div className="flex-1">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-900">Recepción y Ticket</span>
+              {currentStep === 3 && (
+                <div className="flex gap-1.5">
+                  <button
+                    type="button"
+                    onClick={openAssociateScanView}
+                    className="text-[10px] font-bold px-2.5 py-1 border border-slate-200 hover:bg-slate-50 rounded-lg bg-white cursor-pointer"
+                  >
+                    Ver 🧺
+                  </button>
+                  <button
+                    type="button"
+                    onClick={runStep3Auto}
+                    disabled={loading}
+                    className="text-[10px] font-bold px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg cursor-pointer"
+                  >
+                    Crear Orden ⚡
+                  </button>
+                </div>
+              )}
+            </div>
+            <span className="text-[11px] text-slate-500">
+              {currentStep > 3 ? "✓ Orden generada con ticket." : "Recepción en mostrador."}
+            </span>
+          </div>
+        </div>
+
+        {/* Step 4 */}
+        <div className="p-3.5 rounded-2xl border border-slate-100 bg-white shadow-2xs flex items-start gap-3">
+          <span className={`w-6 h-6 rounded-full shrink-0 flex items-center justify-center font-bold text-xs border mt-0.5 ${
+            currentStep >= 4 ? "bg-emerald-600 border-emerald-600 text-white font-black" : "bg-slate-100 text-slate-400 border-slate-200"
+          }`}>
+            {currentStep >= 4 ? <Check className="w-3.5 h-3.5" /> : "4"}
+          </span>
+          <div className="flex-1">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-900">Pesaje & Entrega</span>
+              {currentStep >= 4 && (
+                <button
+                  type="button"
+                  onClick={openAssociateScanView}
+                  className="text-[10px] font-bold px-3 py-1 bg-[#0f55d8] hover:bg-[#0d4bc0] text-white rounded-lg cursor-pointer"
+                >
+                  Ir a Orden #{activeOrderId || "ACTIVA"} 📦
+                </button>
+              )}
+            </div>
+            <span className="text-[11px] text-slate-500">
+              {currentStep >= 4 ? "✓ Pantalla operativa de pesaje y entrega." : "Pesaje final y entrega."}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Direct Customer Scan Simulation Button */}
+      <button
+        type="button"
+        onClick={openClientScanView}
+        disabled={loading}
+        className="w-full py-3.5 px-4 bg-[#0f55d8] hover:bg-[#0c4ab9] text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+      >
+        <Smartphone className="w-4 h-4" />
+        <span>Simular Escaneo como Cliente 📱</span>
+        <ArrowRight className="w-3.5 h-3.5 ml-auto" />
+      </button>
+
+      {/* Full-width Single Line Reset Button */}
+      <button
+        type="button"
+        onClick={resetDemo}
+        disabled={loading}
+        className="w-full py-3 px-4 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 rounded-2xl flex items-center justify-center gap-2 transition-colors disabled:opacity-40 cursor-pointer"
+      >
+        <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+        <span>Reiniciar Datos</span>
+      </button>
 
       {/* Status log panel */}
       {statusMsg && (
-        <div className="bg-slate-50 rounded-xl p-3 text-[10px] font-mono text-left border border-slate-100 flex items-start gap-1 text-[#0f55d8]">
+        <div className="bg-slate-50 rounded-xl p-2.5 text-[10px] font-mono text-left border border-slate-100 flex items-start gap-1.5 text-[#0f55d8]">
           <span className="text-slate-400 select-none">&gt;</span>
           <p className="flex-1 leading-normal">{statusMsg}</p>
         </div>
       )}
-
-      {/* Extra guide tip */}
-      <div className="text-[10px] text-slate-400 text-left flex items-start gap-1.5 pt-2 border-t border-slate-100">
-        <HelpCircle className="w-3.5 h-3.5 text-slate-400 mt-0.5 shrink-0" />
-        <span>Puedes alternar entre pestañas en cualquier momento para comprobar el comportamiento desde ambos roles sin afectar datos reales.</span>
-      </div>
     </motion.div>
   );
 }

@@ -78,15 +78,12 @@ export default function PushNotificationBanner({
 
   if (subscribed && permission === "granted") {
     return (
-      <div className="bg-emerald-50/90 border border-emerald-200/80 rounded-2xl p-3 px-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs mb-4 animate-in fade-in">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
-            <Check className="w-4 h-4 stroke-[3]" />
+      <div className="bg-emerald-50/90 border border-emerald-200/80 rounded-2xl p-2.5 px-3 flex items-center justify-between gap-2 shadow-2xs mb-4 animate-in fade-in">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center shrink-0">
+            <Check className="w-3.5 h-3.5 stroke-[3]" />
           </div>
-          <div>
-            <p className="text-xs font-bold text-emerald-950 leading-tight">Alertas de llegada activadas 🔔</p>
-            <p className="text-[11px] text-emerald-700 font-medium">Este celular sonará cuando un cliente avise que viene en camino.</p>
-          </div>
+          <span className="text-xs font-bold text-emerald-950">Alertas activadas 🔔</span>
         </div>
         <button
           type="button"
@@ -94,7 +91,7 @@ export default function PushNotificationBanner({
           disabled={testSent}
           className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded-xl shadow-xs transition-colors cursor-pointer shrink-0"
         >
-          <span>{testSent ? "¡Enviando alerta...!" : "Probar notificación ahora"}</span>
+          <span>{testSent ? "¡Probando...!" : "Probar alerta"}</span>
         </button>
       </div>
     );
@@ -102,48 +99,24 @@ export default function PushNotificationBanner({
 
   if (permission === "denied") {
     return (
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 px-4 flex items-center gap-3 mb-4 text-left">
-        <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
-        <div className="text-xs text-amber-900">
-          <p className="font-bold">Notificaciones bloqueadas en el navegador</p>
-          <p className="text-[11px] text-amber-700">Para recibir alertas con la pantalla apagada, activa los permisos en la configuración del sitio.</p>
-        </div>
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-2.5 px-3 flex items-center gap-2.5 mb-4 text-left">
+        <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+        <span className="text-xs font-semibold text-amber-900">Notificaciones bloqueadas en el navegador</span>
       </div>
     );
   }
 
   return (
-    <div className="bg-linear-to-r from-blue-900 to-[#0f55d8] text-white rounded-2xl p-4 shadow-md mb-4 text-left relative overflow-hidden animate-in fade-in">
-      <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20">
-            <BellRing className="w-5 h-5 text-amber-300 animate-bounce" />
-          </div>
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-extrabold">Activar Alertas al Celular</span>
-              <span className="px-1.5 py-0.5 bg-amber-400 text-blue-950 font-black text-[9px] rounded uppercase tracking-wider">
-                Exclusivo Personal
-              </span>
-            </div>
-            <p className="text-xs text-blue-100 font-medium leading-relaxed">
-              Recibe avisos sonoros instantáneos en la pantalla de bloqueo cuando los clientes vengan en camino a dejar su cesto.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <button
-            type="button"
-            onClick={handleSubscribe}
-            disabled={loading}
-            className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-blue-50 text-[#0f55d8] rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
-          >
-            <Smartphone className="w-4 h-4" />
-            <span>{loading ? "Activando..." : "Activar en este celular"}</span>
-          </button>
-        </div>
-      </div>
+    <div className="mb-4 animate-in fade-in">
+      <button
+        type="button"
+        onClick={handleSubscribe}
+        disabled={loading}
+        className="w-full py-3 px-4 bg-linear-to-r from-blue-900 to-[#0f55d8] hover:from-blue-950 hover:to-[#0c48b8] active:scale-[0.99] text-white rounded-2xl font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all"
+      >
+        <BellRing className="w-4 h-4 text-amber-300 animate-pulse" />
+        <span>{loading ? "Activando..." : "Activar Alertas de Llegada"}</span>
+      </button>
     </div>
   );
 }

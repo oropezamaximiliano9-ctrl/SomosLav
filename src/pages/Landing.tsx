@@ -37,6 +37,32 @@ const drillTransition = {
   duration: 0.12,
 };
 
+const checkmarkContainerVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.7,
+      delayChildren: 1,
+    },
+  },
+};
+
+const checkmarkItemVariants = {
+  hidden: { opacity: 0, scale: 0.15, y: 3 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 280,
+      damping: 12,
+      mass: 0.85,
+    },
+  },
+};
+
 const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
@@ -954,30 +980,44 @@ export default function Landing() {
                       Toda la ropa de tu cesto:
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                      <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
+                  <motion.div 
+                    className="flex flex-col gap-2"
+                    variants={checkmarkContainerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
+                        <motion.div variants={checkmarkItemVariants} className="flex items-center justify-center">
+                          <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
+                        </motion.div>
+                      </div>
+                      <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
+                        Lavada y doblada
+                      </span>
                     </div>
-                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
-                      Lavada y doblada
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                      <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
+                    <div className="flex items-center gap-2">
+                      <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
+                        <motion.div variants={checkmarkItemVariants} className="flex items-center justify-center">
+                          <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
+                        </motion.div>
+                      </div>
+                      <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
+                        Lista en 24 horas
+                      </span>
                     </div>
-                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
-                      Lista en 24 horas
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                      <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
+                    <div className="flex items-center gap-2">
+                      <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
+                        <motion.div variants={checkmarkItemVariants} className="flex items-center justify-center">
+                          <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
+                        </motion.div>
+                      </div>
+                      <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
+                        A domicilio
+                      </span>
                     </div>
-                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
-                      A domicilio
-                    </span>
-                  </div>
+                  </motion.div>
                 </div>
                 
                 <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start ml-2">
@@ -1329,9 +1369,6 @@ export default function Landing() {
             <div className="w-[48%] mt-20 sm:mt-32 flex flex-col gap-6 sm:gap-8 relative">
               {/* Card 2 */}
               <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
-                <span className="font-geist text-neutral-800/35 text-base sm:text-lg font-medium tracking-wider select-none">
-                  lentes
-                </span>
               </div>
 
               {/* Card 4 - Beside Card 3 */}
@@ -1354,9 +1391,9 @@ export default function Landing() {
       >
         <button
           onClick={openBottomSheet}
-          className="w-auto px-7 h-[50px] sm:h-[52px] bg-[#222222] hover:bg-[#1a1a1a] active:scale-[0.98] text-white rounded-[22px] font-semibold font-geist text-[17px] tracking-tight flex items-center justify-center gap-2 shadow-[0_14px_35px_rgba(0,0,0,0.5),0_3px_10px_rgba(0,0,0,0.3)] border border-white/15 pointer-events-auto transition-all cursor-pointer select-none whitespace-nowrap"
+          className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_6px_20px_rgba(0,0,0,0.3)] pointer-events-auto cursor-pointer"
         >
-          <span>Quiero mi cesto gratis</span>
+          <span>Quiero mi cesto</span>
         </button>
       </div>
 
@@ -1615,6 +1652,7 @@ export default function Landing() {
                       {formStep === 1 && (
                         <span className="inline-flex items-center gap-1">
                           <motion.span
+                            key={`wave-${isBottomSheetOpen}`}
                             className="inline-block origin-bottom-right select-none"
                             animate={{ rotate: [0, 18, -10, 18, -6, 0, 0] }}
                             transition={{
@@ -1627,6 +1665,7 @@ export default function Landing() {
                             👋
                           </motion.span>
                           <motion.span
+                            key={`grin-${isBottomSheetOpen}`}
                             className="inline-block origin-center select-none"
                             animate={{ 
                               scale: [1, 1.2, 0.95, 1.1, 1, 1],
@@ -1647,6 +1686,7 @@ export default function Landing() {
                       {formStep === 2 && (
                         <span className="inline-flex items-center gap-1.5">
                           <motion.span
+                            key={`phone-${formStep}`}
                             className="inline-block"
                             animate={{ rotate: [0, -12, 12, -12, 12, 0] }}
                             transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }}
@@ -1659,6 +1699,7 @@ export default function Landing() {
                       {formStep === 3 && (
                         <span className="inline-flex items-center gap-1.5">
                           <motion.span
+                            key={`pin-${formStep}`}
                             className="inline-block"
                             animate={{ y: [0, -6, 0] }}
                             transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.8, ease: "easeInOut" }}

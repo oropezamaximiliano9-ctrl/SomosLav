@@ -11,16 +11,15 @@ import {
 } from "firebase/firestore";
 import { getColoniaDistance } from "../utils/distance";
 
-const getDeliveryDayDescription = (deliveryTypeStr: string) => {
-  const type = (deliveryTypeStr || 'Est\u00e1ndar').toLowerCase();
-  // Express/expr\u00e9s/24h -> 1 day. Standard/est\u00e1ndar/48h -> 2 days.
-  const daysToAdd = type.includes('24') || type.includes('expr') || type.includes('express') ? 1 : 2;
+const getDeliveryDayDescription = (_deliveryTypeStr?: string) => {
+  // All orders are delivered within 24 hours (1 day)
+  const daysToAdd = 1;
   
   const deliveryDate = new Date();
   deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
   
   const daysOfWeek = [
-    'Domingo', 'Lunes', 'Martes', 'Mi\u00e9rcoles', 'Jueves', 'Viernes', 'S\u00e1bado'
+    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
   ];
   const months = [
     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
@@ -1127,7 +1126,7 @@ export default function Dashboard() {
       await updateDoc(doc(db, "users", id), {
         name,
         phone,
-        deliveryPreference: deliveryPreference || "Estándar (48 h)",
+        deliveryPreference: deliveryPreference || "24 horas",
         addressColonia: addressColonia || null,
         addressCalle: addressCalle || null,
         addressNumero: addressNumero || null,
@@ -2025,7 +2024,7 @@ return (
                           translate="no" 
                           className={`notranslate ${selectedCustomer.orderCount === 0 ? "text-gray-400 italic text-xs block font-medium" : "text-gray-950 font-semibold"}`}
                         >
-                          {selectedCustomer.orderCount === 0 ? 'No seleccionada aún (Pendiente de visita al punto)' : (selectedCustomer.deliveryPreference || 'Estándar (48 h)')}
+                          {selectedCustomer.orderCount === 0 ? 'No seleccionada aún (Pendiente de visita al punto)' : (selectedCustomer.deliveryPreference || '24 horas')}
                         </span>
                       </div>
                       <div>

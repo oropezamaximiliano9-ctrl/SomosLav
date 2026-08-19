@@ -33,7 +33,7 @@ export default function BagFlow() {
   const [delivering, setDelivering] = useState(false);
   const [showDeliverySuccess, setShowDeliverySuccess] = useState(false);
   
-  const [prefSpeed, setPrefSpeed] = useState("Estándar (48 h)");
+  const [prefSpeed] = useState("24 horas");
   const [prefTime, setPrefTime] = useState("Mañana (8:00 AM – 10:00 AM)");
 
   const [washMinutes, setWashMinutes] = useState("");
@@ -49,9 +49,6 @@ export default function BagFlow() {
   useEffect(() => {
     if (bag) {
       if (bag.user) {
-        if (bag.user.deliveryPreference) {
-          setPrefSpeed(bag.user.deliveryPreference);
-        }
         if (bag.user.preferredTime) {
           setPrefTime(bag.user.preferredTime);
         }
@@ -152,7 +149,7 @@ export default function BagFlow() {
         setConfirmedOrderData({
           orderId: activeOrder.id,
           user: userData,
-          deliveryType: activeOrder.deliveryType || userData?.deliveryPreference || "Estándar (48 h)",
+          deliveryType: activeOrder.deliveryType || userData?.deliveryPreference || "24 horas",
           date: formattedDate
         });
 
@@ -175,7 +172,7 @@ export default function BagFlow() {
 
     const userName = bag.user.name || "Cliente";
     const userPhone = bag.user.phone || "";
-    const deliveryPref = bag.user.deliveryPreference || "Estándar (48 h)";
+    const deliveryPref = bag.user.deliveryPreference || "24 horas";
 
     // 1. Play immediate audio feedback
     try {
@@ -238,7 +235,7 @@ export default function BagFlow() {
       }
       let userData = userSnap.data() as any;
 
-      const pref = selectedDeliveryType || userData.deliveryPreference || "Estándar (48 h)";
+      const pref = selectedDeliveryType || userData.deliveryPreference || "24 horas";
       const prefTime = preferredTimePreference || userData.preferredTime || "Mañana (8:00 AM – 10:00 AM)";
       await updateDoc(doc(db, "users", userData.id), { deliveryPreference: pref, preferredTime: prefTime });
       userData.deliveryPreference = pref;
@@ -254,7 +251,7 @@ export default function BagFlow() {
       });
 
       const orderId = nextIdVal.toString();
-      const finalDeliveryType = selectedDeliveryType || userData.deliveryPreference || "Estándar (48 h)";
+      const finalDeliveryType = selectedDeliveryType || userData.deliveryPreference || "24 horas";
 
       // Complete any past uncompleted orders for this bag
       for (const oSnap of ordersSnap.docs) {
@@ -284,7 +281,7 @@ export default function BagFlow() {
       setConfirmedOrderData({
         orderId: orderId,
         user: userData,
-        deliveryType: selectedDeliveryType || userData.deliveryPreference || 'Estándar (48 h)',
+        deliveryType: selectedDeliveryType || userData.deliveryPreference || '24 horas',
         date: formattedDate
       });
 
@@ -478,10 +475,6 @@ export default function BagFlow() {
         
         {/* Header Badge */}
         <div className="space-y-1.5 pt-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-[#0f55d8] border border-blue-100 rounded-full text-[11px] font-bold tracking-widest uppercase">
-            <Sparkles className="w-3.5 h-3.5 text-[#0f55d8]" />
-            <span>Cesto Inteligente #{id}</span>
-          </div>
           <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Hola, {clientFirstName} 👋
           </h2>
@@ -498,8 +491,10 @@ export default function BagFlow() {
               <p className="text-sm font-bold text-slate-800">{bag.user?.name || "Cliente Registrado"}</p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 block">Servicio Habitual</span>
-              <p className="text-xs font-bold text-[#0f55d8]">{bag.user?.deliveryPreference || "Estándar (48 h)"}</p>
+              <span className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 block">Horario Preferido</span>
+              <p className="text-xs font-bold text-[#0f55d8]">
+                {bag.user?.preferredTime?.includes("Noche") ? "Noche (8–10 PM)" : bag.user?.preferredTime?.includes("Mañana") ? "Mañana (8–10 AM)" : (bag.user?.preferredTime || "Mañana (8–10 AM)")}
+              </p>
             </div>
           </div>
 
@@ -516,7 +511,7 @@ export default function BagFlow() {
               <div className="space-y-0.5">
                 <h4 className="text-sm font-extrabold text-emerald-900">¡Aviso enviado a recepción!</h4>
                 <p className="text-xs text-emerald-700 font-medium leading-relaxed">
-                  Nuestro personal ya tiene la alerta en pantalla y estará listo para recibir tu cesto al llegar.
+                  Nuestro asociado estará listo para recibir tu cesto al llegar.
                 </p>
               </div>
               <div className="pt-1 flex justify-center items-center gap-1.5 text-[11px] font-bold text-emerald-800">
@@ -540,7 +535,7 @@ export default function BagFlow() {
                 ) : (
                   <>
                     <span className="text-xl">🏃‍♂️</span>
-                    <span>Voy en camino a dejar mi ropa</span>
+                    <span>Voy en camino</span>
                   </>
                 )}
               </button>
@@ -557,22 +552,6 @@ export default function BagFlow() {
           <p className="text-[11px] text-slate-500 leading-relaxed">
             Al escanear tu cesto y avisar, el asociado prepara tu orden automáticamente. Solo dejas el cesto y listo.
           </p>
-        </div>
-
-        {/* Acceso de Personal SOMOS */}
-        <div className="w-full max-w-sm pt-4 border-t border-dashed border-gray-200">
-          <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-3.5 text-center">
-            <span className="text-[9px] uppercase tracking-widest font-extrabold text-slate-400 block mb-1">Personal de Operaciones SOMOS</span>
-            <p className="text-[11px] text-slate-500 mb-2.5 leading-relaxed">
-              ¿Eres asociado y escaneaste este cesto con la cámara?
-            </p>
-            <button
-              onClick={() => setRole('associate')}
-              className="w-full bg-slate-900 hover:bg-black text-white py-2.5 px-3 rounded-xl font-bold text-xs transition-all outline-none cursor-pointer"
-            >
-              Cambiar a Vista de Operaciones
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -622,7 +601,7 @@ export default function BagFlow() {
       if (whatsappUrl) {
         const orderNumber = confirmedOrderData?.orderId || "SOMOS";
         const clientName = confirmedOrderData?.user?.name || "Cliente";
-        const deliveryType = confirmedOrderData?.deliveryType || "Estándar (48 h)";
+        const deliveryType = confirmedOrderData?.deliveryType || "24 horas";
         const dateText = confirmedOrderData?.date || "Hoy";
 
         const textMessage = `¡Hola, *${clientName}*! 🫧\n\nAquí tienes tu ticket digital de *SOMOS lavandería*:\n\n📦 *Orden:* #${String(orderNumber).padStart(4, '0')}\n📅 *Fecha:* ${dateText}\n🚀 *Servicio:* ${deliveryType}\n\n_(Te copiamos la imagen del ticket al portapapeles. ¡Solo mantén presionado el chat y dale Pegar para enviarla!)_`;
@@ -1030,57 +1009,6 @@ export default function BagFlow() {
         
         {isFirstVisit ? (
           <div className="space-y-4 py-1">
-
-            {/* Plan de Entrega Preferido */}
-            <div className="space-y-3 text-left">
-              <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block pb-0.5">Plan de Entrega Preferido</label>
-
-              <div className="grid grid-cols-2 gap-3 mt-1">
-                {/* Estándar Card */}
-                <motion.button
-                  whileHover={{ y: -1, scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="button"
-                  onClick={() => setPrefSpeed("Estándar (48 h)")}
-                  className={`relative py-3 px-3 rounded-xl border text-center transition-all duration-300 focus:outline-none flex flex-col items-center justify-center min-h-[4rem] cursor-pointer ${
-                    prefSpeed === "Estándar (48 h)"
-                      ? "bg-blue-50/70 border-[#0f55d8] border-2"
-                      : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
-                  }`}
-                >
-                  <span className={`font-black text-sm sm:text-base tracking-tight block ${prefSpeed === "Estándar (48 h)" ? "text-[#0f55d8]" : "text-slate-800"}`}>
-                    Estándar
-                  </span>
-                  <span className="text-xs leading-tight text-gray-500 font-bold block mt-0.5">
-                    48 horas
-                  </span>
-                </motion.button>
-
-                {/* Express Card */}
-                <motion.button
-                  whileHover={{ y: -1, scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="button"
-                  onClick={() => setPrefSpeed("Express (24 h)")}
-                  className={`relative py-3 px-3 rounded-xl border text-center transition-all duration-300 focus:outline-none flex flex-col items-center justify-center min-h-[4rem] cursor-pointer ${
-                    prefSpeed === "Express (24 h)"
-                      ? "bg-blue-50/70 border-[#0f55d8] border-2"
-                      : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
-                  }`}
-                >
-                  <span 
-                    translate="no" 
-                    className={`font-black text-sm sm:text-base tracking-tight block notranslate ${prefSpeed === "Express (24 h)" ? "text-[#0f55d8]" : "text-slate-800"}`}
-                  >
-                    Express
-                  </span>
-                  <span className="text-xs leading-tight text-gray-500 font-bold block mt-0.5">
-                    24 horas
-                  </span>
-                </motion.button>
-              </div>
-            </div>
-
             {/* Horario de Entrega Preferido */}
             {isEligibleForDelivery && (
               <div className="space-y-3 text-left">
@@ -1139,35 +1067,6 @@ export default function BagFlow() {
             </div>
 
             <div className="grid grid-cols-1 gap-3">
-              {/* Plan de Entrega Row Card */}
-              <div className="flex items-center justify-between p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-xl transition-all duration-200">
-                <div className="space-y-0.5 text-left min-w-0">
-                  <span className="text-[8px] uppercase tracking-wider font-extrabold text-slate-400 block">Plan de Entrega</span>
-                  <span translate="no" className="text-sm sm:text-base font-black text-slate-800 notranslate flex items-center gap-1.5 flex-nowrap whitespace-nowrap">
-                    {prefSpeed === 'Express (24 h)' ? (
-                      <>
-                        Express
-                        <span className="text-xs font-bold text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">24 h</span>
-                      </>
-                    ) : (
-                      <>
-                        Estándar
-                        <span className="text-xs font-bold text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">48 h</span>
-                      </>
-                    )}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPrefSpeed(p => p === "Express (24 h)" ? "Estándar (48 h)" : "Express (24 h)");
-                  }}
-                  className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-900 text-slate-900 hover:text-white rounded-lg font-bold text-[9px] sm:text-[10px] transition-all cursor-pointer uppercase border border-slate-200/60 hover:border-slate-900 shrink-0"
-                >
-                  Cambiar
-                </button>
-              </div>
-
               {/* Horario Row Card (only if eligible) */}
               {isEligibleForDelivery && (
                 <div className="flex items-center justify-between p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-xl transition-all duration-200 animate-slide-in">
