@@ -1332,13 +1332,13 @@ export default function Landing() {
       {/* Sección Asimétrica Editorial (Playeras) */}
       <section 
         id="lava-estrena-section" 
-        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-36 sm:pb-48 flex flex-col justify-start items-center bg-[#4E0000] snap-start min-h-[150dvh] sm:min-h-[160dvh]" 
+        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-16 sm:pb-24 flex flex-col justify-start items-center bg-[#4E0000] snap-start min-h-screen" 
         style={{ scrollSnapAlign: 'start' }}
       >
         
         <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-0">
           {/* Título Grande y Subtítulo */}
-          <div className="mb-4 sm:mb-8 w-full px-1">
+          <div className="mb-2 sm:mb-4 w-full px-1">
             <h2 className="font-geist text-white text-[56px] sm:text-[72px] font-bold drop-shadow-sm leading-[0.95] tracking-[-0.03em] uppercase">
               Lava <span className="font-serif italic font-light lowercase text-[0.6em] text-white/85 tracking-normal inline-block align-middle transform -translate-y-1 sm:-translate-y-1.5 ml-1">y</span><br />
               Estrena
@@ -1349,10 +1349,10 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="w-full flex items-start justify-between gap-3 sm:gap-6 relative mt-12 sm:mt-20">
+          <div className="w-full flex items-start justify-between gap-3 sm:gap-6 relative mt-4 sm:mt-6">
             
             {/* Left Column - Elevated (Card 1 & Card 3) */}
-            <div className="w-[48%] mt-4 sm:mt-8 flex flex-col gap-6 sm:gap-8 relative">
+            <div className="w-[48%] mt-0 sm:mt-2 flex flex-col gap-6 sm:gap-8 relative">
               {/* Card 1 */}
               <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
                 <span className="font-geist text-neutral-800/35 text-base sm:text-lg font-medium tracking-wider select-none">
@@ -1366,7 +1366,7 @@ export default function Landing() {
             </div>
             
             {/* Right Column - Pushed down (Card 2 & Card 4) */}
-            <div className="w-[48%] mt-20 sm:mt-32 flex flex-col gap-6 sm:gap-8 relative">
+            <div className="w-[48%] mt-12 sm:mt-18 flex flex-col gap-6 sm:gap-8 relative">
               {/* Card 2 */}
               <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
               </div>
@@ -1377,25 +1377,22 @@ export default function Landing() {
             </div>
 
           </div>
+
+          {/* Texto explicativo y botón debajo de las tarjetas */}
+          <div className="mt-8 sm:mt-12 mb-2 w-full px-1 flex flex-col items-start text-left select-none gap-3 sm:gap-3.5">
+            <p className="font-geist text-white/90 text-[15px] sm:text-[17px] font-medium tracking-tight leading-snug">
+              Te entregamos la prenda que quieras<br />junto con tu ropa limpia
+            </p>
+            <button
+              onClick={openBottomSheet}
+              className="h-[43px] px-4 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)] cursor-pointer"
+            >
+              <span>Quiero mi cesto</span>
+            </button>
+          </div>
         </div>
 
       </section>
-
-      {/* CTA inferior flotante estilo minimalista (visible únicamente en la sección 'Lava y Estrena') */}
-      <div 
-        className={`fixed bottom-2 sm:bottom-3 left-0 right-0 z-30 px-3 sm:px-4 flex justify-center pointer-events-none transition-all duration-300 ease-out pb-[env(safe-area-inset-bottom,0px)] ${
-          showLavaCta && !isBottomSheetOpen 
-            ? "opacity-100 translate-y-0" 
-            : "opacity-0 translate-y-6 pointer-events-none"
-        }`}
-      >
-        <button
-          onClick={openBottomSheet}
-          className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_6px_20px_rgba(0,0,0,0.3)] pointer-events-auto cursor-pointer"
-        >
-          <span>Quiero mi cesto</span>
-        </button>
-      </div>
 
       {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}
       <div 
