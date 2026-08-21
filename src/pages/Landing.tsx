@@ -974,16 +974,16 @@ export default function Landing() {
               </div>
 
               {/* Tarjeta de beneficios */}
-              <div className="pt-2 pb-2.5 px-2 w-full border-t border-gray-100/50">
+              <div className="pt-1.5 pb-2.5 px-2 w-full border-t border-gray-100/50">
                 {/* Textos de inclusión */}
-                <div className="flex flex-col gap-2 select-none text-left pt-2">
+                <div className="flex flex-col gap-1.5 select-none text-left pt-1">
                   <div className="ml-2">
                     <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
                       Toda la ropa de tu cesto:
                     </span>
                   </div>
                   <motion.div 
-                    className="flex flex-col gap-2"
+                    className="flex flex-col gap-1.5"
                     variants={checkmarkContainerVariants}
                     initial="hidden"
                     whileInView="visible"
@@ -995,7 +995,7 @@ export default function Landing() {
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                         </motion.div>
                       </div>
-                      <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
+                      <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
                         Lavada y doblada
                       </span>
                     </div>
@@ -1005,7 +1005,7 @@ export default function Landing() {
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                         </motion.div>
                       </div>
-                      <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
+                      <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
                         Lista en 24 horas
                       </span>
                     </div>
@@ -1015,17 +1015,17 @@ export default function Landing() {
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                         </motion.div>
                       </div>
-                      <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
+                      <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
                         A domicilio
                       </span>
                     </div>
                   </motion.div>
                 </div>
                 
-                <div className="flex gap-2 mt-[27px] w-full max-w-[340px] justify-start ml-2">
+                <div className="flex gap-2 mt-[24px] w-full max-w-[340px] justify-start ml-2">
                   <button 
                     onClick={openBottomSheet}
-                    className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                    className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Quiero mi cesto</span>
                   </button>
@@ -1033,7 +1033,7 @@ export default function Landing() {
                     onClick={() => {
                       document.getElementById('empieza-hoy-section')?.scrollIntoView({ behavior: 'smooth' })
                     }}
-                    className="h-[43px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                    className="h-[43px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Saber más</span>
                     <ChevronDown className="w-[18px] h-[18px]" strokeWidth={2.5} />
@@ -1086,7 +1086,7 @@ export default function Landing() {
               id="empty-green-landing-card"
             >
               {/* Texto explicativo ARRIBA de la imagen */}
-              <div className="pt-5 pb-3 px-6 w-full text-left">
+              <div className="py-5 px-4 sm:p-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Recibe tu cesto <span className="text-[#0f55d8] font-bold">hoy</span><br />y llénalo a tu propio ritmo
                 </p>
@@ -1138,12 +1138,12 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-3 pb-3 pl-4 pr-2 sm:pl-6 sm:pr-3 w-full text-left">
+              <div className="py-5 px-4 sm:p-6 w-full text-left">
                 <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
-                  Toda la ropa que quepa por $95 <span className="text-[#0f55d8] font-bold">siempre</span>
+                  Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold whitespace-nowrap">$95</span><br />sin límite de peso
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
-                <div className="mt-7 text-right">
+                <div className="mt-5 sm:mt-6 text-right">
                   <button
                     type="button"
                     onClick={() => setIsPriceInfoModalOpen(true)}
