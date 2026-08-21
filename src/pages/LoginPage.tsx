@@ -2,6 +2,7 @@ import { useState, useContext, FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, Lock, UserCircle, Briefcase } from "lucide-react";
 import { RoleContext } from "../App";
+import { dismissKeyboard } from "../utils/keyboard";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
@@ -14,6 +15,7 @@ export default function LoginPage() {
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
+    dismissKeyboard();
     if (password === 'somos123') {
       setRole(selectedRole);
       if (redirectParams) {

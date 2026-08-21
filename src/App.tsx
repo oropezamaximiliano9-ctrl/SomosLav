@@ -17,6 +17,7 @@ import AssociateAssignPreRegistered from "./pages/AssociateAssignPreRegistered";
 import AssociateSimulator from "./pages/AssociateSimulator";
 import FlowSimulator from "./components/FlowSimulator";
 import GlobalArrivalListener from "./components/GlobalArrivalListener";
+import { useGlobalKeyboardDismiss } from "./hooks/useGlobalKeyboardDismiss";
 
 interface RoleContextType {
   role: 'customer' | 'associate' | 'admin';
@@ -27,6 +28,7 @@ export const RoleContext = createContext<RoleContextType>({ role: 'customer', se
 
 // MainLayout extracted to wrap inside BrowserRouter for use of hooks like useNavigate
 function MainLayout() {
+  useGlobalKeyboardDismiss();
   const { role, setRole } = useContext(RoleContext);
   const navigate = useNavigate();
   const location = useLocation();

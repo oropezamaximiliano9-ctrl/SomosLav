@@ -10,6 +10,7 @@ import {
   collection, getDocs, getDoc, setDoc, updateDoc, doc, query, where, orderBy, limit 
 } from "firebase/firestore";
 import { getColoniaDistance } from "../utils/distance";
+import { dismissKeyboard } from "../utils/keyboard";
 
 const getDeliveryDayDescription = (_deliveryTypeStr?: string) => {
   // All orders are delivered within 24 hours (1 day)
@@ -1056,6 +1057,7 @@ export default function Dashboard() {
 
   const handleSaveLocation = async (e: FormEvent) => {
     e.preventDefault();
+    dismissKeyboard();
     setSavingLoc(true);
     try {
       const { id, name, address, isActive } = editingLoc;
@@ -1120,6 +1122,7 @@ export default function Dashboard() {
   };
 
   const handleSaveCustomerDetails = async (custDetails: any) => {
+    dismissKeyboard();
     setSavingCustomer(true);
     try {
       const { id, name, phone, deliveryPreference, addressColonia, addressCalle, addressNumero, preferredTime, addressReferences, credits } = custDetails;

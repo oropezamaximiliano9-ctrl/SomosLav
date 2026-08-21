@@ -7,6 +7,7 @@ import { extractBagId } from "../utils/qr";
 import { db } from "../firebase";
 import { doc, getDoc, getDocs, updateDoc, setDoc, collection, query, where } from "firebase/firestore";
 import { getColoniaDistance } from "../utils/distance";
+import { dismissKeyboard } from "../utils/keyboard";
 
 export default function AssociateAssignPreRegistered() {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ export default function AssociateAssignPreRegistered() {
     e.preventDefault();
     if (!phoneSearch) return;
 
+    dismissKeyboard();
     setLoading(true);
     setSearchError("");
     try {

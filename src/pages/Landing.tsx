@@ -15,6 +15,7 @@ import sprayTagBg from "../assets/images/spray_tag_bg.png";
 import { db } from "../firebase";
 import { collection, doc, getDocs, updateDoc, setDoc, query, where } from "firebase/firestore";
 import { getColoniaDistance, asyncGetColoniaDistance, ORIGEN_LAVANDERIA } from "../utils/distance";
+import { dismissKeyboard } from "../utils/keyboard";
 
 const drillVariants = {
   enter: (direction: "forward" | "backward") => ({
@@ -43,7 +44,7 @@ const checkmarkContainerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.7,
-      delayChildren: 1,
+      delayChildren: 1.5,
     },
   },
 };
@@ -752,6 +753,7 @@ export default function Landing() {
     if (!addressCalle.trim()) setAddressCalle(fullAddress);
     if (!addressColonia.trim()) setAddressColonia(fullAddress);
 
+    dismissKeyboard();
     setFormStep("verifying");
     setVerificationProgress(0);
     setLoading(true);
@@ -1086,7 +1088,7 @@ export default function Landing() {
               {/* Texto explicativo ARRIBA de la imagen */}
               <div className="pt-5 pb-3 px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="text-[#0f55d8] font-semibold">Recibe</span> tu cesto hoy<br />y llénalo a tu propio ritmo
+                  Recibe tu cesto <span className="text-[#0f55d8] font-bold">hoy</span><br />y llénalo a tu propio ritmo
                 </p>
               </div>
 
@@ -1138,7 +1140,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-3 pb-3 pl-4 pr-2 sm:pl-6 sm:pr-3 w-full text-left">
                 <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
-                  Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold">$95</span>
+                  Toda la ropa que quepa por $95 <span className="text-[#0f55d8] font-bold">siempre</span>
                 </p>
                 {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
                 <div className="mt-7 text-right">
@@ -1381,7 +1383,7 @@ export default function Landing() {
           {/* Texto explicativo y botón debajo de las tarjetas */}
           <div className="mt-8 sm:mt-12 mb-2 w-full px-1 flex flex-col items-start text-left select-none gap-3 sm:gap-3.5">
             <p className="font-geist text-white/90 text-[15px] sm:text-[17px] font-medium tracking-tight leading-snug">
-              Te entregamos la prenda que quieras<br />junto con tu ropa limpia
+              Recibe la prenda que quieras<br />junto con tu ropa limpia
             </p>
             <button
               onClick={openBottomSheet}
@@ -1398,7 +1400,10 @@ export default function Landing() {
       <div 
         className="form-overlay" 
         data-open={isBottomSheetOpen ? "true" : "false"}
-        onClick={() => setIsBottomSheetOpen(false)}
+        onClick={() => {
+          dismissKeyboard();
+          setIsBottomSheetOpen(false);
+        }}
       />
 
       <div 
@@ -1411,7 +1416,10 @@ export default function Landing() {
 
         {/* Close Button X on top-right */}
         <button
-          onClick={() => setIsBottomSheetOpen(false)}
+          onClick={() => {
+            dismissKeyboard();
+            setIsBottomSheetOpen(false);
+          }}
           className="absolute right-4 top-4 p-1.5 text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-colors rounded-full pointer-events-auto z-20"
         >
           <X className="w-4 h-4" />
