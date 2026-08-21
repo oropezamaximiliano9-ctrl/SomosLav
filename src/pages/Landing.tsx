@@ -1138,12 +1138,12 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="py-5 px-4 sm:p-6 w-full text-left">
+              <div className="pt-5 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 w-full text-left">
                 <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
                   Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold whitespace-nowrap">$95</span><br />sin límite de peso
                 </p>
-                {/* Enlace "Más información" subrayado en la siguiente línea dentro de la tarjeta */}
-                <div className="mt-5 sm:mt-6 text-right">
+                {/* Enlace "Más información" subrayado con espacio reducido en 1 línea */}
+                <div className="mt-3 sm:mt-3.5 text-right">
                   <button
                     type="button"
                     onClick={() => setIsPriceInfoModalOpen(true)}
