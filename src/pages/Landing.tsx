@@ -978,7 +978,7 @@ export default function Landing() {
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-1.5 select-none text-left pt-1">
                   <div className="ml-2">
-                    <span className="font-geist text-[#333333] text-[18px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
                       Toda la ropa de tu cesto:
                     </span>
                   </div>
