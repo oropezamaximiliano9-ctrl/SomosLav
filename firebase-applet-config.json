@@ -1,10 +1,12 @@
 {
-  "projectId": "gen-lang-client-0520257417",
-  "appId": "1:1025122898913:web:d41f0739d75f1166cb38a0",
-  "apiKey": "AIzaSyB9chMQVXkaHm4od0I9O6-s4pdqBHNNEnQ",
-  "authDomain": "gen-lang-client-0520257417.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-55d4092f-0deb-4d0b-9f59-abe82919263d",
-  "storageBucket": "gen-lang-client-0520257417.firebasestorage.app",
-  "messagingSenderId": "1025122898913",
-  "measurementId": ""
+  "projectId": "silent-bolt-458107-d1",
+  "appId": "1:201641949455:web:2a23cf469e0c10df83667a",
+  "apiKey": "AIzaSyAFsgfhA7zeG5BajxNRs_J3io9VyqO0nRo",
+  "authDomain": "silent-bolt-458107-d1.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-somos-7d5698d9-5aad-4ac7-8ff9-3b7e48a88a09",
+  "storageBucket": "silent-bolt-458107-d1.firebasestorage.app",
+  "messagingSenderId": "201641949455",
+  "measurementId": "",
+  "oAuthClientId": "201641949455-5ed2jogqqd3g9nmhd96n4cbeshpporu2.apps.googleusercontent.com",
+  "recaptchaSiteKey": ""
 }

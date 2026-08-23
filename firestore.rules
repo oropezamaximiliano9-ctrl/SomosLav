@@ -1,28 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId} {
-      allow read, write: if true;
-    }
-    match /bags/{bagId} {
-      allow read, write: if true;
-    }
-    match /orders/{orderId} {
-      allow read, write: if true;
-    }
-    match /locations/{locationId} {
-      allow read, write: if true;
-    }
-    match /settings/{settingId} {
-      allow read, write: if true;
-    }
-    match /arrival_notices/{noticeId} {
-      allow read, write: if true;
-    }
-    match /associate_devices/{deviceId} {
-      allow read, write: if true;
-    }
-    match /test/{docId} {
+    
+    // In this app, customers do not use Firebase Auth to log in. 
+    // They are identified by phone number/id. 
+    // Therefore, we must allow public read/write to collections they interact with.
+    
+    match /{document=**} {
       allow read, write: if true;
     }
   }

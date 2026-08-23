@@ -1140,7 +1140,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-5 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 w-full text-left">
                 <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
-                  Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold whitespace-nowrap">$95</span><br />sin límite de peso
+                  <span className="whitespace-nowrap">Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold">$95</span></span><br />sin límite de peso
                 </p>
                 {/* Enlace "Más información" subrayado con espacio reducido en 1 línea */}
                 <div className="mt-3 sm:mt-3.5 text-right">
@@ -1510,7 +1510,10 @@ export default function Landing() {
                              Dirección Registrada
                            </p>
                            <p className="font-extrabold text-gray-800 text-xs text-slate-800">
-                             {addressCalle}, {addressColonia}
+                             {addressCalle?.trim() === (addressColonia || "").trim() 
+                               ? addressCalle
+                               : `${addressCalle}, ${addressColonia}`
+                             }
                            </p>
                          </div>
                          

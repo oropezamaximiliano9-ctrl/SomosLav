@@ -993,7 +993,9 @@ export default function Dashboard() {
       });
 
       // 6. Map customers with calculated transaction counts
-      const customersData = usersList.map((u) => {
+      const customersData = usersList
+        .filter((u) => u.role !== 'admin' && u.id !== 'admin') // Exclude admins
+        .map((u) => {
         let orderCount = 0;
         let activeOrderCount = 0;
         rawOrdersList.forEach((ord) => {
@@ -1949,7 +1951,9 @@ return (
                             <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
                             <span className="text-slate-600 break-words leading-normal">
                               {cust.addressCalle ? (
-                                `${cust.addressCalle} ${cust.addressNumero || ""} ${cust.addressColonia ? `• Col. ${cust.addressColonia}` : ""}`
+                                cust.addressCalle.trim() === (cust.addressColonia || "").trim()
+                                  ? `${cust.addressCalle} ${cust.addressNumero || ""}`.trim()
+                                  : `${cust.addressCalle} ${cust.addressNumero || ""} ${cust.addressColonia ? `• Col. ${cust.addressColonia}` : ""}`.trim()
                               ) : (
                                 <span className="text-slate-400 italic font-normal">Mostrador / Entrega en sucursal</span>
                               )}
@@ -2017,9 +2021,11 @@ return (
                         <span className="font-mono text-gray-900 font-medium">{selectedCustomer.phone}</span>
                       </div>
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-gray-400 font-mono block">Calle y cruzamientos:</span>
+                        <span className="text-[10px] uppercase font-bold text-gray-400 font-mono block">Dirección:</span>
                         <span className="text-gray-900 font-bold">{selectedCustomer.addressCalle || 'Sin calle registrada'}</span>
-                        <span className="text-gray-500 block text-xs mt-0.5">Colonia: {selectedCustomer.addressColonia || 'Mostrador / General'}</span>
+                        {selectedCustomer.addressCalle?.trim() !== (selectedCustomer.addressColonia || "").trim() && (
+                          <span className="text-gray-500 block text-xs mt-0.5">Colonia: {selectedCustomer.addressColonia || 'Mostrador / General'}</span>
+                        )}
                       </div>
                       <div>
                         <span className="text-[10px] uppercase font-bold text-gray-400 font-mono block">Preferencia de Entrega:</span>
