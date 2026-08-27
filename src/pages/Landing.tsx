@@ -1141,16 +1141,22 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="pt-5 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 w-full text-left">
                 <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="whitespace-nowrap">Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold">$95</span></span><br />sin límite de peso
+                  <span className="whitespace-nowrap">Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold">$95</span></span><br />Sin límite de peso
                 </p>
                 {/* Enlace "Más información" subrayado con espacio reducido en 1 línea */}
                 <div className="mt-3 sm:mt-3.5 text-right">
                   <button
                     type="button"
-                    onClick={() => setIsPriceInfoModalOpen(true)}
-                    className="font-geist text-[15px] sm:text-[16px] font-semibold text-black underline underline-offset-4 hover:opacity-80 transition-opacity cursor-pointer select-none"
+                    onClick={() => {
+                      const nextSection = document.getElementById('editorial-location-section');
+                      if (nextSection) {
+                        nextSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="font-geist text-[15px] sm:text-[16px] font-semibold text-black hover:opacity-80 transition-opacity cursor-pointer select-none inline-flex items-center gap-0.5"
                   >
-                    Más información
+                    <span className="underline underline-offset-4">Nuestra ubicación</span>
+                    <ChevronDown className="w-4 h-4" strokeWidth={2.5} />
                   </button>
                 </div>
               </div>
@@ -1384,7 +1390,7 @@ export default function Landing() {
           {/* Texto explicativo y botón debajo de las tarjetas */}
           <div className="mt-8 sm:mt-12 mb-2 w-full px-1 flex flex-col items-start text-left select-none gap-3 sm:gap-3.5">
             <p className="font-geist text-white/90 text-[15px] sm:text-[17px] font-medium tracking-tight leading-snug">
-              Recibe la prenda que quieras<br />junto con tu ropa limpia
+              Recibe lo que quieras probar<br />junto con tu ropa limpia
             </p>
             <button
               onClick={openBottomSheet}
