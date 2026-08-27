@@ -943,21 +943,22 @@ export default function Landing() {
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
-            <div 
-              className="absolute top-[16px] left-[6px] sm:left-[10px] z-20 w-[100px] sm:w-[114px] pointer-events-none -rotate-[10deg]"
-            >
-              <img 
-                src="https://iili.io/CU67SLX.webp" 
-                alt="Cesto incluido" 
-                className="w-full h-auto object-contain drop-shadow-sm"
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist rotate-[5deg] pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
-                <span>Cesto</span>
-                <span>incluido</span>
-              </div>
-            </div>
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
+                <div 
+                  className="absolute top-[16px] left-2.5 z-20 w-[100px] sm:w-[114px] pointer-events-none"
+                >
+                  <img 
+                    src="https://iili.io/CU67SLX.webp" 
+                    alt="Cesto incluido" 
+                    className="w-full h-auto object-contain drop-shadow-sm -rotate-[4.5deg]"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
+                    <span>Cesto</span>
+                    <span>incluido</span>
+                  </div>
+                </div>
+
                 {/* Imagen del cesto */}
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-3">
                   <img 
@@ -979,7 +980,7 @@ export default function Landing() {
                 <div className="flex flex-col gap-1.5 select-none text-left pt-1">
                   <div className="ml-2">
                     <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
-                      Toda la ropa de tu cesto:
+                      La ropa de tu cesto:
                     </span>
                   </div>
                   <motion.div 
@@ -1178,7 +1179,7 @@ export default function Landing() {
               id="recepcion-landing-card"
             >
               {/* Texto explicativo ARRIBA del mapa */}
-              <div className="pt-5 pb-1 px-6 w-full text-left">
+              <div className="py-5 px-4 sm:p-6 w-full text-left">
                 <div>
                   <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                     Dejas tu ropa sucia
@@ -1190,7 +1191,7 @@ export default function Landing() {
               </div>
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
-              <div className="w-full h-[270px] flex flex-col pt-2 relative">
+              <div className="w-full h-[270px] flex flex-col relative">
                 <div 
                   className="absolute -top-[10px] right-[3px] sm:right-[10px] z-20 w-[105px] sm:w-[120px] pointer-events-none"
                 >
