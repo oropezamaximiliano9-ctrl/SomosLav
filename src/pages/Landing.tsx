@@ -1389,7 +1389,7 @@ export default function Landing() {
 
           {/* Texto explicativo y botón debajo de las tarjetas */}
           <div className="mt-8 sm:mt-12 mb-2 w-full px-1 flex flex-col items-start text-left select-none gap-3 sm:gap-3.5">
-            <p className="font-geist text-white/90 text-[15px] sm:text-[17px] font-medium tracking-tight leading-snug">
+            <p className="font-geist text-white/90 text-[15px] sm:text-[17px] font-medium tracking-tight leading-snug italic">
               Recíbelo junto con<br />tu ropa limpia
             </p>
             <button
