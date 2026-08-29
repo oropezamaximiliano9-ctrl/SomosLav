@@ -946,18 +946,36 @@ export default function Landing() {
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
                 <div 
-                  className="absolute top-[16px] left-2.5 z-20 w-[100px] sm:w-[114px] pointer-events-none"
+                  className="absolute top-[3px] left-2.5 z-20 w-[100px] sm:w-[114px] pointer-events-none"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
-                    alt="Cesto incluido" 
+                    alt="Incluido sin costo" 
                     className="w-full h-auto object-contain drop-shadow-sm -rotate-[4.5deg]"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
-                    <span>Cesto</span>
-                    <span>incluido</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-tight px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
+                    <span className="whitespace-nowrap">Incluido</span>
+                    <span className="whitespace-nowrap">sin costo</span>
                   </div>
                 </div>
+
+                {/* Línea curva punteada que conecta la etiqueta "Incluido sin costo" con el cesto de la imagen */}
+                <svg 
+                  className="absolute inset-0 w-full h-full pointer-events-none z-15 overflow-visible" 
+                  viewBox="0 0 100 100" 
+                  preserveAspectRatio="none"
+                >
+                  <path 
+                    d="M 20 13 Q 12 30, 27 40" 
+                    stroke="#333333" 
+                    strokeWidth="1.5" 
+                    strokeDasharray="8 8" 
+                    strokeOpacity="0.6"
+                    fill="none" 
+                    strokeLinecap="round" 
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
 
                 {/* Imagen del cesto */}
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-3">
@@ -983,18 +1001,12 @@ export default function Landing() {
                       La ropa de tu cesto:
                     </span>
                   </div>
-                  <motion.div 
-                    className="flex flex-col gap-1.5"
-                    variants={checkmarkContainerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                  >
+                  <div className="flex flex-col gap-1.5">
                     <div className="flex items-center gap-2">
                       <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                        <motion.div variants={checkmarkItemVariants} className="flex items-center justify-center">
+                        <div className="flex items-center justify-center">
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
-                        </motion.div>
+                        </div>
                       </div>
                       <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
                         Lavada y doblada
@@ -1002,9 +1014,9 @@ export default function Landing() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                        <motion.div variants={checkmarkItemVariants} className="flex items-center justify-center">
+                        <div className="flex items-center justify-center">
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
-                        </motion.div>
+                        </div>
                       </div>
                       <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
                         Lista en 24 horas
@@ -1012,15 +1024,15 @@ export default function Landing() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                        <motion.div variants={checkmarkItemVariants} className="flex items-center justify-center">
+                        <div className="flex items-center justify-center">
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
-                        </motion.div>
+                        </div>
                       </div>
                       <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
                         A domicilio
                       </span>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
                 
                 <div className="flex gap-2 mt-[24px] w-full max-w-[340px] justify-start ml-2">
@@ -1100,31 +1112,10 @@ export default function Landing() {
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
-                    alt="Es gratis" 
+                    alt="Etiqueta" 
                     className="w-full h-auto object-contain drop-shadow-sm scale-x-[0.98] scale-y-[0.82] -rotate-[3deg]"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
-                    <span>Es gratis</span>
-                  </div>
                 </div>
-                
-                {/* Línea curva punteada que conecta la etiqueta "Es gratis" con el cesto de la imagen */}
-                <svg 
-                  className="absolute inset-0 w-full h-full pointer-events-none z-15 overflow-visible" 
-                  viewBox="0 0 100 100" 
-                  preserveAspectRatio="none"
-                >
-                  <path 
-                    d="M 83 7 Q 92 28, 58 48" 
-                    stroke="#333333" 
-                    strokeWidth="1.5" 
-                    strokeDasharray="8 8" 
-                    strokeOpacity="0.6"
-                    fill="none" 
-                    strokeLinecap="round" 
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
 
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
                   <img 
@@ -1171,10 +1162,10 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-              Visítanos
+              ¿Cesto lleno?
             </h1>
             <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-              con tu cesto listo
+              Tú eliges
             </p>
           </div>
 
@@ -1185,31 +1176,17 @@ export default function Landing() {
               id="recepcion-landing-card"
             >
               {/* Texto explicativo ARRIBA del mapa */}
-              <div className="py-5 px-4 sm:p-6 w-full text-left">
+              <div className="py-5 pl-4 pr-1 sm:p-6 w-full text-left">
                 <div>
                   <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                    Dejas tu ropa sucia
-                  </p>
-                  <p className="font-geist text-[#333333] text-[21px] font-medium leading-tight -mt-0.5 whitespace-nowrap">
-                    <span className="text-[#0f55d8] font-semibold">sin esperar</span>
+                    Recolección a domicilio por <span className="text-[#0f55d8] font-bold">$5</span><br />
+                    o recepción en nuestro punto
                   </p>
                 </div>
               </div>
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
               <div className="w-full h-[270px] flex flex-col relative">
-                <div 
-                  className="absolute -top-[10px] right-[3px] sm:right-[10px] z-20 w-[105px] sm:w-[120px] pointer-events-none"
-                >
-                  <img 
-                    src="https://iili.io/CU67SLX.webp" 
-                    alt="Cerca de ti" 
-                    className="w-full h-auto object-contain drop-shadow-sm scale-x-[1.02] scale-y-[0.82] -rotate-[3deg]"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]">
-                    <span>Cerca de ti</span>
-                  </div>
-                </div>
                 <div className="relative w-full flex-1 select-none overflow-visible bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
@@ -1252,8 +1229,8 @@ export default function Landing() {
                       <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
                         {/* Attached label positioned to the left without affecting the marker's position */}
                         <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap font-geist">
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Palmas</span>
                         </div>
                         <div className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
                           {/* Circle enclosing the pin marker */}
@@ -1316,8 +1293,8 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO del mapa */}
               <div className="pt-9 pb-6 px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Te la entregamos limpia en casa&nbsp;&nbsp;
-                  <span className="text-[#0f55d8] font-semibold">sin costo</span>
+                  Te lo devolvemos limpio en casa&nbsp;&nbsp;
+                  <span className="text-[#0f55d8] font-bold">sin costo</span>
                 </p>
 
                 {isNavigatingGPS && gpsLoadingStep && (
@@ -1389,8 +1366,8 @@ export default function Landing() {
 
           {/* Texto explicativo y botón debajo de las tarjetas */}
           <div className="mt-8 sm:mt-12 mb-2 w-full px-1 flex flex-col items-start text-left select-none gap-3 sm:gap-3.5">
-            <p className="font-geist text-white/90 text-[15px] sm:text-[17px] font-medium tracking-tight leading-snug italic">
-              Recíbelo junto con<br />tu ropa limpia
+            <p className="font-geist text-white/90 text-[17px] sm:text-xl font-medium tracking-tight leading-snug">
+              Recíbelo junto con tu ropa limpia
             </p>
             <button
               onClick={openBottomSheet}
