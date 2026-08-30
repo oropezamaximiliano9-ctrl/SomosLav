@@ -1173,11 +1173,13 @@ export default function Landing() {
               id="recepcion-landing-card"
             >
               {/* Texto explicativo ARRIBA del mapa */}
-              <div className="py-5 pl-4 pr-1 sm:p-6 w-full text-left">
-                <div>
-                  <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                    Recolección a domicilio por <span className="text-[#0f55d8] font-bold">$5</span><br />
-                    o recepción en nuestro punto
+              <div className="pt-3 pb-3 pl-4 pr-1 sm:pt-4 sm:pb-4 sm:px-6 w-full text-left">
+                <div className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
+                  <p>
+                    Por <span className="text-[#0f55d8] font-bold">$5</span> pide recolección a domicilio
+                  </p>
+                  <p className="mt-2">
+                    o déjalo en nuestro punto
                   </p>
                 </div>
               </div>
@@ -1288,7 +1290,7 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO del mapa */}
-              <div className="pt-9 pb-6 px-6 w-full text-left">
+              <div className="pt-9 pb-3 px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Te lo devolvemos limpio en casa&nbsp;&nbsp;
                   <span className="text-[#0f55d8] font-bold">sin costo</span>
