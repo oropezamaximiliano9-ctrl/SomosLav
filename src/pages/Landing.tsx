@@ -1112,9 +1112,12 @@ export default function Landing() {
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
-                    alt="Etiqueta" 
+                    alt="Es gratis" 
                     className="w-full h-auto object-contain drop-shadow-sm scale-x-[0.98] scale-y-[0.82] -rotate-[3deg]"
                   />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-tight px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
+                    <span className="whitespace-nowrap">Es gratis</span>
+                  </div>
                 </div>
 
                 <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
@@ -1176,7 +1179,7 @@ export default function Landing() {
               <div className="pt-3 pb-3 pl-4 pr-1 sm:pt-4 sm:pb-4 sm:px-6 w-full text-left">
                 <div className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   <p>
-                    Por <span className="text-[#0f55d8] font-bold">$5</span> pide recolección a domicilio
+                    Pide recolección a domicilio<br />por <span className="text-[#0f55d8] font-bold">$5</span>
                   </p>
                   <p className="mt-2">
                     o déjalo en nuestro punto
