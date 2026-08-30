@@ -1165,7 +1165,7 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-              Cuando tengas<br />tu cesto listo:
+              Cuando tengas<br />lleno tu cesto:
             </h1>
           </div>
 
