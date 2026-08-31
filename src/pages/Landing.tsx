@@ -531,7 +531,13 @@ export default function Landing() {
   const openBottomSheet = () => {
     setIsBottomSheetOpen(true);
     setRegistered(false);
-    setFormStep(1);
+    
+    if (name.trim().length > 0) {
+      setFormStep(2);
+    } else {
+      setFormStep(1);
+    }
+    
     setDirection("forward");
     setFormError(null);
   };
@@ -1039,6 +1045,8 @@ export default function Landing() {
                   <input 
                     type="text" 
                     placeholder="Tu nombre" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="flex-1 bg-transparent pl-[38px] pr-3 text-[#333333] placeholder:text-[#86868b] placeholder:font-medium focus:outline-none font-geist text-[18px] min-w-0 h-full"
                   />
                   <button 
