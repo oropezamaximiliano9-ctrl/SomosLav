@@ -1035,21 +1035,17 @@ export default function Landing() {
                   </div>
                 </div>
                 
-                <div className="flex gap-2 mt-[24px] w-full max-w-[340px] justify-start ml-2">
+                <div className="flex items-center mt-[24px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
+                  <input 
+                    type="text" 
+                    placeholder="Tu nombre" 
+                    className="flex-1 bg-transparent pl-[38px] pr-3 text-[#333333] placeholder:text-[#86868b] placeholder:font-medium focus:outline-none font-geist text-[18px] min-w-0 h-full"
+                  />
                   <button 
                     onClick={openBottomSheet}
                     className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
                   >
                     <span>Quiero mi cesto</span>
-                  </button>
-                  <button 
-                    onClick={() => {
-                      document.getElementById('empieza-hoy-section')?.scrollIntoView({ behavior: 'smooth' })
-                    }}
-                    className="h-[43px] px-3 shrink-0 bg-white border border-[#333333] text-[#333333] rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-0.5 select-none hover:bg-black/5 transition-colors shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
-                  >
-                    <span>Saber más</span>
-                    <ChevronDown className="w-[18px] h-[18px]" strokeWidth={2.5} />
                   </button>
                 </div>
               </div>
