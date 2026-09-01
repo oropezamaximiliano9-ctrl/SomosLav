@@ -169,19 +169,7 @@ export default function Landing() {
   const [gpsAutofillError, setGpsAutofillError] = useState<string | null>(null);
   const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
-  const [typingPlaceholder, setTypingPlaceholder] = useState("Tu nombre...");
   const [isInputFocused, setIsInputFocused] = useState(false);
-
-  useEffect(() => {
-    let dotCount = 3;
-    const intervalId = setInterval(() => {
-      dotCount = (dotCount + 1) % 4;
-      const dots = ".".repeat(dotCount);
-      setTypingPlaceholder(`Tu nombre${dots}`);
-    }, 450);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   const ALL_COATZA_COLONIAS = [
     "Las Palmas",
@@ -987,9 +975,8 @@ export default function Landing() {
                   <path 
                     d="M 20 13 Q 12 30, 27 40" 
                     stroke="#333333" 
-                    strokeWidth="1.5" 
-                    strokeDasharray="8 8" 
-                    strokeOpacity="0.6"
+                    strokeWidth="2" 
+                    strokeDasharray="5 5" 
                     fill="none" 
                     strokeLinecap="round" 
                     vectorEffect="non-scaling-stroke"
@@ -1057,12 +1044,12 @@ export default function Landing() {
                 <div className="flex items-center mt-[24px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
                   <input 
                     type="text" 
-                    placeholder={isInputFocused ? "" : typingPlaceholder} 
+                    placeholder={isInputFocused ? "" : "Tu nombre"} 
                     value={name}
                     onFocus={() => setIsInputFocused(true)}
                     onBlur={() => setIsInputFocused(false)}
                     onChange={(e) => setName(e.target.value)}
-                    className="flex-1 bg-transparent pl-4 pr-3 text-[#333333] placeholder:text-[#86868b] placeholder:font-medium focus:outline-none font-geist text-[18px] min-w-0 h-full"
+                    className="flex-1 bg-transparent px-3 text-center text-[#333333] placeholder:text-[#86868b] placeholder:font-medium placeholder:text-center focus:outline-none font-geist text-[18px] min-w-0 h-full"
                   />
                   <button 
                     onClick={openBottomSheet}
@@ -1127,15 +1114,16 @@ export default function Landing() {
               {/* Imagen en el MEDIO */}
               <div className="w-full h-[270px] flex flex-col relative">
                 <div 
-                  className="absolute -top-[10px] right-[4px] sm:right-[12px] z-20 w-[100px] sm:w-[114px] pointer-events-none"
+                  className="absolute -bottom-[8px] right-0 z-20 w-[100px] sm:w-[114px] pointer-events-none"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
-                    alt="Es gratis" 
-                    className="w-full h-auto object-contain drop-shadow-sm scale-x-[0.98] scale-y-[0.82] -rotate-[3deg]"
+                    alt="Precio fijo" 
+                    className="w-full h-auto object-contain drop-shadow-sm -rotate-[4.5deg] scale-x-[0.86]"
                   />
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-tight px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
-                    <span className="whitespace-nowrap">Es gratis</span>
+                    <span className="whitespace-nowrap">Precio</span>
+                    <span className="whitespace-nowrap">fijo</span>
                   </div>
                 </div>
 
@@ -1184,7 +1172,7 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-              Al llenar<br />tu cesto:
+              Libérate<br />de tu ropa sucia
             </h1>
           </div>
 
@@ -1196,14 +1184,9 @@ export default function Landing() {
             >
               {/* Texto explicativo ARRIBA del mapa */}
               <div className="pt-3 pb-3 pl-4 pr-1 sm:pt-4 sm:pb-4 sm:px-6 w-full text-left">
-                <div className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  <p>
-                    Pide recolección a domicilio<br />por <span className="text-[#0f55d8] font-bold">$5</span>
-                  </p>
-                  <p className="mt-2">
-                    o déjalo en nuestro punto
-                  </p>
-                </div>
+                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
+                  Pide recolección a domicilio<br />o déjala en nuestro punto
+                </p>
               </div>
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
@@ -1314,7 +1297,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO del mapa */}
               <div className="pt-9 pb-3 px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Te lo devolvemos limpio en casa&nbsp;&nbsp;
+                  Te la devolvemos limpia en casa&nbsp;&nbsp;
                   <span className="text-[#0f55d8] font-bold">sin costo</span>
                 </p>
 
