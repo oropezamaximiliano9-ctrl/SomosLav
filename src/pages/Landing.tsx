@@ -169,6 +169,19 @@ export default function Landing() {
   const [gpsAutofillError, setGpsAutofillError] = useState<string | null>(null);
   const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
+  const [typingPlaceholder, setTypingPlaceholder] = useState("Tu nombre...");
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  useEffect(() => {
+    let dotCount = 3;
+    const intervalId = setInterval(() => {
+      dotCount = (dotCount + 1) % 4;
+      const dots = ".".repeat(dotCount);
+      setTypingPlaceholder(`Tu nombre${dots}`);
+    }, 450);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const ALL_COATZA_COLONIAS = [
     "Las Palmas",
@@ -413,7 +426,7 @@ export default function Landing() {
   };
 
   const [locations, setLocations] = useState<any[]>([]);
-  const [selectedLocationName, setSelectedLocationName] = useState<string>("Ubicación Palmas");
+  const [selectedLocationName, setSelectedLocationName] = useState<string>("Punto de recepción");
   
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [showLavaCta, setShowLavaCta] = useState(false);
@@ -489,7 +502,7 @@ export default function Landing() {
     console.log("[Firestore Call] Initiating fetch for 'locations' collection...");
     const defaultLocation = {
       id: "loc_1",
-      name: "Ubicación Palmas",
+      name: "Punto de recepción",
       address: "Paseo de las Palmas 209, Coatzacoalcos, Veracruz",
       isActive: 1,
       latitude: 18.1404,
@@ -1044,10 +1057,12 @@ export default function Landing() {
                 <div className="flex items-center mt-[24px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
                   <input 
                     type="text" 
-                    placeholder="Tu nombre" 
+                    placeholder={isInputFocused ? "" : typingPlaceholder} 
                     value={name}
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => setIsInputFocused(false)}
                     onChange={(e) => setName(e.target.value)}
-                    className="flex-1 bg-transparent pl-[38px] pr-3 text-[#333333] placeholder:text-[#86868b] placeholder:font-medium focus:outline-none font-geist text-[18px] min-w-0 h-full"
+                    className="flex-1 bg-transparent pl-4 pr-3 text-[#333333] placeholder:text-[#86868b] placeholder:font-medium focus:outline-none font-geist text-[18px] min-w-0 h-full"
                   />
                   <button 
                     onClick={openBottomSheet}
@@ -1169,7 +1184,7 @@ export default function Landing() {
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-              Cuando tengas<br />lleno tu cesto:
+              Al llenar<br />tu cesto:
             </h1>
           </div>
 
@@ -1235,8 +1250,8 @@ export default function Landing() {
                       <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
                         {/* Attached label positioned to the left without affecting the marker's position */}
                         <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap font-geist">
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto</span>
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Palmas</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
                         </div>
                         <div className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
                           {/* Circle enclosing the pin marker */}
@@ -1461,7 +1476,7 @@ export default function Landing() {
                             Punto de Entrega y Recepción
                           </p>
                           <p className="font-extrabold text-gray-800 text-xs">
-                            {selectedLocationName || 'Ubicación Palmas (Mostrador)'}
+                            {selectedLocationName || 'Punto de recepción (Mostrador)'}
                           </p>
                           <p className="text-[10px] text-gray-500 mt-1">
                             Tu colonia ({addressColonia}) queda fuera de reparto, ¡pero tu cesto te espera en mostrador!
