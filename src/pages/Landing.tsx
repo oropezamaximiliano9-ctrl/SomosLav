@@ -949,7 +949,7 @@ export default function Landing() {
           <TypewriterTitle />
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
-          <div className="px-0 sm:px-0 mt-2.5 mb-6 w-full relative">
+          <div className="px-0 sm:px-0 mt-2.5 w-full relative">
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
                 <div 
@@ -1060,6 +1060,22 @@ export default function Landing() {
                 </div>
               </div>
           </div>
+          {/* Indicador de scroll hacia abajo */}
+          <div className="mt-2 w-full flex justify-center items-center">
+            <button
+              type="button"
+              aria-label="Ver siguiente sección"
+              onClick={() => {
+                const nextSection = document.getElementById('empieza-hoy-section');
+                if (nextSection) {
+                  nextSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="text-[#333333] hover:text-[#0f55d8] transition-colors cursor-pointer select-none p-1.5 flex items-center justify-center animate-bounce"
+            >
+              <ChevronDown className="w-6 h-6" strokeWidth={2.5} />
+            </button>
+          </div>
         </div>
       </div>
       </section>
@@ -1146,20 +1162,20 @@ export default function Landing() {
                 </p>
               </div>
             </div>
-            {/* Enlace "Más información" subrayado con espacio reducido en 1 línea */}
-            <div className="mt-1.5 sm:mt-2 text-right w-full px-4 sm:px-6">
+            {/* Indicador de scroll hacia abajo */}
+            <div className="mt-2 w-full flex justify-center items-center">
               <button
                 type="button"
+                aria-label="Ver siguiente sección"
                 onClick={() => {
                   const nextSection = document.getElementById('editorial-location-section');
                   if (nextSection) {
                     nextSection.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="font-geist text-[15px] sm:text-[16px] font-semibold text-black hover:opacity-80 transition-opacity cursor-pointer select-none inline-flex items-center gap-0.5"
+                className="text-[#333333] hover:text-[#0f55d8] transition-colors cursor-pointer select-none p-1.5 flex items-center justify-center animate-bounce"
               >
-                <span className="underline underline-offset-4">Nuestra ubicación</span>
-                <ChevronDown className="w-4 h-4" strokeWidth={2.5} />
+                <ChevronDown className="w-6 h-6" strokeWidth={2.5} />
               </button>
             </div>
           </div>
