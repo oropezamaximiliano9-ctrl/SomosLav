@@ -1186,7 +1186,7 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
-          <div className="w-full text-center pt-8 pb-2 select-none px-4" id="location-editorial-head">
+          <div className="w-full text-center pt-2 pb-2 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
               Al llenar tu cesto:
             </h1>
@@ -1199,7 +1199,7 @@ export default function Landing() {
               id="recepcion-landing-card"
             >
               {/* Texto explicativo ARRIBA del mapa */}
-              <div className="pt-3 pb-3 pl-4 pr-1 sm:pt-4 sm:pb-4 sm:px-6 w-full text-left">
+              <div className="py-5 px-4 sm:p-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Pide recolección a domicilio<br />
                   o tráelo al punto
@@ -1311,8 +1311,8 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Texto explicativo DEBAJO del mapa */}
-              <div className="pt-9 pb-3 px-6 w-full text-left">
+              {/* Texto explicativo DEBAJO del mapa - pt compensa los 19px que sobresale el botón Abrir mapa */}
+              <div className="pt-[39px] sm:pt-[43px] pb-5 sm:pb-6 px-4 sm:px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Te lo devolvemos limpio en casa&nbsp;&nbsp;
                   <span className="text-[#0f55d8] font-bold">sin costo</span>
