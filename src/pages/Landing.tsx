@@ -1130,7 +1130,7 @@ export default function Landing() {
               {/* Imagen en el MEDIO */}
               <div className="w-full h-[270px] flex flex-col relative">
                 <div 
-                  className="absolute -bottom-[8px] right-0 z-20 w-[100px] sm:w-[114px] pointer-events-none"
+                  className="absolute bottom-0 right-0 z-20 w-[100px] sm:w-[114px] pointer-events-none"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
@@ -1186,14 +1186,14 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
-          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
+          <div className="w-full text-center pt-8 pb-2 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-              Libérate<br />de tu ropa sucia
+              Al llenar tu cesto:
             </h1>
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
-          <div className="px-0 sm:px-0 mt-2.5 w-full relative">
+          <div className="px-0 sm:px-0 mt-3 w-full relative">
             <div 
               className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
               id="recepcion-landing-card"
@@ -1201,7 +1201,8 @@ export default function Landing() {
               {/* Texto explicativo ARRIBA del mapa */}
               <div className="pt-3 pb-3 pl-4 pr-1 sm:pt-4 sm:pb-4 sm:px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Pide recolección a domicilio<br />o déjala en nuestro punto
+                  Pide recolección a domicilio<br />
+                  o tráelo al punto
                 </p>
               </div>
 
@@ -1248,9 +1249,9 @@ export default function Landing() {
                       {/* Red Pin - Positioned at left-[38%] to keep the blue circle near but not touching the street text */}
                       <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
                         {/* Attached label positioned to the left without affecting the marker's position */}
-                        <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col text-right leading-tight whitespace-nowrap font-geist">
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
+                        <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col items-center text-center leading-tight whitespace-nowrap font-geist">
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Recepción</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Palmas</span>
                         </div>
                         <div className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
                           {/* Circle enclosing the pin marker */}
@@ -1313,7 +1314,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO del mapa */}
               <div className="pt-9 pb-3 px-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Te la devolvemos limpia en casa&nbsp;&nbsp;
+                  Te lo devolvemos limpio en casa&nbsp;&nbsp;
                   <span className="text-[#0f55d8] font-bold">sin costo</span>
                 </p>
 
