@@ -1128,30 +1128,31 @@ export default function Landing() {
               </div>
 
               {/* Imagen en el MEDIO */}
-              <div className="w-full h-[270px] flex flex-col relative">
-                <div 
-                  className="absolute bottom-0 right-0 z-20 w-[100px] sm:w-[114px] pointer-events-none"
-                >
-                  <img 
-                    src="https://iili.io/CU67SLX.webp" 
-                    alt="Precio fijo" 
-                    className="w-full h-auto object-contain drop-shadow-sm -rotate-[4.5deg] scale-x-[0.86]"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-tight px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
-                    <span className="whitespace-nowrap">Precio</span>
-                    <span className="whitespace-nowrap">fijo</span>
-                  </div>
-                </div>
-
-                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5">
+              <div className="w-full h-[270px] flex flex-col relative px-2.5">
+                <div className="relative w-full h-full rounded-md overflow-hidden select-none bg-transparent">
                   <img 
                     src="https://i.ibb.co/sdyNTT4D/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png" 
                     alt="Servicio a domicilio SOMOS" 
-                    className="w-full h-full object-cover object-center pointer-events-none select-none rounded-md"
+                    className="w-full h-full object-cover object-center pointer-events-none select-none"
                     onError={(e) => {
                       e.currentTarget.src = "https://i.ibb.co/NdZJ00qk/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png";
                     }}
                   />
+
+                  {/* Etiqueta de Precio Fijo alineada pegada al borde inferior e izquierdo */}
+                  <div 
+                    className="absolute -bottom-1 -left-1 z-20 w-[100px] sm:w-[114px] pointer-events-none"
+                  >
+                    <img 
+                      src="https://iili.io/CU67SLX.webp" 
+                      alt="Precio fijo" 
+                      className="w-full h-auto object-contain drop-shadow-sm -rotate-[4.5deg] scale-x-[0.86]"
+                    />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-tight px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
+                      <span className="whitespace-nowrap">Precio</span>
+                      <span className="whitespace-nowrap">fijo</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
