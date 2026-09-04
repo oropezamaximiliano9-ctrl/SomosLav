@@ -1148,7 +1148,7 @@ export default function Landing() {
                       alt="Precio fijo" 
                       className="w-full h-auto object-contain drop-shadow-sm -rotate-[4.5deg] scale-x-[0.86]"
                     />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-tight px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
                       <span className="whitespace-nowrap">Precio</span>
                       <span className="whitespace-nowrap">fijo</span>
                     </div>
@@ -1203,7 +1203,7 @@ export default function Landing() {
               <div className="py-5 px-4 sm:p-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Pide recolección a domicilio<br />
-                  o tráelo al punto
+                  o déjalo en nuestro punto
                 </p>
               </div>
 
@@ -1254,7 +1254,9 @@ export default function Landing() {
                           <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Recepción</span>
                           <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Palmas</span>
                         </div>
-                        <div className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]">
+                        <div 
+                          className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]"
+                        >
                           {/* Circle enclosing the pin marker */}
                           <div className="absolute -inset-0.5 border-2 border-[#0f55d8] bg-[#0f55d8]/10 rounded-full pointer-events-none"></div>
                           <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
