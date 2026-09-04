@@ -1187,7 +1187,7 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
-          <div className="w-full text-center pt-2 pb-2 select-none px-4" id="location-editorial-head">
+          <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="location-editorial-head">
             <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
               Al llenar tu cesto:
             </h1>
