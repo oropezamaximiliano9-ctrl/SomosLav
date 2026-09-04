@@ -1071,9 +1071,12 @@ export default function Landing() {
                   nextSection.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="text-[#333333] hover:text-[#0f55d8] transition-colors cursor-pointer select-none p-1.5 flex items-center justify-center animate-bounce"
+              className="text-[#333333] hover:text-[#0f55d8] transition-colors cursor-pointer select-none py-1 px-2 flex items-center justify-center gap-1.5 group"
             >
-              <ChevronDown className="w-6 h-6" strokeWidth={2.5} />
+              <span className="text-[15px] font-semibold text-[#333333]/50 group-hover:text-[#0f55d8]/70 transition-colors leading-none">
+                más información
+              </span>
+              <ChevronDown className="w-6 h-6 animate-bounce" strokeWidth={2.5} />
             </button>
           </div>
         </div>
