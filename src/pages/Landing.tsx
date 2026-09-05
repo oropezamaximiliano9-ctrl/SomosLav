@@ -1060,25 +1060,6 @@ export default function Landing() {
                 </div>
               </div>
           </div>
-          {/* Indicador de scroll hacia abajo */}
-          <div className="mt-2 w-full flex justify-end items-center">
-            <button
-              type="button"
-              aria-label="Ver siguiente sección"
-              onClick={() => {
-                const nextSection = document.getElementById('empieza-hoy-section');
-                if (nextSection) {
-                  nextSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className="text-[#333333] hover:text-[#0f55d8] transition-colors cursor-pointer select-none py-1 px-2 flex items-center justify-center gap-0.5 group"
-            >
-              <span className="text-[14px] font-semibold text-[#333333]/50 group-hover:text-[#0f55d8]/70 transition-colors leading-none -translate-y-[4px] underline underline-offset-2 decoration-[#333333]/50 group-hover:decoration-[#0f55d8]/70">
-                más información
-              </span>
-              <ChevronDown className="w-[14px] h-[14px] -translate-y-[4px]" strokeWidth={2.5} />
-            </button>
-          </div>
         </div>
       </div>
       </section>
