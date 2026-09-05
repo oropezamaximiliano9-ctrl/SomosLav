@@ -67,13 +67,14 @@ const checkmarkItemVariants = {
 const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
-      <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-        Tu ropa <span className="text-[#0f55d8]">limpia</span>
-      </h1>
-      <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-        con envío{" "}
-        <span className="relative inline-block px-0.5">
-          gratis
+      <div className="relative -top-2">
+        <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
+          Tu ropa <span className="text-[#0f55d8]">limpia</span>
+        </h1>
+        <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
+          con envío{" "}
+          <span className="relative inline-block px-0.5">
+            gratis
           <svg
             className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
             viewBox="0 0 100 10"
@@ -94,6 +95,7 @@ const TypewriterTitle = () => {
           </svg>
         </span>
       </p>
+      </div>
     </div>
   );
 };
@@ -949,7 +951,7 @@ export default function Landing() {
           <TypewriterTitle />
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
-          <div className="px-0 sm:px-0 mt-2.5 w-full relative">
+          <div className="px-0 sm:px-0 -mt-1 w-full relative">
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
                 <div 
@@ -1041,7 +1043,7 @@ export default function Landing() {
                   </div>
                 </div>
                 
-                <div className="flex items-center mt-[24px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
+                <div className="flex items-center mt-[18px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
                   <input 
                     type="text" 
                     placeholder={isInputFocused ? "" : "Tu nombre"} 
@@ -1058,6 +1060,12 @@ export default function Landing() {
                     <span>Quiero mi cesto</span>
                   </button>
                 </div>
+
+                <div className="w-[calc(100%-16px)] max-w-[340px] mx-2 flex justify-end mt-1.5 pb-1 select-none pr-1 sm:pr-2.5">
+                  <p className="font-geist text-[13px] text-[#666666] font-medium tracking-tight whitespace-nowrap">
+                    Pídelo <span className="text-[#0f55d8] font-semibold">gratis</span>, solo pagas por lavada
+                  </p>
+                </div>
               </div>
           </div>
         </div>
@@ -1068,13 +1076,10 @@ export default function Landing() {
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
-          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
-            <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-              Empieza
-            </h1>
-            <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
+          <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="empieza-hoy-title-container">
+            <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
               <span className="relative inline-block px-0.5">
-                sin salir
+                Sin salir
                 <svg
                   className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
                   viewBox="0 0 100 10"
@@ -1095,7 +1100,7 @@ export default function Landing() {
                 </svg>
               </span>{" "}
               de casa
-            </p>
+            </h1>
           </div>
 
           {/* Tarjeta de Servicio a Domicilio - Blanca */}
@@ -1187,7 +1192,7 @@ export default function Landing() {
               <div className="py-5 px-4 sm:p-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Pide recolección a domicilio<br />
-                  o déjalo en nuestro punto
+                  o déjalo en recepción
                 </p>
               </div>
 
