@@ -94,7 +94,7 @@ const TypewriterTitle = () => {
             />
           </svg>
         </span>
-      </p>
+        </p>
       </div>
     </div>
   );
@@ -1051,7 +1051,7 @@ export default function Landing() {
                     onFocus={() => setIsInputFocused(true)}
                     onBlur={() => setIsInputFocused(false)}
                     onChange={(e) => setName(e.target.value)}
-                    className="flex-1 bg-transparent px-3 text-center text-[#333333] placeholder:text-[#86868b] placeholder:font-medium placeholder:text-center focus:outline-none font-geist text-[18px] min-w-0 h-full"
+                    className="flex-1 bg-transparent px-3 text-center text-[#333333] placeholder:text-[#86868b]/70 placeholder:font-medium placeholder:text-center focus:outline-none font-geist text-[18px] min-w-0 h-full"
                   />
                   <button 
                     onClick={openBottomSheet}
@@ -1063,7 +1063,7 @@ export default function Landing() {
 
                 <div className="w-[calc(100%-16px)] max-w-[340px] mx-2 flex justify-end mt-1.5 pb-1 select-none pr-1 sm:pr-2.5">
                   <p className="font-geist text-[13px] text-[#666666] font-medium tracking-tight whitespace-nowrap">
-                    Pídelo <span className="text-[#0f55d8] font-semibold">gratis</span>, solo pagas por lavada
+                    Es <span className="text-[#0f55d8] font-semibold">gratis</span>, solo pagas por lavado
                   </p>
                 </div>
               </div>
@@ -1077,30 +1077,35 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="empieza-hoy-title-container">
-            <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-              <span className="relative inline-block px-0.5">
-                Sin salir
-                <svg
-                  className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
-                  viewBox="0 0 100 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  preserveAspectRatio="none"
-                >
-                  <motion.path
-                    d="M 1 6 C 30 4.5, 70 7, 99 5.5"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0 }}
-                    whileInView={{ pathLength: 1 }}
-                    viewport={{ once: false, amount: 0.5 }}
-                    transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
-                  />
-                </svg>
-              </span>{" "}
-              de casa
-            </h1>
+            <div className="relative -top-2">
+              <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
+                Sin pesar
+              </h1>
+              <p className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight mt-1">
+                <span className="relative inline-block px-0.5">
+                  sin salir
+                  <svg
+                    className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
+                    viewBox="0 0 100 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="none"
+                  >
+                    <motion.path
+                      d="M 1 6 C 30 4.5, 70 7, 99 5.5"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0 }}
+                      whileInView={{ pathLength: 1 }}
+                      viewport={{ once: false, amount: 0.5 }}
+                      transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
+                    />
+                  </svg>
+                </span>{" "}
+                de casa
+              </p>
+            </div>
           </div>
 
           {/* Tarjeta de Servicio a Domicilio - Blanca */}
@@ -1110,14 +1115,47 @@ export default function Landing() {
               id="empty-green-landing-card"
             >
               {/* Texto explicativo ARRIBA de la imagen */}
-              <div className="py-5 px-4 sm:p-6 w-full text-left">
+              <div className="py-5 px-4 sm:p-6 w-full text-left relative">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Recibe tu cesto <span className="text-[#0f55d8] font-bold">hoy</span><br />y llénalo a tu propio ritmo
+                  Recibe tu cesto hoy<br />
+                  y llénalo a tu propio ritmo
                 </p>
               </div>
 
               {/* Imagen en el MEDIO */}
               <div className="w-full h-[270px] flex flex-col relative px-2.5">
+                {/* Etiqueta "Caben hasta 7 días de ropa" */}
+                <div 
+                  className="absolute top-0 sm:top-0.5 right-2.5 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
+                >
+                  <img 
+                    src="https://iili.io/CU67SLX.webp" 
+                    alt="Hasta 1 semana de ropa" 
+                    className="w-full h-full object-fill drop-shadow-sm -rotate-[3deg]"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[17.5px] font-geist px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
+                    <span className="whitespace-nowrap">Caben hasta</span>
+                    <span className="whitespace-nowrap">7 días de ropa</span>
+                  </div>
+                </div>
+
+                {/* Línea curva punteada que conecta la etiqueta con el cesto (igual a la de la primera pantalla) */}
+                <svg 
+                  className="absolute inset-0 w-full h-full pointer-events-none z-15 overflow-visible" 
+                  viewBox="0 0 100 100" 
+                  preserveAspectRatio="none"
+                >
+                  <path 
+                    d="M 80 20 Q 82 34, 64 45" 
+                    stroke="#333333" 
+                    strokeWidth="2" 
+                    strokeDasharray="5 5" 
+                    fill="none" 
+                    strokeLinecap="round" 
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
+
                 <div className="relative w-full h-full rounded-md overflow-hidden select-none bg-transparent">
                   <img 
                     src="https://i.ibb.co/sdyNTT4D/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png" 
@@ -1127,28 +1165,13 @@ export default function Landing() {
                       e.currentTarget.src = "https://i.ibb.co/NdZJ00qk/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png";
                     }}
                   />
-
-                  {/* Etiqueta de Precio Fijo alineada pegada al borde inferior e izquierdo */}
-                  <div 
-                    className="absolute -bottom-1 -left-1 z-20 w-[100px] sm:w-[114px] pointer-events-none"
-                  >
-                    <img 
-                      src="https://iili.io/CU67SLX.webp" 
-                      alt="Precio fijo" 
-                      className="w-full h-auto object-contain drop-shadow-sm -rotate-[4.5deg] scale-x-[0.86]"
-                    />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[18px] font-geist pt-0.5 tracking-normal px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
-                      <span className="whitespace-nowrap">Precio</span>
-                      <span className="whitespace-nowrap">fijo</span>
-                    </div>
-                  </div>
                 </div>
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-5 pb-5 px-4 sm:pt-6 sm:pb-6 sm:px-6 w-full text-left">
+              <div className="pt-5 pb-5 px-4 sm:pt-6 sm:pb-6 sm:px-6 w-full text-left min-h-[93px] sm:min-h-[101px]">
                 <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="whitespace-nowrap">Toda la ropa que quepa por <span className="text-[#0f55d8] font-bold">$95</span></span><br />Sin límite de peso
+                  <span className="whitespace-nowrap">Toda la ropa que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
                 </p>
               </div>
             </div>
@@ -1192,7 +1215,7 @@ export default function Landing() {
               <div className="py-5 px-4 sm:p-6 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Pide recolección a domicilio<br />
-                  o déjalo en recepción
+                  o déjalo en nuestro punto
                 </p>
               </div>
 
