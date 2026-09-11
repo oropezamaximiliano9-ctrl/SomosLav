@@ -1169,9 +1169,10 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-5 pb-5 px-4 sm:pt-6 sm:pb-6 sm:px-6 w-full text-left min-h-[93px] sm:min-h-[101px]">
-                <p className="text-[21px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="whitespace-nowrap">Toda la ropa que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
+              <div className="py-5 px-4 sm:p-6 w-full text-left relative">
+                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
+                  <span className="whitespace-nowrap">Precio claro desde el principio</span><br />
+                  <span className="whitespace-nowrap">toda la ropa que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
                 </p>
               </div>
             </div>
