@@ -72,9 +72,8 @@ const TypewriterTitle = () => {
           Tu ropa <span className="text-[#0f55d8]">limpia</span>
         </h1>
         <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-          con envío{" "}
           <span className="relative inline-block px-0.5">
-            gratis
+            sin salir
           <svg
             className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
             viewBox="0 0 100 10"
@@ -93,7 +92,7 @@ const TypewriterTitle = () => {
               transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
             />
           </svg>
-        </span>
+        </span>{" "}de casa
         </p>
       </div>
     </div>
@@ -1063,7 +1062,7 @@ export default function Landing() {
 
                 <div className="w-[calc(100%-16px)] max-w-[340px] mx-2 flex justify-end mt-1.5 pb-1 select-none pr-1 sm:pr-2.5">
                   <p className="font-geist text-[13px] text-[#666666] font-medium tracking-tight whitespace-nowrap">
-                    Es <span className="text-[#0f55d8] font-semibold">gratis</span>, solo pagas por lavado
+                    Es <span className="font-semibold">gratis</span>, solo pagas por lavado
                   </p>
                 </div>
               </div>
@@ -1079,13 +1078,11 @@ export default function Landing() {
           <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="empieza-hoy-title-container">
             <div className="relative -top-2">
               <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-                Sin pesar
-              </h1>
-              <p className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight mt-1">
+                Empieza{" "}
                 <span className="relative inline-block px-0.5">
-                  sin salir
+                  gratis
                   <svg
-                    className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
+                    className="absolute left-0 -bottom-[6px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
                     viewBox="0 0 100 10"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -1102,9 +1099,9 @@ export default function Landing() {
                       transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
                     />
                   </svg>
-                </span>{" "}
-                de casa
-              </p>
+                </span><br />
+                con tu cesto
+              </h1>
             </div>
           </div>
 
@@ -1117,7 +1114,7 @@ export default function Landing() {
               {/* Texto explicativo ARRIBA de la imagen */}
               <div className="py-5 px-4 sm:p-6 w-full text-left relative">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Recibe tu cesto hoy<br />
+                  Recíbelo <span className="text-[#0f55d8] font-bold">hoy</span><br />
                   y llénalo a tu propio ritmo
                 </p>
               </div>
@@ -1139,14 +1136,14 @@ export default function Landing() {
                   </div>
                 </div>
 
-                {/* Línea curva punteada que conecta la etiqueta con el cesto (igual a la de la primera pantalla) */}
+                {/* Línea curva punteada que conecta la etiqueta con el cesto (llega justo al borde) */}
                 <svg 
                   className="absolute inset-0 w-full h-full pointer-events-none z-15 overflow-visible" 
                   viewBox="0 0 100 100" 
                   preserveAspectRatio="none"
                 >
                   <path 
-                    d="M 80 20 Q 82 34, 64 45" 
+                    d="M 76 21 Q 77 32, 69.5 41.5" 
                     stroke="#333333" 
                     strokeWidth="2" 
                     strokeDasharray="5 5" 
@@ -1171,7 +1168,7 @@ export default function Landing() {
               {/* Texto explicativo DEBAJO de la imagen */}
               <div className="py-5 px-4 sm:p-6 w-full text-left relative">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="whitespace-nowrap">Precio claro desde el principio</span><br />
+                  <span className="whitespace-nowrap">Sin límite de peso</span><br />
                   <span className="whitespace-nowrap">toda la ropa que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
                 </p>
               </div>
@@ -1201,9 +1198,11 @@ export default function Landing() {
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
           <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="location-editorial-head">
-            <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-              Al llenar tu cesto:
-            </h1>
+            <div className="relative -top-2">
+              <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
+                Como prefieras
+              </h1>
+            </div>
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
@@ -1212,16 +1211,32 @@ export default function Landing() {
               className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
               id="recepcion-landing-card"
             >
-              {/* Texto explicativo ARRIBA del mapa */}
-              <div className="py-5 px-4 sm:p-6 w-full text-left">
+              {/* Textos explicativos ARRIBA del mapa */}
+              <div className="pt-5 px-4 sm:pt-6 sm:px-6 pb-2 sm:pb-3 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Pide recolección a domicilio<br />
-                  o déjalo en nuestro punto
+                  Recogemos tu ropa sucia y<br />
+                  te la devolvemos limpia
                 </p>
+                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight mt-9">
+                  O déjala en nuestra recepción:
+                </p>
+
+                {isNavigatingGPS && gpsLoadingStep && (
+                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
+                    <span className="w-2 h-2 rounded-full bg-[#0f55d8] animate-pulse" />
+                    <span>{gpsLoadingStep}</span>
+                  </div>
+                )}
+
+                {geoError && (
+                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
+                    ⚠️ {geoError}
+                  </div>
+                )}
               </div>
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
-              <div className="w-full h-[270px] flex flex-col relative">
+              <div className="w-full h-[270px] flex flex-col relative mb-[39px] sm:mb-[43px]">
                 <div className="relative w-full flex-1 select-none overflow-visible bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
@@ -1305,7 +1320,7 @@ export default function Landing() {
                       </div>
                     </div>
 
-                    {/* Botón Abrir mapa ubicado en la esquina inferior izquierda sobresaliendo del mapa */}
+                    {/* Botón Ver ubicación ubicado en la esquina inferior izquierda sobresaliendo del mapa */}
                     <button 
                       type="button"
                       onClick={(e) => {
@@ -1320,32 +1335,11 @@ export default function Landing() {
                       {isNavigatingGPS ? (
                         <span>Conectando...</span>
                       ) : (
-                        <span>Abrir mapa</span>
+                        <span>Ver ubicación</span>
                       )}
                     </button>
                   </a>
                 </div>
-              </div>
-
-              {/* Texto explicativo DEBAJO del mapa - pt compensa los 19px que sobresale el botón Abrir mapa */}
-              <div className="pt-[39px] sm:pt-[43px] pb-5 sm:pb-6 px-4 sm:px-6 w-full text-left">
-                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Te lo devolvemos limpio en casa&nbsp;&nbsp;
-                  <span className="text-[#0f55d8] font-bold">sin costo</span>
-                </p>
-
-                {isNavigatingGPS && gpsLoadingStep && (
-                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
-                    <span className="w-2 h-2 rounded-full bg-[#0f55d8] animate-pulse" />
-                    <span>{gpsLoadingStep}</span>
-                  </div>
-                )}
-
-                {geoError && (
-                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
-                    ⚠️ {geoError}
-                  </div>
-                )}
               </div>
             </div>
           </div>
