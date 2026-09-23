@@ -1167,7 +1167,7 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-[18px] pb-2.5 px-4 sm:pt-[18px] sm:pb-3 sm:px-6 w-full text-left relative flex flex-col items-center">
+              <div className="pt-[18px] pb-2.5 px-4 sm:pt-[18px] sm:pb-3 sm:px-6 w-full text-left relative flex flex-col items-start">
                 <div className="w-full text-left">
                   <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                     <span className="whitespace-nowrap">Sin límite de peso</span><br />
@@ -1176,7 +1176,7 @@ export default function Landing() {
                 </div>
 
                 {/* Formulario / CTA idéntico a la primera pantalla */}
-                <div className="flex items-center mt-[18px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
+                <div className="flex items-center mt-[18px] w-[calc(100%-8px)] max-w-[340px] ml-0.5 sm:ml-1 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
                   <input 
                     type="text" 
                     placeholder={isInput2Focused ? "" : "Tu nombre"} 
