@@ -171,6 +171,7 @@ export default function Landing() {
   const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isInput2Focused, setIsInput2Focused] = useState(false);
 
   const ALL_COATZA_COLONIAS = [
     "Las Palmas",
@@ -1120,10 +1121,10 @@ export default function Landing() {
               </div>
 
               {/* Imagen en el MEDIO */}
-              <div className="w-full h-[270px] flex flex-col relative px-2.5">
+              <div className="w-full h-[258px] flex flex-col relative px-2.5 overflow-visible">
                 {/* Etiqueta "Caben hasta 7 días de ropa" */}
                 <div 
-                  className="absolute top-0 sm:top-0.5 right-2.5 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
+                  className="absolute top-1 sm:top-1.5 right-2.5 sm:right-3 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
@@ -1143,7 +1144,7 @@ export default function Landing() {
                   preserveAspectRatio="none"
                 >
                   <path 
-                    d="M 76 21 Q 77 32, 69.5 41.5" 
+                    d="M 76 22 Q 77 32, 69.5 41.5" 
                     stroke="#333333" 
                     strokeWidth="2" 
                     strokeDasharray="5 5" 
@@ -1166,28 +1167,33 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="py-5 px-4 sm:p-6 w-full text-left relative">
-                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="whitespace-nowrap">Sin límite de peso</span><br />
-                  <span className="whitespace-nowrap">todo lo que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
-                </p>
+              <div className="pt-5 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 w-full text-left relative flex flex-col items-center">
+                <div className="w-full text-left">
+                  <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
+                    <span className="whitespace-nowrap">Sin límite de peso</span><br />
+                    <span className="whitespace-nowrap">todo lo que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
+                  </p>
+                </div>
+
+                {/* Formulario / CTA idéntico a la primera pantalla */}
+                <div className="flex items-center mt-[18px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
+                  <input 
+                    type="text" 
+                    placeholder={isInput2Focused ? "" : "Tu nombre"} 
+                    value={name}
+                    onFocus={() => setIsInput2Focused(true)}
+                    onBlur={() => setIsInput2Focused(false)}
+                    onChange={(e) => setName(e.target.value)}
+                    className="flex-1 bg-transparent px-3 text-center text-[#333333] placeholder:text-[#86868b]/70 placeholder:font-medium placeholder:text-center focus:outline-none font-geist text-[18px] min-w-0 h-full"
+                  />
+                  <button 
+                    onClick={openBottomSheet}
+                    className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                  >
+                    <span>Quiero mi cesto</span>
+                  </button>
+                </div>
               </div>
-            </div>
-            {/* Indicador de scroll hacia abajo */}
-            <div className="mt-2 w-full flex justify-center items-center">
-              <button
-                type="button"
-                aria-label="Ver siguiente sección"
-                onClick={() => {
-                  const nextSection = document.getElementById('editorial-location-section');
-                  if (nextSection) {
-                    nextSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="text-[#333333] hover:text-[#0f55d8] transition-colors cursor-pointer select-none p-1.5 flex items-center justify-center animate-bounce"
-              >
-                <ChevronDown className="w-6 h-6" strokeWidth={2.5} />
-              </button>
             </div>
           </div>
         </div>
@@ -1215,11 +1221,11 @@ export default function Landing() {
               {/* Textos explicativos ARRIBA del mapa */}
               <div className="pt-5 px-4 sm:pt-6 sm:px-6 pb-2 sm:pb-3 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="text-[#0f55d8] font-bold">Recogemos</span> el cesto lleno y<br />
-                  te lo <span className="text-[#0f55d8] font-bold">entregamos</span> con tu ropa lista para usar
+                  <span className="text-[#0f55d8] font-semibold">Recogemos</span> el cesto lleno y<br />
+                  te lo <span className="text-[#0f55d8] font-semibold">entregamos</span> con tu ropa lista para usar
                 </p>
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight mt-6">
-                  A domicilio o en punto:
+                  a domicilio o en punto:
                 </p>
 
                 {isNavigatingGPS && gpsLoadingStep && (
