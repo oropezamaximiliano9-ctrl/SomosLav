@@ -1004,7 +1004,7 @@ export default function Landing() {
                 {/* Textos de inclusión */}
                 <div className="flex flex-col gap-1.5 select-none text-left pt-1">
                   <div className="ml-2">
-                    <span className="font-geist text-[#333333] text-[19px] font-medium leading-tight">
+                    <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
                       La ropa de tu cesto:
                     </span>
                   </div>
@@ -1015,7 +1015,7 @@ export default function Landing() {
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                         </div>
                       </div>
-                      <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
+                      <span className="font-geist text-black text-[20px] font-medium leading-tight">
                         Lavada y doblada
                       </span>
                     </div>
@@ -1025,7 +1025,7 @@ export default function Landing() {
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                         </div>
                       </div>
-                      <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
+                      <span className="font-geist text-black text-[20px] font-medium leading-tight">
                         Lista en 24 horas
                       </span>
                     </div>
@@ -1035,7 +1035,7 @@ export default function Landing() {
                           <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
                         </div>
                       </div>
-                      <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
+                      <span className="font-geist text-black text-[20px] font-medium leading-tight">
                         A domicilio
                       </span>
                     </div>
@@ -1169,7 +1169,7 @@ export default function Landing() {
               <div className="py-5 px-4 sm:p-6 w-full text-left relative">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   <span className="whitespace-nowrap">Sin límite de peso</span><br />
-                  <span className="whitespace-nowrap">toda la ropa que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
+                  <span className="whitespace-nowrap">todo lo que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
                 </p>
               </div>
             </div>
@@ -1200,7 +1200,8 @@ export default function Landing() {
           <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="location-editorial-head">
             <div className="relative -top-2">
               <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-                Como prefieras
+                Nosotros<br />
+                hacemos el resto
               </h1>
             </div>
           </div>
@@ -1214,11 +1215,11 @@ export default function Landing() {
               {/* Textos explicativos ARRIBA del mapa */}
               <div className="pt-5 px-4 sm:pt-6 sm:px-6 pb-2 sm:pb-3 w-full text-left">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Recogemos tu ropa sucia y<br />
-                  te la devolvemos limpia
+                  <span className="text-[#0f55d8] font-bold">Recogemos</span> el cesto lleno y<br />
+                  te lo <span className="text-[#0f55d8] font-bold">entregamos</span> con tu ropa lista para usar
                 </p>
-                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight mt-9">
-                  O déjala en nuestra recepción:
+                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight mt-6">
+                  A domicilio o en punto:
                 </p>
 
                 {isNavigatingGPS && gpsLoadingStep && (
@@ -1279,8 +1280,8 @@ export default function Landing() {
                       <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
                         {/* Attached label positioned to the left without affecting the marker's position */}
                         <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col items-center text-center leading-tight whitespace-nowrap font-geist">
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Recepción</span>
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Palmas</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
+                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
                         </div>
                         <div 
                           className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]"
