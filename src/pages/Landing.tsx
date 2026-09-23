@@ -1113,7 +1113,7 @@ export default function Landing() {
               id="empty-green-landing-card"
             >
               {/* Texto explicativo ARRIBA de la imagen */}
-              <div className="py-5 px-4 sm:p-6 w-full text-left relative">
+              <div className="pt-5 pb-[18px] px-4 sm:pt-6 sm:pb-[18px] sm:px-6 w-full text-left relative">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Recíbelo <span className="text-[#0f55d8] font-bold">hoy</span><br />
                   y llénalo a tu propio ritmo
@@ -1167,7 +1167,7 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-5 pb-2.5 px-4 sm:pt-6 sm:pb-3 sm:px-6 w-full text-left relative flex flex-col items-center">
+              <div className="pt-[18px] pb-2.5 px-4 sm:pt-[18px] sm:pb-3 sm:px-6 w-full text-left relative flex flex-col items-center">
                 <div className="w-full text-left">
                   <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                     <span className="whitespace-nowrap">Sin límite de peso</span><br />
