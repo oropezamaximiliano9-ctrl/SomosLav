@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight, ChevronDown, Plus } from "lucide-react";
+import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "react";
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
@@ -1174,6 +1174,17 @@ export default function Landing() {
                     <span className="whitespace-nowrap">sin sorpresas al pagar</span>
                   </p>
                 </div>
+
+                {/* Botón CTA Saber más con diseño idéntico al de Quiero mi cesto */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    document.getElementById('editorial-location-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="mt-4 h-[43px] px-4 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)] cursor-pointer"
+                >
+                  <span>Saber más</span>
+                </button>
               </div>
             </div>
           </div>
