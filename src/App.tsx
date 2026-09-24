@@ -252,7 +252,7 @@ function MainLayout() {
         className={`sticky top-0 w-full z-50 transition-all duration-75 ${
           hideNavbar 
             ? "bg-[#4E0000] text-white" 
-            : "bg-[#fdf0d5]/95 backdrop-blur-md text-gray-900"
+            : "bg-[#fdf0d5] text-gray-900"
         }`}
       >
         <div className={`max-w-sm mx-auto px-4 h-[50px] flex items-center justify-between transition-opacity duration-75 ${

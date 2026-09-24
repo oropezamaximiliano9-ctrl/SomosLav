@@ -1063,7 +1063,7 @@ export default function Landing() {
 
                 <div className="w-[calc(100%-16px)] max-w-[340px] mx-2 flex justify-end mt-1.5 pb-1 select-none pr-1 sm:pr-2.5">
                   <p className="font-geist text-[13px] text-[#666666] font-medium tracking-tight whitespace-nowrap">
-                    Es <span className="font-semibold">gratis</span>, solo pagas por lavado
+                    Es gratis, solo pagas por lavado
                   </p>
                 </div>
               </div>
@@ -1076,7 +1076,7 @@ export default function Landing() {
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
-          <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="empieza-hoy-title-container">
+          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
             <div className="relative -top-2">
               <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
                 Empieza{" "}
@@ -1107,7 +1107,7 @@ export default function Landing() {
           </div>
 
           {/* Tarjeta de Servicio a Domicilio - Blanca */}
-          <div className="px-0 sm:px-0 mt-2.5 w-full relative">
+          <div className="px-0 sm:px-0 -mt-1 w-full relative">
             <div 
               className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
               id="empty-green-landing-card"
@@ -1167,7 +1167,7 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-[18px] pb-2.5 px-4 sm:pt-[18px] sm:pb-3 sm:px-6 w-full text-left relative flex flex-col items-start">
+              <div className="pt-[18px] pb-5 px-4 sm:pt-[18px] sm:pb-[22px] sm:px-6 w-full text-left relative flex flex-col items-start">
                 <div className="w-full text-left">
                   <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                     <span className="whitespace-nowrap">Sin límite de peso</span><br />
@@ -1203,7 +1203,7 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
-          <div className="w-full text-center pt-3.5 pb-2 select-none px-4" id="location-editorial-head">
+          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
             <div className="relative -top-2">
               <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
                 Nosotros<br />
@@ -1213,7 +1213,7 @@ export default function Landing() {
           </div>
 
           {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
-          <div className="px-0 sm:px-0 mt-3 w-full relative">
+          <div className="px-0 sm:px-0 -mt-1 w-full relative">
             <div 
               className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
               id="recepcion-landing-card"
@@ -1243,7 +1243,7 @@ export default function Landing() {
               </div>
 
               {/* Contenedor con Mapa con su tamaño original h-[270px] */}
-              <div className="w-full h-[270px] flex flex-col relative mb-[39px] sm:mb-[43px]">
+              <div className="w-full h-[270px] flex flex-col relative mb-[49px] sm:mb-[53px]">
                 <div className="relative w-full flex-1 select-none overflow-visible bg-transparent flex items-center justify-center px-2.5">
                   <a 
                     href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
