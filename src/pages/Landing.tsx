@@ -171,7 +171,6 @@ export default function Landing() {
   const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const [isInput2Focused, setIsInput2Focused] = useState(false);
 
   const ALL_COATZA_COLONIAS = [
     "Las Palmas",
@@ -1113,7 +1112,7 @@ export default function Landing() {
               id="empty-green-landing-card"
             >
               {/* Texto explicativo ARRIBA de la imagen */}
-              <div className="pt-5 pb-[18px] px-4 sm:pt-6 sm:pb-[18px] sm:px-6 w-full text-left relative">
+              <div className="pt-5 pb-[20px] px-4 sm:pt-6 sm:pb-[20px] sm:px-6 w-full text-left relative">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                   Recíbelo <span className="text-[#0f55d8] font-bold">hoy</span><br />
                   y llénalo a tu propio ritmo
@@ -1167,31 +1166,13 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-[18px] pb-5 px-4 sm:pt-[18px] sm:pb-[22px] sm:px-6 w-full text-left relative flex flex-col items-start">
+              <div className="pt-[20px] pb-5 px-4 sm:pt-[20px] sm:pb-6 sm:px-6 w-full text-left relative flex flex-col items-start">
                 <div className="w-full text-left">
                   <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                    <span className="whitespace-nowrap">Sin límite de peso</span><br />
-                    <span className="whitespace-nowrap">todo lo que metas por <span className="text-[#0f55d8] font-bold">$95</span></span>
+                    <span className="whitespace-nowrap">Todo lo que metas por <span className="text-[#0f55d8] font-bold">$95</span></span><br />
+                    <span className="whitespace-nowrap">sin límite de peso</span><br />
+                    <span className="whitespace-nowrap">sin sorpresas al pagar</span>
                   </p>
-                </div>
-
-                {/* Formulario / CTA idéntico a la primera pantalla */}
-                <div className="flex items-center mt-[18px] w-[calc(100%-8px)] max-w-[340px] ml-0.5 sm:ml-1 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
-                  <input 
-                    type="text" 
-                    placeholder={isInput2Focused ? "" : "Tu nombre"} 
-                    value={name}
-                    onFocus={() => setIsInput2Focused(true)}
-                    onBlur={() => setIsInput2Focused(false)}
-                    onChange={(e) => setName(e.target.value)}
-                    className="flex-1 bg-transparent px-3 text-center text-[#333333] placeholder:text-[#86868b]/70 placeholder:font-medium placeholder:text-center focus:outline-none font-geist text-[18px] min-w-0 h-full"
-                  />
-                  <button 
-                    onClick={openBottomSheet}
-                    className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
-                  >
-                    <span>Quiero mi cesto</span>
-                  </button>
                 </div>
               </div>
             </div>
