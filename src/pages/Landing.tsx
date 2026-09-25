@@ -1166,7 +1166,7 @@ export default function Landing() {
               </div>
 
               {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-[20px] pb-3 px-4 sm:pt-[20px] sm:pb-4 sm:px-6 w-full text-left relative flex flex-col items-start">
+              <div className="pt-[20px] pb-3.5 px-4 sm:pt-[20px] sm:pb-4.5 sm:px-6 w-full text-left relative flex flex-col items-start">
                 <div className="w-full text-left">
                   <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
                     <span className="whitespace-nowrap">Todo lo que metas por <span className="text-[#0f55d8] font-bold">$95</span></span><br />
@@ -1174,15 +1174,15 @@ export default function Landing() {
                     <span className="whitespace-nowrap">sin sorpresas al pagar</span>
                   </p>
                 </div>
-
-                {/* Botón CTA Quiero mi cesto con diseño idéntico al de la primera pantalla, alineado a la derecha */}
                 <div className="w-full flex justify-end mt-3.5">
                   <button
                     type="button"
-                    onClick={openBottomSheet}
-                    className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)] cursor-pointer"
+                    onClick={() => {
+                      document.getElementById('editorial-location-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="text-[#333333] underline underline-offset-4 decoration-[#333333] font-geist font-semibold text-[17px] hover:text-black transition-colors cursor-pointer select-none"
                   >
-                    <span>Quiero mi cesto</span>
+                    Saber más
                   </button>
                 </div>
               </div>
