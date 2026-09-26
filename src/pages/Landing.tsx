@@ -1114,7 +1114,7 @@ export default function Landing() {
               {/* Texto explicativo ARRIBA de la imagen */}
               <div className="pt-5 pb-[20px] px-4 sm:pt-6 sm:pb-[20px] sm:px-6 w-full text-left relative">
                 <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Recíbelo <span className="text-[#0f55d8] font-bold">hoy</span><br />
+                  Pídelo <span className="text-[#0f55d8] font-bold">hoy</span><br />
                   y llénalo a tu propio ritmo
                 </p>
               </div>
@@ -1182,7 +1182,7 @@ export default function Landing() {
                     }}
                     className="text-[#333333] underline underline-offset-4 decoration-[#333333] font-geist font-semibold text-[17px] hover:text-black transition-colors cursor-pointer select-none"
                   >
-                    Saber más
+                    saber más
                   </button>
                 </div>
               </div>
