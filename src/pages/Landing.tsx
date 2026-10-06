@@ -69,30 +69,10 @@ const TypewriterTitle = () => {
     <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
       <div className="relative -top-2">
         <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-          Tu ropa <span className="text-[#0f55d8]">limpia</span>
+          Olvídate de lavar
         </h1>
         <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-          <span className="relative inline-block px-0.5">
-            sin salir
-          <svg
-            className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
-            viewBox="0 0 100 10"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-          >
-            <motion.path
-              d="M 1 6 C 30 4.5, 70 7, 99 5.5"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="round"
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              viewport={{ once: false, amount: 0.5 }}
-              transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
-            />
-          </svg>
-        </span>{" "}de casa
+          esta semana
         </p>
       </div>
     </div>
@@ -952,6 +932,46 @@ export default function Landing() {
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 -mt-1 w-full relative">
             <div className="rounded-lg border border-gray-100/50 overflow-hidden bg-white">
+              {/* Tarjeta de beneficios (Texto al principio) */}
+              <div className="pt-2 pb-2.5 px-2 w-full">
+                {/* Textos de inclusión */}
+                <div className="flex flex-col gap-1.5 select-none text-left pt-1">
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="shrink-0 w-6 h-6 ml-2 flex items-center justify-center">
+                        <Check className="w-[20px] h-[20px] text-[#0f55d8]" strokeWidth={4.5} />
+                      </div>
+                      <span className="font-geist text-[#333333] text-[22px] font-medium leading-tight">
+                        Recogemos
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="shrink-0 w-6 h-6 ml-2 flex items-center justify-center">
+                        <Check className="w-[20px] h-[20px] text-[#0f55d8]" strokeWidth={4.5} />
+                      </div>
+                      <span className="font-geist text-[#333333] text-[22px] font-medium leading-tight">
+                        Lavamos
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="shrink-0 w-6 h-6 ml-2 flex items-center justify-center">
+                        <Check className="w-[20px] h-[20px] text-[#0f55d8]" strokeWidth={4.5} />
+                      </div>
+                      <span className="font-geist text-[#333333] text-[22px] font-medium leading-tight">
+                        Entregamos
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="ml-2 pt-1">
+                    <span className="font-geist text-[#333333] text-[22px] font-medium leading-tight">
+                      Por <span className="text-[#0f55d8] font-bold">$95</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Imagen del cesto (Después) */}
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
                 <div 
                   className="absolute top-[3px] left-2.5 z-20 w-[100px] sm:w-[114px] pointer-events-none"
@@ -999,50 +1019,9 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Tarjeta de beneficios */}
-              <div className="pt-1.5 pb-2.5 px-2 w-full border-t border-gray-100/50">
-                {/* Textos de inclusión */}
-                <div className="flex flex-col gap-1.5 select-none text-left pt-1">
-                  <div className="ml-2">
-                    <span className="font-geist text-[#333333] text-[20px] font-medium leading-tight">
-                      La ropa de tu cesto:
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2">
-                      <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                        <div className="flex items-center justify-center">
-                          <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
-                        </div>
-                      </div>
-                      <span className="font-geist text-black text-[20px] font-medium leading-tight">
-                        Lavada y doblada
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                        <div className="flex items-center justify-center">
-                          <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
-                        </div>
-                      </div>
-                      <span className="font-geist text-black text-[20px] font-medium leading-tight">
-                        Lista en 24 horas
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="shrink-0 w-5 h-5 ml-2 flex items-center justify-center">
-                        <div className="flex items-center justify-center">
-                          <Check className="w-[17px] h-[17px] text-[#0f55d8]" strokeWidth={4.6} />
-                        </div>
-                      </div>
-                      <span className="font-geist text-black text-[20px] font-medium leading-tight">
-                        A domicilio
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center mt-[18px] w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
+              {/* Input y botón dentro de la tarjeta blanca */}
+              <div className="pb-2.5 px-2 w-full flex flex-col items-center">
+                <div className="flex items-center mt-2 w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
                   <input 
                     type="text" 
                     placeholder={isInputFocused ? "" : "Tu nombre"} 
@@ -1060,15 +1039,15 @@ export default function Landing() {
                   </button>
                 </div>
 
-                <div className="w-[calc(100%-16px)] max-w-[340px] mx-2 flex justify-end mt-1.5 pb-1 select-none pr-1 sm:pr-2.5">
+                <div className="w-[calc(100%-16px)] max-w-[340px] mx-2 flex justify-end mt-1.5 pb-0.5 select-none pr-1 sm:pr-2.5">
                   <p className="font-geist text-[13px] text-[#666666] font-medium tracking-tight whitespace-nowrap">
                     Es gratis, solo pagas por lavado
                   </p>
                 </div>
               </div>
+            </div>
           </div>
         </div>
-      </div>
       </section>
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
