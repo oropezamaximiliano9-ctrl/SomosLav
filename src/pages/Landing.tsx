@@ -923,7 +923,7 @@ export default function Landing() {
   return (
     <div className="flex-1 flex flex-col w-full bg-[#fdf0d5]">
       {/* Hero Section */}
-      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-between snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)] overflow-hidden" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-between snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
 
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0">
 
@@ -931,48 +931,43 @@ export default function Landing() {
 
           {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
           <div className="px-0 sm:px-0 -mt-1 w-full relative">
-            {/* Franja de fondo grisáceo en toda la anchura que cubre la tarjeta e input */}
-            <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-screen bg-[#f3f1ec] pointer-events-none z-0" />
-
-            <div className="relative z-10 w-full flex flex-col">
-              <div className="w-full rounded-lg border-0 bg-[#f3f1ec] overflow-hidden shadow-none flex flex-col">
-                {/* Imagen del cesto (Primero) */}
-                <div id="basket-container" className="relative w-full h-[255px] flex flex-col">
-                  {/* Imagen del cesto */}
-                  <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-2.5">
-                    <img 
-                      src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
-                      alt="Cesto de lona premium SOMOS en ambiente real minimal" 
-                      className="w-full h-full object-cover object-[center_65%] pointer-events-none select-none rounded-md"
-                      fetchPriority="high"
-                      decoding="sync"
-                      onError={(e) => {
-                        e.currentTarget.src = canvasLaundryBag;
-                      }}
-                    />
-                  </div>
+            <div className="w-full rounded-lg border border-gray-100/50 bg-white overflow-hidden shadow-none flex flex-col">
+              {/* Imagen del cesto (Primero) */}
+              <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
+                {/* Imagen del cesto */}
+                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-2.5">
+                  <img 
+                    src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
+                    alt="Cesto de lona premium SOMOS en ambiente real minimal" 
+                    className="w-full h-full object-cover object-[center_65%] pointer-events-none select-none rounded-md"
+                    fetchPriority="high"
+                    decoding="sync"
+                    onError={(e) => {
+                      e.currentTarget.src = canvasLaundryBag;
+                    }}
+                  />
                 </div>
+              </div>
 
-                {/* Texto de beneficios (Dentro de la tarjeta blanca) */}
-                <div className="w-full px-3 py-2.5 flex flex-col items-center justify-center text-center">
-                  <div className="select-none w-full text-center">
-                    <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                      Recogemos tu ropa sucia<br />
-                      y te la entregamos<br />
-                      <span className="text-[#0f55d8] font-bold">limpia y doblada</span>
-                    </p>
-                    <div className="flex items-center justify-center gap-2.5 pt-2 text-[19px] text-[#333333] font-medium font-geist leading-tight">
-                      <span>a domicilio</span>
-                      <span className="text-[#0f55d8] text-[16px] leading-none font-bold select-none">•</span>
-                      <span>en 24 h.</span>
-                    </div>
+              {/* Texto de beneficios (Dentro de la tarjeta blanca) */}
+              <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
+                <div className="select-none w-full text-left">
+                  <p className="text-[22px] text-[#333333] font-medium font-geist leading-[1.3]">
+                    Recogemos tu ropa sucia<br />
+                    te la entregamos<br />
+                    <span className="text-[#0f55d8] font-bold">limpia</span> y <span className="text-[#0f55d8] font-bold">doblada</span>
+                  </p>
+                  <div className="flex items-center justify-start gap-2 pt-2.5 text-[19px] text-[#333333] font-medium font-geist leading-tight">
+                    <span>A domicilio</span>
+                    <span className="text-[#0f55d8] text-[15px] font-bold leading-none select-none">•</span>
+                    <span>En 24 h.</span>
                   </div>
                 </div>
               </div>
 
-              {/* Input y botón */}
-              <div className="pb-2.5 px-2 w-full flex flex-col items-center mt-1.5">
-                <div className="flex items-center w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
+              {/* Input y botón (Dentro de la tarjeta blanca) */}
+              <div className="pb-3 px-2 w-full flex flex-col items-center mt-2">
+                <div className="flex items-center mt-1 w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
                   <input 
                     type="text" 
                     placeholder={isInputFocused ? "" : "Tu nombre"} 
@@ -998,8 +993,8 @@ export default function Landing() {
               </div>
             </div>
           </div>
-          </div>
-        </section>
+        </div>
+      </section>
 
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
