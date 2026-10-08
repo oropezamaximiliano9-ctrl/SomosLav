@@ -67,7 +67,7 @@ const checkmarkItemVariants = {
 const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
-      <div className="relative top-1">
+      <div className="relative -top-2">
         <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
           Olvídate de lavar
         </h1>
@@ -933,30 +933,27 @@ export default function Landing() {
           <div className="px-0 sm:px-0 -mt-1 w-full relative">
             <div className="w-full rounded-lg border border-gray-100/50 bg-white overflow-hidden shadow-none flex flex-col">
               {/* Imagen del cesto (Primero) */}
-              <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
-                {/* Imagen del cesto */}
-                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center">
-                  <img 
-                    src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
-                    alt="Cesto de lona premium SOMOS en ambiente real minimal" 
-                    className="w-full h-full object-cover object-[center_65%] pointer-events-none select-none rounded-t-lg"
-                    fetchPriority="high"
-                    decoding="sync"
-                    onError={(e) => {
-                      e.currentTarget.src = canvasLaundryBag;
-                    }}
-                  />
-                </div>
+              <div id="basket-container" className="relative w-full h-[270px] overflow-hidden select-none">
+                <img 
+                  src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
+                  alt="Cesto de lona premium SOMOS en ambiente real minimal" 
+                  className="w-full h-full object-cover object-[center_65%] pointer-events-none select-none block"
+                  fetchPriority="high"
+                  decoding="sync"
+                  onError={(e) => {
+                    e.currentTarget.src = canvasLaundryBag;
+                  }}
+                />
               </div>
 
               {/* Texto de beneficios (Dentro de la tarjeta blanca) */}
               <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
                 <div className="select-none w-full text-left">
-                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-[1.2] -mt-2">
+                  <p className="text-[19px] text-[#333333] font-medium font-geist leading-[1.2] -mt-1">
                     Recogemos tu ropa sucia y<br />
                     te la entregamos:
                   </p>
-                  <div className="flex flex-col items-start gap-1.5 pt-4 text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  <div className="flex flex-col items-start gap-1.5 pt-3.5 text-[20px] text-[#333333] font-medium font-geist leading-tight">
                     <div className="flex items-center gap-2">
                       <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
                       <span>Limpia y doblada</span>
@@ -991,12 +988,6 @@ export default function Landing() {
                   >
                     <span>Quiero mi cesto</span>
                   </button>
-                </div>
-
-                <div className="w-[calc(100%-16px)] max-w-[340px] mx-2 flex justify-end mt-1.5 pb-0.5 select-none pr-1 sm:pr-2.5">
-                  <p className="font-geist text-[13px] text-[#666666] font-medium tracking-tight whitespace-nowrap">
-                    Es gratis, solo pagas por lavado
-                  </p>
                 </div>
               </div>
             </div>
