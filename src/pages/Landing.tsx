@@ -67,7 +67,7 @@ const checkmarkItemVariants = {
 const TypewriterTitle = () => {
   return (
     <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
-      <div className="relative -top-2">
+      <div className="relative top-1">
         <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
           Olvídate de lavar
         </h1>
@@ -935,11 +935,11 @@ export default function Landing() {
               {/* Imagen del cesto (Primero) */}
               <div id="basket-container" className="relative w-full h-[270px] flex flex-col">
                 {/* Imagen del cesto */}
-                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center px-2.5 pt-2.5">
+                <div className="relative w-full flex-1 select-none overflow-hidden bg-transparent flex items-center justify-center">
                   <img 
                     src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
                     alt="Cesto de lona premium SOMOS en ambiente real minimal" 
-                    className="w-full h-full object-cover object-[center_65%] pointer-events-none select-none rounded-md"
+                    className="w-full h-full object-cover object-[center_65%] pointer-events-none select-none rounded-t-lg"
                     fetchPriority="high"
                     decoding="sync"
                     onError={(e) => {
@@ -952,15 +952,23 @@ export default function Landing() {
               {/* Texto de beneficios (Dentro de la tarjeta blanca) */}
               <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
                 <div className="select-none w-full text-left">
-                  <p className="text-[22px] text-[#333333] font-medium font-geist leading-[1.3]">
-                    Recogemos tu ropa sucia<br />
-                    te la entregamos<br />
-                    <span className="text-[#0f55d8] font-bold">limpia</span> y <span className="text-[#0f55d8] font-bold">doblada</span>
+                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-[1.2] -mt-2">
+                    Recogemos tu ropa sucia y<br />
+                    te la entregamos:
                   </p>
-                  <div className="flex items-center justify-start gap-2 pt-2.5 text-[19px] text-[#333333] font-medium font-geist leading-tight">
-                    <span>A domicilio</span>
-                    <span className="text-[#0f55d8] text-[15px] font-bold leading-none select-none">•</span>
-                    <span>En 24 h.</span>
+                  <div className="flex flex-col items-start gap-1.5 pt-4 text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
+                      <span>Limpia y doblada</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
+                      <span>A domicilio</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
+                      <span>En <span className="text-[19px]">24</span>h.</span>
+                    </div>
                   </div>
                 </div>
               </div>
