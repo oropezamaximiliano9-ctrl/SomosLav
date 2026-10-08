@@ -1012,11 +1012,11 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Input y botón (Cápsula unificada estilo iOS/glass como la referencia) */}
-              <div className="pb-3 px-4 w-full flex flex-col items-center mt-2.5">
-                <div className="w-full max-w-[340px] rounded-[28px] py-2 px-4 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_0_0_1px_rgba(255,255,255,0.7),inset_0_1px_1px_rgba(255,255,255,0.9)] bg-white/40 backdrop-blur-xl border border-black/[0.08] flex flex-col items-center">
+              {/* Input y botón (Opción 1: Cápsula Glass con separación sutil y armónica) */}
+              <div className="pb-3 px-4 w-full flex flex-col items-center mt-2">
+                <div className="w-full max-w-[306px] rounded-[26px] py-2 px-2.5 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_0_0_1px_rgba(255,255,255,0.7),inset_0_1px_1px_rgba(255,255,255,0.9)] bg-white/45 backdrop-blur-xl border border-black/[0.08] flex flex-col items-center gap-2">
                   {/* Campo de texto (blanco con contorno fino) */}
-                  <div className="w-full h-[44px] mb-2 px-3 rounded-full bg-white border border-black/15 shadow-[0_1px_2px_rgba(0,0,0,0.03)] flex items-center justify-center transition-all focus-within:border-[#0f55d8] focus-within:ring-1 focus-within:ring-[#0f55d8] cursor-text">
+                  <div className="w-full h-[41px] px-3 rounded-full bg-white border border-black/15 shadow-[0_1px_2px_rgba(0,0,0,0.03)] flex items-center justify-center transition-all focus-within:border-[#0f55d8] focus-within:ring-1 focus-within:ring-[#0f55d8] cursor-text">
                     <input 
                       type="tel" 
                       placeholder={isInputFocused ? "" : "Tu número de teléfono"} 
@@ -1031,13 +1031,13 @@ export default function Landing() {
                         const val = e.target.value.replace(/\D/g, "").slice(0, 10);
                         setPhone(val);
                       }}
-                      className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal placeholder:text-[#94a3b8]/85 placeholder:font-medium placeholder:text-center placeholder:tracking-wide focus:outline-none font-geist text-[17px] sm:text-[18px] h-full transition-colors"
+                      className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal placeholder:text-[#94a3b8]/85 placeholder:font-medium placeholder:text-center placeholder:tracking-wide focus:outline-none font-geist text-[18px] h-full transition-colors"
                     />
                   </div>
                   {/* Botón píldora interior */}
                   <button 
                     onClick={openBottomSheet}
-                    className="w-full h-[44px] bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_1px_3px_rgba(0,0,0,0.08)]"
+                    className="w-full h-[41px] bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_1px_3px_rgba(0,0,0,0.08)]"
                   >
                     <span>Quiero mi cesto gratis</span>
                   </button>
