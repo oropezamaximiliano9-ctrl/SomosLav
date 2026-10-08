@@ -964,12 +964,34 @@ export default function Landing() {
                     e.currentTarget.src = canvasLaundryBag;
                   }}
                 />
+
+                {/* Etiqueta decorativa sin texto (superior izquierda) */}
+                <div 
+                  className="absolute top-2.5 left-2.5 sm:left-3 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
+                >
+                  <img 
+                    src="https://iili.io/CU67SLX.webp" 
+                    alt="Etiqueta decorativa" 
+                    className="w-full h-full object-fill drop-shadow-sm -rotate-[3deg]"
+                  />
+                </div>
+
+                {/* Segunda etiqueta decorativa sin texto (inferior derecha) */}
+                <div 
+                  className="absolute bottom-2.5 right-2.5 sm:right-3 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
+                >
+                  <img 
+                    src="https://iili.io/CU67SLX.webp" 
+                    alt="Etiqueta decorativa inferior" 
+                    className="w-full h-full object-fill drop-shadow-sm -rotate-[3deg]"
+                  />
+                </div>
               </div>
 
               {/* Texto de beneficios (Dentro de la tarjeta blanca) */}
               <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
                 <div className="select-none w-full text-left">
-                  <p className="text-[19px] text-[#333333] font-medium font-geist leading-[1.3] -mt-1">
+                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-[1.3] -mt-1">
                     Recogemos tu ropa sucia y te la<br />
                     entregamos:
                   </p>
