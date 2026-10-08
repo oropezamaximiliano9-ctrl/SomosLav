@@ -535,7 +535,13 @@ export default function Landing() {
     setIsBottomSheetOpen(true);
     setRegistered(false);
     
-    if (name.trim().length > 0) {
+    if (phone.trim().length === 10) {
+      if (!name.trim()) {
+        setFormStep(1);
+      } else {
+        setFormStep(3);
+      }
+    } else if (name.trim().length > 0) {
       setFormStep(2);
     } else {
       setFormStep(1);
@@ -954,7 +960,7 @@ export default function Landing() {
           <div className="px-0 sm:px-0 -mt-1 w-full relative">
             <div className="w-full rounded-lg border border-gray-100/50 bg-white overflow-hidden shadow-none flex flex-col">
               {/* Imagen del cesto (Primero) */}
-              <div id="basket-container" className="relative w-full h-[270px] overflow-hidden select-none">
+              <div id="basket-container" className="relative w-full h-[250px] overflow-hidden select-none">
                 <img 
                   src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
                   alt="Cesto de lona premium SOMOS en ambiente real minimal" 
@@ -1006,23 +1012,34 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Input y botón (Dentro de la tarjeta blanca) */}
-              <div className="pb-3 px-2 w-full flex flex-col items-center mt-2">
-                <div className="flex items-center mt-1 w-[calc(100%-16px)] max-w-[340px] mx-2 h-[43px] rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.15)] bg-[#f9f9f9]">
-                  <input 
-                    type="text" 
-                    placeholder={isInputFocused ? "" : "Tu nombre"} 
-                    value={name}
-                    onFocus={() => setIsInputFocused(true)}
-                    onBlur={() => setIsInputFocused(false)}
-                    onChange={(e) => setName(e.target.value)}
-                    className="flex-1 bg-transparent px-3 text-center text-[#333333] placeholder:text-[#86868b]/70 placeholder:font-medium placeholder:text-center focus:outline-none font-geist text-[18px] min-w-0 h-full"
-                  />
+              {/* Input y botón (Cápsula unificada estilo iOS/glass como la referencia) */}
+              <div className="pb-3 px-4 w-full flex flex-col items-center mt-2.5">
+                <div className="w-full max-w-[340px] rounded-[28px] py-2 px-4 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_0_0_1px_rgba(255,255,255,0.7),inset_0_1px_1px_rgba(255,255,255,0.9)] bg-white/40 backdrop-blur-xl border border-black/[0.08] flex flex-col items-center">
+                  {/* Campo de texto (blanco con contorno fino) */}
+                  <div className="w-full h-[44px] mb-2 px-3 rounded-full bg-white border border-black/15 shadow-[0_1px_2px_rgba(0,0,0,0.03)] flex items-center justify-center transition-all focus-within:border-[#0f55d8] focus-within:ring-1 focus-within:ring-[#0f55d8] cursor-text">
+                    <input 
+                      type="tel" 
+                      placeholder={isInputFocused ? "" : "Tu número de teléfono"} 
+                      value={phone}
+                      maxLength={10}
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => {
+                        setIsInputFocused(false);
+                        handlePhoneBlur();
+                      }}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                        setPhone(val);
+                      }}
+                      className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal placeholder:text-[#94a3b8]/85 placeholder:font-medium placeholder:text-center placeholder:tracking-wide focus:outline-none font-geist text-[17px] sm:text-[18px] h-full transition-colors"
+                    />
+                  </div>
+                  {/* Botón píldora interior */}
                   <button 
                     onClick={openBottomSheet}
-                    className="h-[43px] px-3.5 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
+                    className="w-full h-[44px] bg-[#0f55d8] text-white rounded-full font-semibold text-[18px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_1px_3px_rgba(0,0,0,0.08)]"
                   >
-                    <span>Quiero mi cesto</span>
+                    <span>Quiero mi cesto gratis</span>
                   </button>
                 </div>
               </div>
