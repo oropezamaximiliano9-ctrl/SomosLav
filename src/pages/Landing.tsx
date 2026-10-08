@@ -960,7 +960,7 @@ export default function Landing() {
           <div className="px-0 sm:px-0 -mt-1 w-full relative">
             <div className="w-full rounded-lg border border-gray-100/50 bg-white overflow-hidden shadow-none flex flex-col">
               {/* Imagen del cesto (Primero) */}
-              <div id="basket-container" className="relative w-full h-[250px] overflow-hidden select-none">
+              <div id="basket-container" className="relative w-full h-[240px] overflow-hidden select-none">
                 <img 
                   src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
                   alt="Cesto de lona premium SOMOS en ambiente real minimal" 
