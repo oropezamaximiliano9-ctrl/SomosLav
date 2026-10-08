@@ -89,10 +89,11 @@ const TypewriterTitle = () => {
                 transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
               />
             </svg>
-          </span>
+          </span>{" "}
+          de
         </h1>
         <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-          de lavar esta semana
+          lavar esta semana
         </p>
       </div>
     </div>
@@ -965,26 +966,19 @@ export default function Landing() {
                   }}
                 />
 
-                {/* Etiqueta decorativa sin texto (superior izquierda) */}
+                {/* Etiqueta decorativa (superior izquierda) */}
                 <div 
-                  className="absolute top-2.5 left-2.5 sm:left-3 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
+                  className="absolute top-2.5 left-2.5 sm:left-3 z-20 w-[96px] sm:w-[102px] h-[48px] sm:h-[51px] pointer-events-none"
                 >
                   <img 
                     src="https://iili.io/CU67SLX.webp" 
-                    alt="Etiqueta decorativa" 
-                    className="w-full h-full object-fill drop-shadow-sm -rotate-[3deg]"
+                    alt="Cesto incluido" 
+                    className="w-full h-full object-fill drop-shadow-sm -rotate-[4deg]"
                   />
-                </div>
-
-                {/* Segunda etiqueta decorativa sin texto (inferior derecha) */}
-                <div 
-                  className="absolute bottom-2.5 right-2.5 sm:right-3 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
-                >
-                  <img 
-                    src="https://iili.io/CU67SLX.webp" 
-                    alt="Etiqueta decorativa inferior" 
-                    className="w-full h-full object-fill drop-shadow-sm -rotate-[3deg]"
-                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[17px] font-geist px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
+                    <span className="whitespace-nowrap">Cesto</span>
+                    <span className="whitespace-nowrap">incluido</span>
+                  </div>
                 </div>
               </div>
 
@@ -992,13 +986,13 @@ export default function Landing() {
               <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
                 <div className="select-none w-full text-left">
                   <p className="text-[20px] text-[#333333] font-medium font-geist leading-[1.3] -mt-1">
-                    Recogemos tu ropa sucia y te la<br />
-                    entregamos:
+                    Recogemos tu ropa sucia y<br />
+                    te la entregamos:
                   </p>
-                  <div className="flex flex-col items-start gap-1 pt-1.5 text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  <div className="flex flex-col items-start gap-1 pt-2 text-[20px] text-[#333333] font-medium font-geist leading-tight">
                     <div className="flex items-center gap-2">
                       <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
-                      <span>Limpia y doblada</span>
+                      <span>Lavada y doblada</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
