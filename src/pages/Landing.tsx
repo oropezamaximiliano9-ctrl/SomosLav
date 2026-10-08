@@ -69,10 +69,30 @@ const TypewriterTitle = () => {
     <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
       <div className="relative -top-2">
         <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-          Olvídate de lavar
+          <span className="relative inline-block px-0.5">
+            Olvídate
+            <svg
+              className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
+              viewBox="0 0 100 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="none"
+            >
+              <motion.path
+                d="M 1 6 C 30 4.5, 70 7, 99 5.5"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: false, amount: 0.5 }}
+                transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
+              />
+            </svg>
+          </span>
         </h1>
         <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-          esta semana
+          de lavar esta semana
         </p>
       </div>
     </div>
@@ -950,10 +970,10 @@ export default function Landing() {
               <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
                 <div className="select-none w-full text-left">
                   <p className="text-[19px] text-[#333333] font-medium font-geist leading-[1.2] -mt-1">
-                    Recogemos tu ropa sucia y<br />
-                    te la entregamos:
+                    Recogemos tu ropa sucia y te la<br />
+                    entregamos:
                   </p>
-                  <div className="flex flex-col items-start gap-1.5 pt-3.5 text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  <div className="flex flex-col items-start gap-1 pt-3.5 text-[20px] text-[#333333] font-medium font-geist leading-tight">
                     <div className="flex items-center gap-2">
                       <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
                       <span>Limpia y doblada</span>
