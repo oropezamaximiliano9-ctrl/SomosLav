@@ -1012,9 +1012,9 @@ export default function Landing() {
                 </div>
               </div>
 
-              {/* Input y botón (Opción 1: Cápsula Glass con separación sutil y armónica) */}
+              {/* Input y botón (Opción 1: Cápsula con acabado plata/metálico sutil) */}
               <div className="pb-0 px-4 w-full flex flex-col items-center mt-2">
-                <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_0_0_1px_rgba(255,255,255,0.7),inset_0_1px_1px_rgba(255,255,255,0.9)] bg-white/45 backdrop-blur-xl border border-black/[0.08] flex flex-col items-center gap-1.5">
+                <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_4px_16px_-2px_rgba(0,0,0,0.07),inset_0_1px_1px_0_rgba(255,255,255,0.85),inset_0_-1px_1px_0_rgba(0,0,0,0.05)] bg-gradient-to-b from-[#f2f3f5] via-[#ebedf0] to-[#e2e4e8] border border-[#d3d6dc] flex flex-col items-center gap-1.5">
                   {/* Campo de texto (blanco con contorno fino) */}
                   <div className="w-full h-[37px] px-3 rounded-full bg-white border border-black/15 shadow-[0_1px_2px_rgba(0,0,0,0.03)] flex items-center justify-center transition-all focus-within:border-[#0f55d8] focus-within:ring-1 focus-within:ring-[#0f55d8] cursor-text">
                     <input 
