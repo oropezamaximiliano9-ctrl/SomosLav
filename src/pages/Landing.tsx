@@ -991,11 +991,11 @@ export default function Landing() {
               {/* Texto de beneficios (Dentro de la tarjeta blanca) */}
               <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
                 <div className="select-none w-full text-left">
-                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-[1.3] -mt-1">
+                  <p className="text-[19px] text-[#333333] font-medium font-geist leading-[1.3] -mt-1">
                     Recogemos tu ropa sucia y<br />
                     te la entregamos:
                   </p>
-                  <div className="flex flex-col items-start gap-1 pt-2 text-[20px] text-[#333333] font-medium font-geist leading-tight">
+                  <div className="flex flex-col items-start gap-1 pt-2 text-[19px] text-[#333333] font-medium font-geist leading-tight">
                     <div className="flex items-center gap-2">
                       <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
                       <span>Lavada y doblada</span>
@@ -1006,7 +1006,7 @@ export default function Landing() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
-                      <span>En <span className="text-[19px]">24</span>h.</span>
+                      <span>En <span className="text-[18px]">24</span>h.</span>
                     </div>
                   </div>
                 </div>
