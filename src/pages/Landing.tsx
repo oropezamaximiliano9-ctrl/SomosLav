@@ -952,96 +952,85 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-between snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
 
+        {/* Contenedor del título */}
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0">
-
           <TypewriterTitle />
+        </div>
 
-          {/* Cesto grande centrado en ambiente real minimal con texto descriptivo unificado */}
-          <div className="px-0 sm:px-0 -mt-1 w-full relative">
-            <div className="w-full rounded-lg border border-gray-100/50 bg-white overflow-hidden shadow-none flex flex-col">
-              {/* Imagen del cesto (Primero) */}
-              <div id="basket-container" className="relative w-full h-[240px] overflow-hidden select-none">
-                <img 
-                  src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
-                  alt="Cesto de lona premium SOMOS en ambiente real minimal" 
-                  className="w-full h-full object-cover object-[center_65%] pointer-events-none select-none block"
-                  fetchPriority="high"
-                  decoding="sync"
-                  onError={(e) => {
-                    e.currentTarget.src = canvasLaundryBag;
-                  }}
-                />
+        {/* Cesto grande centrado a ancho completo de pantalla (Full Bleed Edge-to-Edge) */}
+        <div className="w-full relative -mt-1 px-0">
+          <div className="w-full border-y border-black/10 overflow-hidden shadow-md relative flex flex-col min-h-[480px] pb-0 justify-between">
+            {/* Imagen de fondo completa de toda la pantalla horizontal */}
+            <img 
+              src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
+              alt="Cesto de lona premium SOMOS en ambiente real minimal" 
+              className="absolute inset-0 w-full h-full object-cover object-[center_60%] pointer-events-none select-none"
+              fetchPriority="high"
+              decoding="sync"
+              onError={(e) => {
+                e.currentTarget.src = canvasLaundryBag;
+              }}
+            />
 
-                {/* Etiqueta decorativa (superior izquierda) */}
-                <div 
-                  className="absolute top-2.5 left-2.5 sm:left-3 z-20 w-[96px] sm:w-[102px] h-[48px] sm:h-[51px] pointer-events-none"
-                >
-                  <img 
-                    src="https://iili.io/CU67SLX.webp" 
-                    alt="Cesto incluido" 
-                    className="w-full h-full object-fill drop-shadow-sm -rotate-[4deg]"
+            {/* Degradado suave localizado ÚNICAMENTE en la parte superior del texto (un toque más oscuro para óptimo contraste) */}
+            <div className="absolute inset-x-0 top-0 h-60 bg-gradient-to-b from-black/70 via-black/45 to-transparent pointer-events-none" />
+
+            {/* Parte Superior: Texto de beneficios alineado a la izquierda */}
+            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-2.5 pb-1 flex flex-col items-start justify-center text-left">
+              <div className="select-none w-full flex flex-col items-start text-left">
+                <p className="text-[22px] text-white font-medium font-geist leading-[1.25] -mt-1 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
+                  Recogemos tu ropa sucia y<br />
+                  te la entregamos:
+                </p>
+                <div className="flex flex-col items-start gap-1.5 pt-2 text-[20px] text-white font-medium font-geist leading-tight text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
+                  <span className="relative inline-block">
+                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+12.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
+                    <span className="relative z-10">Lavada y doblada</span>
+                  </span>
+                  <span className="relative inline-block">
+                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+12.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
+                    <span className="relative z-10">A domicilio</span>
+                  </span>
+                  <span className="relative inline-block">
+                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+12.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
+                    <span className="relative z-10">En <span className="text-[19px]">24</span>h.</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Zona Media: Espacio abierto para lucir la imagen del cesto limpia */}
+            <div className="relative w-full h-[100px] select-none" />
+
+            {/* Input y botón (Cápsula completa y redondeada, al ras del fondo sin cortarse) */}
+            <div className="relative z-10 pb-1.5 px-4 w-full flex flex-col items-center mt-auto">
+              <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/85 backdrop-blur-md border border-white flex flex-col items-center gap-1.5">
+                {/* Campo de texto (blanco puro) */}
+                <div className="w-full h-[37px] px-3 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all focus-within:ring-2 focus-within:ring-[#3b82f6] cursor-text">
+                  <input 
+                    type="tel" 
+                    placeholder={isInputFocused ? "" : "Tu número de teléfono"} 
+                    value={phone}
+                    maxLength={10}
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => {
+                      setIsInputFocused(false);
+                      handlePhoneBlur();
+                    }}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      setPhone(val);
+                    }}
+                    className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal placeholder:text-[#94a3b8] placeholder:font-medium placeholder:text-center placeholder:tracking-wide focus:outline-none font-geist text-[17px] h-full transition-colors"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[17px] font-geist px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
-                    <span className="whitespace-nowrap">Cesto</span>
-                    <span className="whitespace-nowrap">incluido</span>
-                  </div>
                 </div>
-              </div>
-
-              {/* Texto de beneficios (Dentro de la tarjeta blanca) */}
-              <div className="w-full px-4 sm:px-5 pt-3 pb-1 flex flex-col items-start justify-center text-left">
-                <div className="select-none w-full text-left">
-                  <p className="text-[20px] text-[#333333] font-medium font-geist leading-[1.3] -mt-1">
-                    Recogemos tu ropa sucia y<br />
-                    te la entregamos:
-                  </p>
-                  <div className="flex flex-col items-start gap-1 pt-2 text-[20px] text-[#333333] font-medium font-geist leading-tight">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
-                      <span>Lavada y doblada</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
-                      <span>A domicilio</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="w-[18px] h-[18px] text-[#0f55d8] stroke-[4.75] shrink-0" />
-                      <span>En <span className="text-[19px]">24</span>h.</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Input y botón (Opción 1: Cápsula con acabado plata/metálico sutil) */}
-              <div className="pb-0 px-4 w-full flex flex-col items-center mt-2">
-                <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_4px_16px_-2px_rgba(0,0,0,0.07),inset_0_1px_1px_0_rgba(255,255,255,0.85),inset_0_-1px_1px_0_rgba(0,0,0,0.05)] bg-gradient-to-b from-[#f2f3f5] via-[#ebedf0] to-[#e2e4e8] border border-[#d3d6dc] flex flex-col items-center gap-1.5">
-                  {/* Campo de texto (blanco con contorno fino) */}
-                  <div className="w-full h-[37px] px-3 rounded-full bg-white border border-black/15 shadow-[0_1px_2px_rgba(0,0,0,0.03)] flex items-center justify-center transition-all focus-within:border-[#0f55d8] focus-within:ring-1 focus-within:ring-[#0f55d8] cursor-text">
-                    <input 
-                      type="tel" 
-                      placeholder={isInputFocused ? "" : "Tu número de teléfono"} 
-                      value={phone}
-                      maxLength={10}
-                      onFocus={() => setIsInputFocused(true)}
-                      onBlur={() => {
-                        setIsInputFocused(false);
-                        handlePhoneBlur();
-                      }}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, "").slice(0, 10);
-                        setPhone(val);
-                      }}
-                      className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal placeholder:text-[#94a3b8]/85 placeholder:font-medium placeholder:text-center placeholder:tracking-wide focus:outline-none font-geist text-[17px] h-full transition-colors"
-                    />
-                  </div>
-                  {/* Botón píldora interior */}
-                  <button 
-                    onClick={openBottomSheet}
-                    className="w-full h-[37px] bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_1px_3px_rgba(0,0,0,0.08)]"
-                  >
-                    <span>Quiero mi cesto gratis</span>
-                  </button>
-                </div>
+                {/* Botón píldora interior */}
+                <button 
+                  onClick={openBottomSheet}
+                  className="w-full h-[37px] bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)]"
+                >
+                  <span>Quiero mi cesto gratis</span>
+                </button>
               </div>
             </div>
           </div>
