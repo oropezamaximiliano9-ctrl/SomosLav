@@ -949,13 +949,13 @@ export default function Landing() {
 
   return (
     <div className="flex-1 flex flex-col w-full bg-[#fdf0d5]">
-      {/* Hero Section */}
-      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-start snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+      {/* Hero Section - 100% Pantalla completa con imagen de fondo continua */}
+      <section className="relative w-full px-0 pt-0 pb-0 flex flex-col items-start text-left justify-start snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
 
-        {/* Cesto grande centrado a ancho completo de pantalla (Full Bleed Edge-to-Edge) ocupando el espacio superior */}
-        <div className="w-full relative px-0">
-          <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex flex-col min-h-[540px] sm:min-h-[580px] pb-0 justify-between">
-            {/* Imagen de fondo completa de toda la pantalla horizontal */}
+        {/* Cesto grande a pantalla completa (Full Bleed Edge-to-Edge) de arriba a abajo */}
+        <div className="w-full relative px-0 flex-1 flex flex-col">
+          <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex-1 flex flex-col min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)] pb-4 justify-between">
+            {/* Imagen de fondo completa de toda la pantalla horizontal y vertical */}
             <img 
               src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
               alt="Cesto de lona premium SOMOS en ambiente real minimal" 
@@ -968,10 +968,10 @@ export default function Landing() {
             />
 
             {/* Degradado suave localizado ÚNICAMENTE en la parte superior del texto (un toque más oscuro para óptimo contraste) */}
-            <div className="absolute inset-x-0 top-0 h-60 bg-gradient-to-b from-black/70 via-black/45 to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-black/70 via-black/45 to-transparent pointer-events-none" />
 
             {/* Parte Superior: Texto de beneficios alineado a la izquierda */}
-            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-2.5 pb-1 flex flex-col items-start justify-center text-left">
+            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-3 pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
                 <p className="text-[22px] text-white font-medium font-geist leading-[1.25] -mt-1 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y<br />
@@ -992,10 +992,10 @@ export default function Landing() {
             </div>
 
             {/* Zona Media: Espacio abierto para lucir la imagen del cesto limpia */}
-            <div className="relative w-full h-[100px] select-none" />
+            <div className="relative w-full flex-1 select-none" />
 
             {/* Input y botón (Cápsula completa y redondeada, al ras del fondo sin cortarse) */}
-            <div className="relative z-10 pb-0.5 px-4 w-full flex flex-col items-center mt-auto translate-y-1">
+            <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
               <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/85 backdrop-blur-md border border-white flex flex-col items-center gap-1.5">
                 {/* Campo de texto (blanco puro) */}
                 <div className="w-full h-[37px] px-3 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all focus-within:ring-2 focus-within:ring-[#3b82f6] cursor-text">
