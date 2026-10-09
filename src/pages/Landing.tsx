@@ -950,16 +950,11 @@ export default function Landing() {
   return (
     <div className="flex-1 flex flex-col w-full bg-[#fdf0d5]">
       {/* Hero Section */}
-      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-between snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col items-start text-left justify-start snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
 
-        {/* Contenedor del título */}
-        <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0">
-          <TypewriterTitle />
-        </div>
-
-        {/* Cesto grande centrado a ancho completo de pantalla (Full Bleed Edge-to-Edge) */}
-        <div className="w-full relative -mt-1 px-0">
-          <div className="w-full border-y border-black/10 overflow-hidden shadow-md relative flex flex-col min-h-[480px] pb-0 justify-between">
+        {/* Cesto grande centrado a ancho completo de pantalla (Full Bleed Edge-to-Edge) ocupando el espacio superior */}
+        <div className="w-full relative px-0">
+          <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex flex-col min-h-[540px] sm:min-h-[580px] pb-0 justify-between">
             {/* Imagen de fondo completa de toda la pantalla horizontal */}
             <img 
               src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
@@ -979,22 +974,19 @@ export default function Landing() {
             <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-2.5 pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
                 <p className="text-[22px] text-white font-medium font-geist leading-[1.25] -mt-1 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
-                  Recogemos tu ropa sucia y<br />
-                  te la entregamos:
+                  Pide tu cesto gratis y<br />
+                  llénalo con lo que quieras:<br />
+                  <span className="relative inline-block mt-0.5">
+                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+12.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
+                    <span className="relative z-10">Lo lavamos todo por <span className="font-bold text-[21px] text-white">$95</span></span>
+                  </span>
                 </p>
-                <div className="flex flex-col items-start gap-1.5 pt-2 text-[20px] text-white font-medium font-geist leading-tight text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
-                  <span className="relative inline-block">
-                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+12.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
-                    <span className="relative z-10">Lavada y doblada</span>
-                  </span>
-                  <span className="relative inline-block">
-                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+12.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
-                    <span className="relative z-10">A domicilio</span>
-                  </span>
-                  <span className="relative inline-block">
-                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+12.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
-                    <span className="relative z-10">En <span className="text-[19px]">24</span>h.</span>
-                  </span>
+                <div className="flex flex-col items-start text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-2">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[20px] text-white font-medium font-geist leading-tight">
+                    <span>A domicilio</span>
+                    <span>•</span>
+                    <span>En <span className="text-[19px]">24</span>h.</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1003,7 +995,7 @@ export default function Landing() {
             <div className="relative w-full h-[100px] select-none" />
 
             {/* Input y botón (Cápsula completa y redondeada, al ras del fondo sin cortarse) */}
-            <div className="relative z-10 pb-1.5 px-4 w-full flex flex-col items-center mt-auto">
+            <div className="relative z-10 pb-0.5 px-4 w-full flex flex-col items-center mt-auto translate-y-1">
               <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/85 backdrop-blur-md border border-white flex flex-col items-center gap-1.5">
                 {/* Campo de texto (blanco puro) */}
                 <div className="w-full h-[37px] px-3 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all focus-within:ring-2 focus-within:ring-[#3b82f6] cursor-text">
