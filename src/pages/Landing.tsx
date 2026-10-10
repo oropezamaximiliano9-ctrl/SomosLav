@@ -1029,11 +1029,11 @@ export default function Landing() {
         {/* Cesto grande a pantalla completa (Full Bleed Edge-to-Edge) de arriba a abajo */}
         <div className="w-full relative px-0 flex-1 flex flex-col">
           <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex-1 flex flex-col min-h-[100dvh] min-h-[100svh] pb-4 justify-between">
-            {/* Imagen de fondo completa de toda la pantalla horizontal y vertical */}
+            {/* Imagen de fondo anclada abajo para mostrar todo el piso y margen inferior original */}
             <img 
-              src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
-              alt="Cesto de lona premium SOMOS en ambiente real minimal" 
-              className="absolute inset-0 w-full h-full object-cover object-[center_60%] pointer-events-none select-none"
+              src="https://i.ibb.co/r2hvCs6S/IMG-9744.jpg" 
+              alt="Cesto de lavandería SOMOS en ambiente real minimalista" 
+              className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none select-none"
               fetchPriority="high"
               decoding="sync"
               onError={(e) => {
