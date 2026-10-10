@@ -172,6 +172,80 @@ export default function Landing() {
   const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [typedBase, setTypedBase] = useState("");
+  const [typedDots, setTypedDots] = useState("");
+
+  useEffect(() => {
+    if (isInputFocused || phone) return;
+
+    const baseText = "Tu WhatsApp";
+    let timeoutId: NodeJS.Timeout;
+    let state: "typing_base" | "typing_dots_1" | "erasing_dots" | "typing_dots_2" | "pause_before_delete" | "deleting_all" = "typing_base";
+    let index = 0;
+    let dotCount = 0;
+
+    const run = () => {
+      if (state === "typing_base") {
+        index++;
+        setTypedBase(baseText.slice(0, index));
+        setTypedDots("");
+        if (index === baseText.length) {
+          state = "typing_dots_1";
+          timeoutId = setTimeout(run, 120);
+          return;
+        }
+        timeoutId = setTimeout(run, 80);
+      } else if (state === "typing_dots_1") {
+        dotCount++;
+        setTypedDots(".".repeat(dotCount));
+        if (dotCount === 3) {
+          state = "erasing_dots";
+          timeoutId = setTimeout(run, 600);
+          return;
+        }
+        timeoutId = setTimeout(run, 150);
+      } else if (state === "erasing_dots") {
+        dotCount--;
+        setTypedDots(".".repeat(dotCount));
+        if (dotCount === 0) {
+          state = "typing_dots_2";
+          timeoutId = setTimeout(run, 300);
+          return;
+        }
+        timeoutId = setTimeout(run, 90);
+      } else if (state === "typing_dots_2") {
+        dotCount++;
+        setTypedDots(".".repeat(dotCount));
+        if (dotCount === 3) {
+          state = "pause_before_delete";
+          timeoutId = setTimeout(run, 1000);
+          return;
+        }
+        timeoutId = setTimeout(run, 150);
+      } else if (state === "pause_before_delete") {
+        state = "deleting_all";
+        timeoutId = setTimeout(run, 40);
+      } else if (state === "deleting_all") {
+        if (dotCount > 0) {
+          dotCount--;
+          setTypedDots(".".repeat(dotCount));
+          timeoutId = setTimeout(run, 35);
+        } else if (index > 0) {
+          index--;
+          setTypedBase(baseText.slice(0, index));
+          timeoutId = setTimeout(run, 35);
+        } else {
+          state = "typing_base";
+          dotCount = 0;
+          timeoutId = setTimeout(run, 500);
+        }
+      }
+    };
+
+    timeoutId = setTimeout(run, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, [isInputFocused, phone]);
 
   const ALL_COATZA_COLONIAS = [
     "Las Palmas",
@@ -950,11 +1024,11 @@ export default function Landing() {
   return (
     <div className="flex-1 flex flex-col w-full bg-[#fdf0d5]">
       {/* Hero Section - 100% Pantalla completa con imagen de fondo continua */}
-      <section className="relative w-full px-0 pt-0 pb-0 flex flex-col items-start text-left justify-start snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+      <section className="relative w-full px-0 pt-0 pb-0 flex flex-col items-start text-left justify-start snap-start snap-always min-h-[100dvh] min-h-[100svh]" style={{ scrollSnapAlign: 'start', minHeight: '100dvh' }}>
 
         {/* Cesto grande a pantalla completa (Full Bleed Edge-to-Edge) de arriba a abajo */}
         <div className="w-full relative px-0 flex-1 flex flex-col">
-          <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex-1 flex flex-col min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)] pb-4 justify-between">
+          <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex-1 flex flex-col min-h-[100dvh] min-h-[100svh] pb-4 justify-between">
             {/* Imagen de fondo completa de toda la pantalla horizontal y vertical */}
             <img 
               src="https://i.ibb.co/VcVSqJbP/A5-DFA592-E652-4373-9358-BA9-DC228-E0-D7.webp" 
@@ -967,11 +1041,11 @@ export default function Landing() {
               }}
             />
 
-            {/* Degradado suave localizado ÚNICAMENTE en la parte superior del texto (un toque más oscuro para óptimo contraste) */}
-            <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-black/70 via-black/45 to-transparent pointer-events-none" />
+            {/* Degradado fino y sutil que solo abraza el texto sin invadir el resto de la foto */}
+            <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black/75 via-black/30 via-50% to-transparent pointer-events-none" />
 
-            {/* Parte Superior: Texto de beneficios alineado a la izquierda */}
-            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-3 pb-1 flex flex-col items-start justify-center text-left">
+            {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
+            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[62px] sm:pt-[68px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
                 <p className="text-[22px] text-white font-medium font-geist leading-[1.25] -mt-1 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y<br />
@@ -998,10 +1072,22 @@ export default function Landing() {
             <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
               <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/85 backdrop-blur-md border border-white flex flex-col items-center gap-1.5">
                 {/* Campo de texto (blanco puro) */}
-                <div className="w-full h-[37px] px-3 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all focus-within:ring-2 focus-within:ring-[#3b82f6] cursor-text">
+                <div className="w-full h-[37px] px-3 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.15)] relative flex items-center justify-center transition-all focus-within:ring-2 focus-within:ring-[#3b82f6] cursor-text">
+                  {/* Placeholder animado fijo: el texto no se desplaza horizontalmente cuando los puntos van y vienen */}
+                  {!isInputFocused && !phone && (
+                    <div className="absolute inset-0 pointer-events-none flex items-center justify-center font-geist text-[17px] font-medium text-[#94a3b8] tracking-normal select-none">
+                      <span className="relative">
+                        <span>{typedBase}</span>
+                        {/* Espacio reservado para los puntos para que 'Tu WhatsApp' nunca se mueva de lugar */}
+                        <span className="absolute left-full top-0 tracking-widest text-[#94a3b8]">
+                          {typedDots}
+                        </span>
+                      </span>
+                    </div>
+                  )}
                   <input 
                     type="tel" 
-                    placeholder={isInputFocused ? "" : "Tu número de teléfono"} 
+                    placeholder="" 
                     value={phone}
                     maxLength={10}
                     onFocus={() => setIsInputFocused(true)}
@@ -1013,7 +1099,7 @@ export default function Landing() {
                       const val = e.target.value.replace(/\D/g, "").slice(0, 10);
                       setPhone(val);
                     }}
-                    className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal placeholder:text-[#94a3b8] placeholder:font-medium placeholder:text-center placeholder:tracking-wide focus:outline-none font-geist text-[17px] h-full transition-colors"
+                    className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal focus:outline-none font-geist text-[17px] h-full transition-colors relative z-10"
                   />
                 </div>
                 {/* Botón píldora interior */}

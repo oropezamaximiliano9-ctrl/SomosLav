@@ -72,6 +72,7 @@ function MainLayout() {
   const showAlwaysNavbar = role === 'associate' || role === 'admin' || location.pathname === '/login' || !isLandingPage;
 
   const [hideNavbar, setHideNavbar] = useState(false);
+  const [isAtHero, setIsAtHero] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -156,6 +157,9 @@ function MainLayout() {
       const rect = guindaSection.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
+      // Detectar si estamos en el Hero de la primera pantalla (para navbar flotante transparente)
+      setIsAtHero(currentScrollTop < 60);
+
       // Si venía de un scroll/momentum que inició dentro de la sección guinda y llegó al tope
       if (momentumRestrictedToGuinda && currentScrollTop < guindaTop) {
         container.scrollTop = guindaTop;
@@ -163,8 +167,6 @@ function MainLayout() {
       }
 
       // Auto-corrección de reposo:
-      // Si un deslizamiento excepcionalmente suave o con micro-inercia se detiene flotando en un margen ambiguo justo por encima del tope,
-      // el sistema ejecuta de inmediato un ajuste suave alineándolo al inicio exacto de la sección guinda sin saltos ni cortes
       clearTimeout(scrollEndTimer);
       scrollEndTimer = setTimeout(() => {
         const top = container.scrollTop;
@@ -175,7 +177,6 @@ function MainLayout() {
       }, 80);
 
       // Desactivar scroll snap dentro de la sección guinda (> guindaTop + 10) para desplazamiento libre
-      // En el tope o por encima (<= guindaTop + 5), activar scroll snap para transiciones limpias entre secciones
       if (container.scrollTop > guindaTop + 10) {
         if (container.style.scrollSnapType !== 'none') {
           container.style.scrollSnapType = 'none';
@@ -248,19 +249,41 @@ function MainLayout() {
       {/* Top Banner removed */}
 
       {/* Header - Always present, sticky below the top banner */}
+      {/* Header - Transparent overlay when at top of hero, adaptive on scroll */}
       <header 
-        className={`sticky top-0 w-full z-50 transition-all duration-75 ${
+        className={`sticky top-0 w-full z-50 transition-all duration-200 ${
           hideNavbar 
             ? "bg-[#4E0000] text-white" 
-            : "bg-[#fdf0d5] text-gray-900"
+            : isLandingPage && isAtHero
+              ? "bg-transparent text-white"
+              : "bg-[#fdf0d5] text-gray-900 shadow-sm"
         }`}
       >
-        <div className={`max-w-sm mx-auto px-4 h-[50px] flex items-center justify-between transition-opacity duration-75 ${
+        <div className={`max-w-sm mx-auto px-4 h-[50px] relative flex items-center justify-center space-x-1.5 transition-opacity duration-75 ${
           hideNavbar ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}>
+          {(role === 'associate' || role === 'admin') && (
+             <button 
+               onClick={() => { setRole('customer'); setIsMenuOpen(false); navigate('/'); }}
+               className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 uppercase tracking-wider text-slate-600 transition-all duration-200 absolute left-4"
+             >
+               Salir
+             </button>
+          )}
+          {role === 'associate' && (
+             <button 
+               onClick={() => setIsMenuOpen(!isMenuOpen)}
+               className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors animate-pulse absolute left-16"
+               title="Opciones de Asociado (Simulador)"
+             >
+               <MoreVertical className="w-4 h-4" />
+             </button>
+          )}
           <span 
             onClick={handleClick}
-            className="text-[20px] leading-none font-unbounded font-normal text-gray-900 select-none cursor-pointer relative -top-[1px]"
+            className={`text-[18px] leading-none font-unbounded font-normal select-none cursor-pointer relative -top-[1px] transition-colors duration-200 ${
+              isLandingPage && isAtHero ? "text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]" : "text-gray-900"
+            }`}
             style={{ WebkitTouchCallout: 'none', letterSpacing: '-0.04em' }}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUpOrLeave}
@@ -270,35 +293,11 @@ function MainLayout() {
           >
             somos
           </span>
-          <div className="flex items-center space-x-2 relative">
-            {(role === 'associate' || role === 'admin') && (
-               <button 
-                 onClick={() => { setRole('customer'); setIsMenuOpen(false); navigate('/'); }}
-                 className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 uppercase tracking-wider text-slate-600 transition-all duration-200"
-               >
-                 Salir
-               </button>
-            )}
-            {role === 'associate' && (
-               <button 
-                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                 className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors animate-pulse"
-                 title="Opciones de Asociado (Simulador)"
-               >
-                 <MoreVertical className="w-4 h-4" />
-               </button>
-            )}
-            <img 
-              src="https://i.ibb.co/3ynSFBH9/IMG-8932.webp" 
-              alt="Somos Logo" 
-              className="h-[31px] w-auto object-contain select-none cursor-pointer transition-all duration-300" 
-            />
-          </div>
         </div>
       </header>
 
-      {/* Main Content Area - Mobile constrained with modern standard spacing */}
-      <main className={`flex-1 w-full relative flex flex-col ${isLandingPage ? "pt-0 pb-0 px-0" : "max-w-sm mx-auto px-4 pt-4 pb-4"}`}>
+      {/* Main Content Area - Seamless overlay with floating header on Landing page */}
+      <main className={`flex-1 w-full relative flex flex-col ${isLandingPage ? "-mt-[50px] pt-0 pb-0 px-0" : "max-w-sm mx-auto px-4 pt-4 pb-4"}`}>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/cesto/:id" element={<BagFlow />} />
