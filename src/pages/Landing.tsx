@@ -169,83 +169,75 @@ export default function Landing() {
   const [gpsCoords, setGpsCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [gpsAutofillLoading, setGpsAutofillLoading] = useState(false);
   const [gpsAutofillError, setGpsAutofillError] = useState<string | null>(null);
-  const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [typedBase, setTypedBase] = useState("");
-  const [typedDots, setTypedDots] = useState("");
+  const DIAS_ADELANTE = 365;
 
-  useEffect(() => {
-    if (isInputFocused || phone) return;
+  const [fechasList] = useState<Date[]>(() => {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const arr: Date[] = [];
+    for (let i = 0; i <= DIAS_ADELANTE; i++) {
+      const d = new Date(hoy);
+      d.setDate(d.getDate() + i);
+      arr.push(d);
+    }
+    return arr;
+  });
 
-    const baseText = "Tu WhatsApp";
-    let timeoutId: NodeJS.Timeout;
-    let state: "typing_base" | "typing_dots_1" | "erasing_dots" | "typing_dots_2" | "pause_before_delete" | "deleting_all" = "typing_base";
-    let index = 0;
-    let dotCount = 0;
+  const [dateWheelIndex, setDateWheelIndex] = useState<number>(0);
 
-    const run = () => {
-      if (state === "typing_base") {
-        index++;
-        setTypedBase(baseText.slice(0, index));
-        setTypedDots("");
-        if (index === baseText.length) {
-          state = "typing_dots_1";
-          timeoutId = setTimeout(run, 120);
-          return;
-        }
-        timeoutId = setTimeout(run, 80);
-      } else if (state === "typing_dots_1") {
-        dotCount++;
-        setTypedDots(".".repeat(dotCount));
-        if (dotCount === 3) {
-          state = "erasing_dots";
-          timeoutId = setTimeout(run, 600);
-          return;
-        }
-        timeoutId = setTimeout(run, 150);
-      } else if (state === "erasing_dots") {
-        dotCount--;
-        setTypedDots(".".repeat(dotCount));
-        if (dotCount === 0) {
-          state = "typing_dots_2";
-          timeoutId = setTimeout(run, 300);
-          return;
-        }
-        timeoutId = setTimeout(run, 90);
-      } else if (state === "typing_dots_2") {
-        dotCount++;
-        setTypedDots(".".repeat(dotCount));
-        if (dotCount === 3) {
-          state = "pause_before_delete";
-          timeoutId = setTimeout(run, 1000);
-          return;
-        }
-        timeoutId = setTimeout(run, 150);
-      } else if (state === "pause_before_delete") {
-        state = "deleting_all";
-        timeoutId = setTimeout(run, 40);
-      } else if (state === "deleting_all") {
-        if (dotCount > 0) {
-          dotCount--;
-          setTypedDots(".".repeat(dotCount));
-          timeoutId = setTimeout(run, 35);
-        } else if (index > 0) {
-          index--;
-          setTypedBase(baseText.slice(0, index));
-          timeoutId = setTimeout(run, 35);
-        } else {
-          state = "typing_base";
-          dotCount = 0;
-          timeoutId = setTimeout(run, 500);
-        }
+  const formatWheelDate = (date: Date, idx?: number) => {
+    const weekday = date.toLocaleDateString('es-ES', { weekday: 'long' });
+    const dayNum = date.getDate();
+    const monthShort = date.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '');
+    const text = `${weekday}, ${dayNum} ${monthShort}`;
+    if (idx === 0) {
+      return { tag: "HOY", text };
+    }
+    if (idx === 1) {
+      return { tag: "MAÑANA", text };
+    }
+    return { tag: null, text };
+  };
+
+  const moveDateWheel = (step: number) => {
+    setDateWheelIndex(prev => {
+      const next = prev + step;
+      if (next < 0) return 0;
+      if (next >= fechasList.length) return fechasList.length - 1;
+      return next;
+    });
+  };
+
+  const [wheelTouchStartY, setWheelTouchStartY] = useState<number | null>(null);
+
+  const handleDateWheelTouchStart = (e: React.TouchEvent) => {
+    setWheelTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleDateWheelTouchEnd = (e: React.TouchEvent) => {
+    if (wheelTouchStartY === null) return;
+    const endY = e.changedTouches[0].clientY;
+    const diff = wheelTouchStartY - endY;
+    if (Math.abs(diff) > 25) {
+      if (diff > 0) {
+        moveDateWheel(1);
+      } else {
+        moveDateWheel(-1);
       }
-    };
+    }
+    setWheelTouchStartY(null);
+  };
 
-    timeoutId = setTimeout(run, 400);
-
-    return () => clearTimeout(timeoutId);
-  }, [isInputFocused, phone]);
+  const handleDateWheelWheel = (e: React.WheelEvent) => {
+    if (Math.abs(e.deltaY) > 15) {
+      if (e.deltaY > 0) {
+        moveDateWheel(1);
+      } else {
+        moveDateWheel(-1);
+      }
+    }
+  };
 
   const ALL_COATZA_COLONIAS = [
     "Las Palmas",
@@ -1031,7 +1023,7 @@ export default function Landing() {
           <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex-1 flex flex-col min-h-[100dvh] min-h-[100svh] pb-4 justify-between">
             {/* Imagen de fondo anclada abajo para mostrar todo el piso y margen inferior original */}
             <img 
-              src="https://i.ibb.co/r2hvCs6S/IMG-9744.jpg" 
+              src="https://i.ibb.co/cc81GSmJ/IMG-9746.jpg" 
               alt="Cesto de lavandería SOMOS en ambiente real minimalista" 
               className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none select-none"
               fetchPriority="high"
@@ -1048,13 +1040,17 @@ export default function Landing() {
             <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[62px] sm:pt-[68px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
                 <p className="text-[23px] text-white font-medium font-geist leading-[1.25] -mt-1 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
-                  Pide tu cesto gratis y<br />
-                  llénalo con lo que quieras:<br />
-                  <span className="relative inline-block mt-0.5">
-                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+13.5px)] bg-[#3b82f6]/55 rounded-[3px] -z-0"></span>
-                    <span className="relative z-10">Lo lavamos todo por <span className="font-bold text-[22px] text-white">$95</span></span>
-                  </span>
+                  Pide tu cesto gratis y llénalo<br />
+                  con la ropa que quieras<span className="font-semibold">:</span>
                 </p>
+                <div className="mt-1">
+                  <span className="relative inline-block">
+                    <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#3b82f6]/65 rounded-[3px] -z-0"></span>
+                    <span className="relative z-10 font-bold text-[23px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
+                      Lo lavamos todo por <span className="text-[23px] text-white"><span className="font-bold">$</span><span className="font-extrabold">95</span></span>
+                    </span>
+                  </span>
+                </div>
                 <div className="flex flex-col items-start text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-2">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[21px] text-white font-medium font-geist leading-tight">
                     <span>A domicilio</span>
@@ -1068,44 +1064,61 @@ export default function Landing() {
             {/* Zona Media: Espacio abierto para lucir la imagen del cesto limpia */}
             <div className="relative w-full flex-1 select-none" />
 
-            {/* Input y botón (Cápsula completa y redondeada, al ras del fondo sin cortarse) */}
+            {/* Selector de Fecha Integrado en Cápsula (mismo estilo, bordes, colores y fondo de cápsula) */}
             <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
-              <div className="w-full max-w-[306px] rounded-[24px] py-1.5 px-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/85 backdrop-blur-md border border-white flex flex-col items-center gap-1.5">
-                {/* Campo de texto (blanco puro) */}
-                <div className="w-full h-[37px] px-3 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.15)] relative flex items-center justify-center transition-all focus-within:ring-2 focus-within:ring-[#3b82f6] cursor-text">
-                  {/* Placeholder animado fijo: el texto no se desplaza horizontalmente cuando los puntos van y vienen */}
-                  {!isInputFocused && !phone && (
-                    <div className="absolute inset-0 pointer-events-none flex items-center justify-center font-geist text-[17px] font-medium text-[#94a3b8] tracking-normal select-none">
-                      <span className="relative">
-                        <span>{typedBase}</span>
-                        {/* Espacio reservado para los puntos para que 'Tu WhatsApp' nunca se mueva de lugar */}
-                        <span className="absolute left-full top-0 tracking-widest text-[#94a3b8]">
-                          {typedDots}
-                        </span>
-                      </span>
-                    </div>
-                  )}
-                  <input 
-                    type="tel" 
-                    placeholder="" 
-                    value={phone}
-                    maxLength={10}
-                    onFocus={() => setIsInputFocused(true)}
-                    onBlur={() => {
-                      setIsInputFocused(false);
-                      handlePhoneBlur();
-                    }}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/\D/g, "").slice(0, 10);
-                      setPhone(val);
-                    }}
-                    className="w-full bg-transparent px-2 text-center text-[#1e293b] font-medium tracking-normal focus:outline-none font-geist text-[17px] h-full transition-colors relative z-10"
-                  />
+              <div className="w-full max-w-[320px] rounded-[26px] pt-3 pb-2.5 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/85 backdrop-blur-md border border-white flex flex-col items-center gap-2.5">
+                
+                {/* Título de la cápsula */}
+                <div className="w-full text-center px-0.5">
+                  <p className="text-[14px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap">
+                    ¿Cuándo te lo llevamos?
+                  </p>
                 </div>
+
+                {/* Selector de Tarjetas Horizontales (Opción 3: Borde Azul Marcado y Resalte Tipográfico) */}
+                <div className="w-full grid grid-cols-3 gap-1.5 select-none">
+                  {[0, 1, 2].map((i) => {
+                    const fecha = fechasList[i];
+                    if (!fecha) return null;
+                    const isSelected = dateWheelIndex === i;
+                    const label = i === 0 ? "HOY" : i === 1 ? "MAÑANA" : fecha.toLocaleDateString('es-ES', { weekday: 'short' }).toUpperCase();
+                    const dayNum = fecha.getDate();
+                    const monthShort = fecha.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '');
+
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setDateWheelIndex(i)}
+                        className={`py-1.5 px-1 rounded-[14px] flex flex-col items-center justify-center transition-all duration-150 cursor-pointer ${
+                          isSelected 
+                            ? 'bg-white border-2 border-[#0f55d8] shadow-[0_2px_10px_rgba(15,85,216,0.18)]' 
+                            : 'bg-white/75 hover:bg-white border-2 border-slate-200/70 shadow-xs'
+                        }`}
+                      >
+                        <span className={`text-[9.5px] font-extrabold tracking-wider leading-none mb-0.5 ${isSelected ? 'text-[#0f55d8]' : 'text-slate-400'}`}>
+                          {label}
+                        </span>
+                        <span className={`text-[12px] leading-tight capitalize truncate max-w-full px-0.5 ${isSelected ? 'text-slate-950 font-bold' : 'text-slate-600 font-medium'}`}>
+                          {dayNum} {monthShort}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
                 {/* Botón píldora interior */}
                 <button 
-                  onClick={openBottomSheet}
-                  className="w-full h-[37px] bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)]"
+                  onClick={() => {
+                    const selDate = fechasList[dateWheelIndex];
+                    if (selDate) {
+                      const formatted = formatWheelDate(selDate, dateWheelIndex);
+                      setPreferredTime(formatted);
+                      localStorage.setItem("user_preferred_time", formatted);
+                    }
+                    openBottomSheet();
+                  }}
+                  className="w-full h-[34px] bg-[#0f55d8] text-white rounded-full font-semibold text-[15px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
                 >
                   <span>Quiero mi cesto gratis</span>
                 </button>
