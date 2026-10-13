@@ -281,7 +281,7 @@ function MainLayout() {
           )}
           <span 
             onClick={handleClick}
-            className={`text-[18px] leading-none font-unbounded font-normal select-none cursor-pointer relative -top-[1px] transition-colors duration-200 ${
+            className={`text-[18px] leading-none font-unbounded font-normal select-none cursor-pointer relative -top-[5px] transition-colors duration-200 ${
               isLandingPage && isAtHero ? "text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]" : "text-gray-900"
             }`}
             style={{ WebkitTouchCallout: 'none', letterSpacing: '-0.04em' }}

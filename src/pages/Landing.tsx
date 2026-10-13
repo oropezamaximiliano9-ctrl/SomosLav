@@ -1037,7 +1037,7 @@ export default function Landing() {
             <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black/75 via-black/30 via-50% to-transparent pointer-events-none" />
 
             {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
-            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[62px] sm:pt-[68px] pb-1 flex flex-col items-start justify-center text-left">
+            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[48px] sm:pt-[54px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
                 <p className="text-[23px] text-white font-medium font-geist leading-[1.25] -mt-1 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y llénalo<br />
@@ -1051,11 +1051,11 @@ export default function Landing() {
                     </span>
                   </span>
                 </div>
-                <div className="flex flex-col items-start text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-2">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[21px] text-white font-medium font-geist leading-tight">
+                <div className="flex flex-col items-start text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-0.5">
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[22px] text-white font-medium font-geist leading-normal">
                     <span>A domicilio</span>
                     <span>•</span>
-                    <span>En <span className="text-[20px]">24</span>h.</span>
+                    <span>En <span className="text-[22px]">24</span>h.</span>
                   </div>
                 </div>
               </div>
@@ -1066,11 +1066,11 @@ export default function Landing() {
 
             {/* Selector de Fecha Integrado en Cápsula (mismo estilo, bordes, colores y fondo de cápsula) */}
             <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
-              <div className="w-full max-w-[320px] rounded-[26px] pt-3 pb-2.5 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/85 backdrop-blur-md border border-white flex flex-col items-center gap-2.5">
+              <div className="w-full max-w-[320px] rounded-[26px] pt-3 pb-2.5 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5">
                 
                 {/* Título de la cápsula */}
                 <div className="w-full text-center px-0.5">
-                  <p className="text-[14px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap">
+                  <p className="text-[15px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap">
                     ¿Cuándo te lo llevamos?
                   </p>
                 </div>
