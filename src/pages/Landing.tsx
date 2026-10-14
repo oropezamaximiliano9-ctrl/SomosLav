@@ -1054,10 +1054,12 @@ export default function Landing() {
                     </span>
                   </span>
                 </div>
-                <div className="mt-1.5 w-full text-center">
-                  <p className="w-full text-[23px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
-                    • recolección y entrega en 24h.
-                  </p>
+                <div className="w-full flex flex-col items-center text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-0.5">
+                  <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[22px] text-white font-medium font-geist leading-normal">
+                    <span>A domicilio</span>
+                    <span>•</span>
+                    <span>En <span className="text-[22px]">24</span>h.</span>
+                  </div>
                 </div>
 
               </div>
