@@ -1066,11 +1066,11 @@ export default function Landing() {
 
             {/* Selector de Fecha Integrado en Cápsula (mismo estilo, bordes, colores y fondo de cápsula) */}
             <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
-              <div className="w-full max-w-[320px] rounded-[26px] pt-3 pb-2.5 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5">
+              <div className="w-full max-w-[320px] rounded-[26px] pt-[6px] pb-2.5 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5">
                 
                 {/* Título de la cápsula */}
                 <div className="w-full text-center px-0.5">
-                  <p className="text-[16px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap">
+                  <p className="text-[16px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap relative top-[3px]">
                     ¿Cuándo te lo llevamos?
                   </p>
                 </div>
@@ -1118,7 +1118,7 @@ export default function Landing() {
                     }
                     openBottomSheet();
                   }}
-                  className="w-full h-[34px] bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
+                  className="w-full h-[37px] bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
                 >
                   <span>Quiero mi cesto gratis</span>
                 </button>
