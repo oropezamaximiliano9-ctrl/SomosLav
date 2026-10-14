@@ -1039,7 +1039,10 @@ export default function Landing() {
             {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
             <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[48px] sm:pt-[54px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
-                <p className="text-[23px] text-white font-medium font-geist leading-[1.25] -mt-1 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
+                <p className="text-[25px] text-white font-bold leading-tight -mt-1 mb-3 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
+                  Precio fijo, todo incluido
+                </p>
+                <p className="text-[23px] text-white font-medium font-geist leading-[1.18] text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y llénalo<br />
                   con la ropa que quieras<span className="font-semibold">:</span>
                 </p>
