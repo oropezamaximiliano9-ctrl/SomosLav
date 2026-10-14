@@ -1039,14 +1039,14 @@ export default function Landing() {
             {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
             <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[48px] sm:pt-[54px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
-                <p className="text-[25px] text-white font-bold leading-tight -mt-1 mb-3 text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
+                <p className="w-full text-[25px] text-white font-bold leading-tight -mt-1 mb-3 text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
                   Precio fijo, todo incluido
                 </p>
-                <p className="text-[23px] text-white font-medium font-geist leading-[1.18] text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
+                <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y llénalo<br />
                   con la ropa que quieras<span className="font-semibold">:</span>
                 </p>
-                <div className="mt-1">
+                <div className="mt-1 w-full text-center">
                   <span className="relative inline-block">
                     <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#3b82f6]/65 rounded-[3px] -z-0"></span>
                     <span className="relative z-10 font-bold text-[23px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
@@ -1054,13 +1054,12 @@ export default function Landing() {
                     </span>
                   </span>
                 </div>
-                <div className="flex flex-col items-start text-left drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-0.5">
-                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[22px] text-white font-medium font-geist leading-normal">
-                    <span>A domicilio</span>
-                    <span>•</span>
-                    <span>En <span className="text-[22px]">24</span>h.</span>
-                  </div>
+                <div className="mt-1.5 w-full text-center">
+                  <p className="w-full text-[23px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
+                    • recolección y entrega en 24h.
+                  </p>
                 </div>
+
               </div>
             </div>
 
