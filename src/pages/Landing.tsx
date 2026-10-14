@@ -1070,7 +1070,7 @@ export default function Landing() {
                 
                 {/* Título de la cápsula */}
                 <div className="w-full text-center px-0.5">
-                  <p className="text-[15px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap">
+                  <p className="text-[16px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap">
                     ¿Cuándo te lo llevamos?
                   </p>
                 </div>
@@ -1118,7 +1118,7 @@ export default function Landing() {
                     }
                     openBottomSheet();
                   }}
-                  className="w-full h-[34px] bg-[#0f55d8] text-white rounded-full font-semibold text-[15px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
+                  className="w-full h-[34px] bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
                 >
                   <span>Quiero mi cesto gratis</span>
                 </button>
