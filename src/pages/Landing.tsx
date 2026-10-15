@@ -167,6 +167,7 @@ export default function Landing() {
   const [geoError, setGeoError] = useState<string | null>(null);
 
   const [gpsCoords, setGpsCoords] = useState<{ lat: number; lon: number } | null>(null);
+  const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [gpsAutofillLoading, setGpsAutofillLoading] = useState(false);
   const [gpsAutofillError, setGpsAutofillError] = useState<string | null>(null);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
@@ -1037,9 +1038,9 @@ export default function Landing() {
             <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black/75 via-black/30 via-50% to-transparent pointer-events-none" />
 
             {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
-            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[48px] sm:pt-[54px] pb-1 flex flex-col items-start justify-center text-left">
+            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
-                <p className="w-full text-[25px] text-white font-bold leading-tight -mt-1 mb-3 text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
+                <p className="w-full text-[24px] text-white font-bold leading-tight -mt-1 mb-3 text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
                   Precio fijo, todo incluido
                 </p>
                 <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
@@ -1934,12 +1935,19 @@ export default function Landing() {
                           <div className="space-y-3">
                             <div className="space-y-1 relative">
                               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Dirección</label>
-                              <div className="relative">
-                                {gpsAutofillLoading ? (
-                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin" />
-                                ) : (
-                                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                )}
+                              <div className="relative flex items-center">
+                                <button
+                                  type="button"
+                                  onClick={() => handleAutofillGPS()}
+                                  title="Detectar mi ubicación actual por GPS"
+                                  className="absolute left-2.5 top-1/2 -translate-y-1/2 z-10 p-1 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer"
+                                >
+                                  {gpsAutofillLoading ? (
+                                    <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+                                  ) : (
+                                    <MapPin className="w-4 h-4" />
+                                  )}
+                                </button>
                                 <input
                                   ref={calleInputRef}
                                   type="text"
@@ -1964,9 +1972,26 @@ export default function Landing() {
                                       submitStep3AndVerify(e);
                                     }
                                   }}
-                                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
-                                  placeholder="Compartir ubicación"
+                                  className="w-full pl-9 pr-24 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
+                                  placeholder="Calle y número, colonia"
                                 />
+                                <button
+                                  type="button"
+                                  onClick={() => handleAutofillGPS()}
+                                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 px-2 py-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-1 cursor-pointer select-none"
+                                >
+                                  {gpsAutofillLoading ? (
+                                    <>
+                                      <Loader2 className="w-3 h-3 animate-spin" />
+                                      <span>Buscando...</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <MapPin className="w-3 h-3" />
+                                      <span>GPS</span>
+                                    </>
+                                  )}
+                                </button>
                               </div>
 
                               {/* Menu desplegable de sugerencias autocompletables */}
