@@ -272,8 +272,7 @@ export default function Landing() {
   ];
 
   const handleAddressInputClick = () => {
-    if (!hasRequestedGps && !addressCalle && !addressColonia && !gpsAutofillLoading) {
-      setHasRequestedGps(true);
+    if (!addressCalle.trim() && !gpsAutofillLoading) {
       handleAutofillGPS();
     }
   };
@@ -601,6 +600,7 @@ export default function Landing() {
   const openBottomSheet = () => {
     setIsBottomSheetOpen(true);
     setRegistered(false);
+    setHasRequestedGps(false);
     
     if (phone.trim().length === 10) {
       if (!name.trim()) {
@@ -1040,23 +1040,23 @@ export default function Landing() {
             {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
             <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
-                <p className="w-full text-[24px] text-white font-bold leading-tight -mt-1 mb-3 text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
+                <p className="w-full text-[25px] text-white font-bold leading-tight -mt-1 mb-3 text-center tracking-wide drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.7)]">
                   Precio fijo, todo incluido
                 </p>
                 <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y llénalo<br />
-                  con la ropa que quieras<span className="font-semibold">:</span>
+                  con la ropa que quieras
                 </p>
                 <div className="mt-1 w-full text-center">
                   <span className="relative inline-block">
                     <span className="absolute -inset-x-[2.5px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#3b82f6]/65 rounded-[3px] -z-0"></span>
-                    <span className="relative z-10 font-bold text-[23px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
-                      Lo lavamos todo por <span className="text-[23px] text-white"><span className="font-bold">$</span><span className="font-extrabold">95</span></span>
+                    <span className="relative z-10 font-bold text-[24px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
+                      Lo lavamos todo por <span className="text-[24px] text-white"><span className="font-bold">$</span><span className="font-extrabold">95</span></span>
                     </span>
                   </span>
                 </div>
                 <div className="w-full flex flex-col items-center text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-0.5">
-                  <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[22px] text-white font-medium font-geist leading-normal">
+                  <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[23px] text-white font-medium font-geist leading-normal">
                     <span>A domicilio</span>
                     <span>•</span>
                     <span>En <span className="text-[22px]">24</span>h.</span>
@@ -1935,19 +1935,12 @@ export default function Landing() {
                           <div className="space-y-3">
                             <div className="space-y-1 relative">
                               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Dirección</label>
-                              <div className="relative flex items-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleAutofillGPS()}
-                                  title="Detectar mi ubicación actual por GPS"
-                                  className="absolute left-2.5 top-1/2 -translate-y-1/2 z-10 p-1 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer"
-                                >
-                                  {gpsAutofillLoading ? (
-                                    <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
-                                  ) : (
-                                    <MapPin className="w-4 h-4" />
-                                  )}
-                                </button>
+                              <div className="relative">
+                                {gpsAutofillLoading ? (
+                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin pointer-events-none" />
+                                ) : (
+                                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                                )}
                                 <input
                                   ref={calleInputRef}
                                   type="text"
@@ -1956,7 +1949,12 @@ export default function Landing() {
                                   tabIndex={formStep === 3 ? 0 : -1}
                                   value={addressCalle}
                                   onClick={handleAddressInputClick}
-                                  onFocus={() => setShowColoniaSuggestions(true)}
+                                  onFocus={() => {
+                                    setShowColoniaSuggestions(true);
+                                    if (!addressCalle.trim() && !gpsAutofillLoading && !hasRequestedGps) {
+                                      handleAddressInputClick();
+                                    }
+                                  }}
                                   onChange={(e) => { 
                                     const val = e.target.value;
                                     setAddressCalle(val);
@@ -1972,26 +1970,9 @@ export default function Landing() {
                                       submitStep3AndVerify(e);
                                     }
                                   }}
-                                  className="w-full pl-9 pr-24 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
-                                  placeholder="Calle y número, colonia"
+                                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
+                                  placeholder="Compartir ubicación"
                                 />
-                                <button
-                                  type="button"
-                                  onClick={() => handleAutofillGPS()}
-                                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 px-2 py-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-1 cursor-pointer select-none"
-                                >
-                                  {gpsAutofillLoading ? (
-                                    <>
-                                      <Loader2 className="w-3 h-3 animate-spin" />
-                                      <span>Buscando...</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <MapPin className="w-3 h-3" />
-                                      <span>GPS</span>
-                                    </>
-                                  )}
-                                </button>
                               </div>
 
                               {/* Menu desplegable de sugerencias autocompletables */}
