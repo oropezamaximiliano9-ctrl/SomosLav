@@ -1066,12 +1066,24 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Zona Media: Espacio abierto para lucir la imagen del cesto limpia */}
-            <div className="relative w-full flex-1 select-none" />
+            {/* Zona Media: Espacio abierto para lucir la imagen del cesto con etiqueta en la esquina inferior derecha */}
+            <div className="relative w-full flex-1 select-none flex items-end justify-start pl-10 sm:pl-14 pb-36 sm:pb-40">
+              <div className="relative pointer-events-none w-[104px] sm:w-[112px] h-[50px] sm:h-[54px] z-20">
+                <img 
+                  src="https://iili.io/CU67SLX.webp" 
+                  alt="5 kilos de capacidad" 
+                  className="w-full h-full object-fill drop-shadow-md -rotate-[2deg]"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[14.5px] sm:text-[15.5px] font-geist px-1 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
+                  <span className="whitespace-nowrap">5 kilos de</span>
+                  <span className="whitespace-nowrap tracking-wide">capacidad</span>
+                </div>
+              </div>
+            </div>
 
             {/* Selector de Fecha Integrado en Cápsula (mismo estilo, bordes, colores y fondo de cápsula) */}
             <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
-              <div className="w-full max-w-[320px] rounded-[26px] pt-[6px] pb-2.5 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5">
+              <div className="w-full max-w-[320px] rounded-[26px] pt-[6px] pb-0 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5 overflow-hidden">
                 
                 {/* Título de la cápsula */}
                 <div className="w-full text-center px-0.5">
@@ -1128,6 +1140,7 @@ export default function Landing() {
                   <span>Quiero mi cesto gratis</span>
                 </button>
               </div>
+
             </div>
           </div>
         </div>
@@ -1856,6 +1869,7 @@ export default function Landing() {
                             <span className="font-geist">Continuar</span>
                             <ArrowRight className="w-4 h-4" />
                           </button>
+                          
                         </form>
                       </div>
 
@@ -1916,6 +1930,7 @@ export default function Landing() {
                             <span className="font-geist">Continuar</span>
                             <ArrowRight className="w-4 h-4" />
                           </button>
+                          
                         </form>
                       </div>
 
@@ -1951,9 +1966,6 @@ export default function Landing() {
                                   onClick={handleAddressInputClick}
                                   onFocus={() => {
                                     setShowColoniaSuggestions(true);
-                                    if (!addressCalle.trim() && !gpsAutofillLoading && !hasRequestedGps) {
-                                      handleAddressInputClick();
-                                    }
                                   }}
                                   onChange={(e) => { 
                                     const val = e.target.value;
@@ -2022,6 +2034,7 @@ export default function Landing() {
                               </>
                             )}
                           </button>
+                          
                         </form>
                       </div>
                     </div>
