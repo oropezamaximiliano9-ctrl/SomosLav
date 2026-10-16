@@ -1040,7 +1040,7 @@ export default function Landing() {
             {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
             <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
-                <p className="w-full text-[25px] text-white font-bold leading-tight -mt-1 mb-3 text-center tracking-wide drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.7)]">
+                <p className="w-full text-[25px] text-white font-bold leading-tight -mt-1 mb-3 text-center tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]">
                   Precio fijo, todo incluido
                 </p>
                 <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
@@ -1066,18 +1066,10 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Zona Media: Espacio abierto para lucir la imagen del cesto con etiqueta en la esquina inferior derecha */}
-            <div className="relative w-full flex-1 select-none flex items-end justify-start pl-10 sm:pl-14 pb-36 sm:pb-40">
-              <div className="relative pointer-events-none w-[104px] sm:w-[112px] h-[50px] sm:h-[54px] z-20">
-                <img 
-                  src="https://iili.io/CU67SLX.webp" 
-                  alt="5 kilos de capacidad" 
-                  className="w-full h-full object-fill drop-shadow-md -rotate-[2deg]"
-                />
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[14.5px] sm:text-[15.5px] font-geist px-1 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
-                  <span className="whitespace-nowrap">5 kilos de</span>
-                  <span className="whitespace-nowrap tracking-wide">capacidad</span>
-                </div>
+            {/* Zona Media: Indicador flotante minimalista glassmorphism */}
+            <div className="relative w-full flex-1 select-none flex items-center justify-center px-4">
+              <div className="absolute top-4 right-5 z-20 bg-black/40 backdrop-blur-md text-white text-[13px] font-medium font-geist px-2.5 py-1 rounded-full shadow-lg border border-white/20 select-none flex items-center">
+                <span>5 kg de capacidad</span>
               </div>
             </div>
 
