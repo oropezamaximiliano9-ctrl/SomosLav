@@ -1070,7 +1070,7 @@ export default function Landing() {
             <div className="relative w-full flex-1 select-none flex items-center justify-center px-4">
               <div className="absolute top-24 left-12 sm:left-16 z-20 bg-black/40 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-xl shadow-lg border border-white/20 select-none flex flex-col items-center text-center leading-[1.15]">
                 <span className="text-[13.5px] font-normal whitespace-nowrap">capacidad</span>
-                <span className="whitespace-nowrap tracking-wide"><span className="font-semibold">de</span> <span className="font-bold">5 kg</span></span>
+                <span className="whitespace-nowrap tracking-wide"><span className="font-normal">de</span> <span className="font-bold">5 kg</span></span>
               </div>
             </div>
 
