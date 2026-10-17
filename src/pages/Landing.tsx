@@ -1049,7 +1049,7 @@ export default function Landing() {
                 </p>
                 <div className="mt-1 w-full text-center">
                   <span className="relative inline-block">
-                    <span className="absolute -inset-x-[3px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#2563eb]/75 backdrop-blur-[2px] rounded-[5px] border-t border-blue-300/40 shadow-[0_2px_8px_rgba(37,99,235,0.4)] -z-0"></span>
+                    <span className="absolute -inset-x-[3px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#2563eb]/75 backdrop-blur-[2px] rounded-[5px] shadow-[0_2px_8px_rgba(37,99,235,0.4)] -z-0"></span>
                     <span className="relative z-10 font-bold text-[24px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
                       Lo lavamos todo por <span className="text-[24px] text-white"><span className="font-bold">$</span><span className="font-extrabold">95</span></span>
                     </span>
@@ -1068,9 +1068,9 @@ export default function Landing() {
 
             {/* Zona Media: Indicador flotante minimalista glassmorphism */}
             <div className="relative w-full flex-1 select-none flex items-center justify-center px-4">
-              <div className="absolute top-24 left-12 sm:left-16 z-20 bg-black/40 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-2xl rounded-br-none shadow-lg border border-white/20 select-none flex flex-col items-center text-center leading-[1.15]">
+              <div className="absolute top-24 left-12 sm:left-16 z-20 bg-black/40 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-2xl rounded-br-none shadow-lg border border-white/20 border-r-white/45 border-b-white/45 select-none flex flex-col items-center text-center leading-[1.15]">
                 <span className="text-[13.5px] font-normal whitespace-nowrap">capacidad</span>
-                <span className="whitespace-nowrap tracking-wide"><span className="font-normal">de</span> <span className="font-bold">5 kg</span></span>
+                <span className="whitespace-nowrap tracking-wide font-bold">5 kg</span>
               </div>
             </div>
 
@@ -1128,7 +1128,7 @@ export default function Landing() {
                     }
                     openBottomSheet();
                   }}
-                  className="w-full h-[37px] bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
+                  className="w-full h-[39px] bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
                 >
                   <span>Quiero mi cesto gratis</span>
                 </button>
