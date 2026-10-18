@@ -1038,9 +1038,9 @@ export default function Landing() {
             <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black/75 via-black/30 via-50% to-transparent pointer-events-none" />
 
             {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
-            <div className="relative z-10 w-full max-w-sm mx-auto px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
+            <div className="relative z-10 w-full max-w-sm mx-auto px-3 sm:px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
-                <p className="w-full text-[27px] text-white font-bold leading-tight -mt-1 mb-3 text-center tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
+                <p className="w-full text-[27px] text-white font-bold leading-tight -mt-1 mb-3 text-center whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
                   Precio fijo, todo incluido
                 </p>
                 <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
@@ -1068,7 +1068,7 @@ export default function Landing() {
 
             {/* Zona Media: Indicador flotante minimalista glassmorphism */}
             <div className="relative w-full flex-1 select-none flex items-center justify-center px-4">
-              <div className="absolute top-24 left-12 sm:left-16 z-20 bg-black/40 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-2xl rounded-br-none shadow-lg border border-white/20 border-r-white/45 border-b-white/45 select-none flex flex-col items-center text-center leading-[1.15]">
+              <div className="absolute top-24 left-12 sm:left-16 z-20 bg-black/28 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-2xl rounded-br-none shadow-lg border border-white/20 border-r-white/45 border-b-white/45 select-none flex flex-col items-center text-center leading-[1.15]">
                 <span className="text-[13.5px] font-normal whitespace-nowrap">capacidad</span>
                 <span className="whitespace-nowrap tracking-wide font-bold">5 kg</span>
               </div>
@@ -1078,10 +1078,13 @@ export default function Landing() {
             <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
               <div className="w-full max-w-[320px] rounded-[26px] pt-[6px] pb-0 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5 overflow-hidden">
                 
-                {/* Título de la cápsula */}
-                <div className="w-full text-center px-0.5">
-                  <p className="text-[16px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap relative top-[3px]">
-                    ¿Cuándo te lo llevamos?
+                {/* Título de la cápsula y subtítulo aclaratorio */}
+                <div className="w-full text-center px-1 pt-0.5 flex flex-col items-center">
+                  <p className="text-[15.5px] font-semibold text-slate-800 font-geist leading-tight">
+                    ¿Cuándo te llevamos tu cesto?
+                  </p>
+                  <p className="text-[13px] text-slate-600 font-normal font-geist leading-tight mt-0.5 whitespace-nowrap">
+                    Puedes llenarlo durante la semana
                   </p>
                 </div>
 
