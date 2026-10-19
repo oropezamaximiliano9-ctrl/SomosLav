@@ -65,6 +65,22 @@ function AppContent() {
     }
   };
 
+  const handleNavbarClick = (e: React.MouseEvent) => {
+    // Si fue long press (se abrió login), no hacer nada
+    if (isLongPressRef.current) return;
+    
+    // Si ya estamos en la landing, scrollear suavemente al inicio (hero)
+    if (isLandingPage) {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Si estamos en cualquier otra vista, navegar a la ruta raíz '/'
+      navigate('/');
+    }
+  };
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isLandingPage = location.pathname === '/';
@@ -204,7 +220,7 @@ function AppContent() {
     'transition-colors',
     'duration-75',
     'overflow-x-hidden',
-    hideNavbar ? 'bg-[#4E0000]' : 'bg-[#fdf0d5]',
+    'bg-[#fdf0d5]',
     isLandingPage ? 'h-[100dvh] overflow-y-auto snap-y snap-mandatory' : 'min-h-[100dvh] overflow-y-auto'
   ].join(' ');
 
@@ -216,11 +232,9 @@ function AppContent() {
     'transition-all',
     'duration-200',
     'select-none',
-    hideNavbar 
-      ? 'bg-[#4E0000] text-white' 
-      : isLandingPage && isAtHero 
-        ? 'bg-transparent text-white' 
-        : 'bg-[#fdf0d5] text-gray-900 shadow-sm'
+    isLandingPage && isAtHero 
+      ? 'bg-transparent text-white' 
+      : 'bg-[#fdf0d5] text-gray-900 shadow-sm'
   ].join(' ');
 
   const innerNavClasses = [
@@ -255,12 +269,13 @@ function AppContent() {
     >
       {/* Header con soporte de pulsación larga en cualquier punto de la navbar */}
       <header 
-        className={headerClasses}
+        className={headerClasses + " cursor-pointer"}
         style={{ WebkitTouchCallout: 'none' }}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUpOrLeave}
         onPointerLeave={handlePointerUpOrLeave}
         onPointerCancel={handlePointerUpOrLeave}
+        onClick={handleNavbarClick}
         onContextMenu={(e) => e.preventDefault()}
       >
         <div className={innerNavClasses}>
