@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "react";
+import React, { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "react";
 import { motion } from "motion/react";
 import { RoleContext } from "../App";
 import canvasLaundryBag from "../assets/images/IMG_8321.jpg";
@@ -1041,7 +1041,7 @@ export default function Landing() {
             <div className="relative z-10 w-full max-w-sm mx-auto px-3 sm:px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
                 <p className="w-full text-[27px] text-white font-bold leading-tight -mt-1 mb-3 text-center whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
-                  Precio fijo, todo incluido
+                  Sin báscula ni enredos
                 </p>
                 <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y llénalo<br />
@@ -1122,9 +1122,10 @@ export default function Landing() {
                   onClick={() => {
                     const selDate = fechasList[dateWheelIndex];
                     if (selDate) {
-                      const formatted = formatWheelDate(selDate, dateWheelIndex);
-                      setPreferredTime(formatted);
-                      localStorage.setItem("user_preferred_time", formatted);
+                      const formattedObj = formatWheelDate(selDate, dateWheelIndex);
+                      const formattedStr = formattedObj.tag ? `${formattedObj.tag} (${formattedObj.text})` : formattedObj.text;
+                      setPreferredTime(formattedStr);
+                      localStorage.setItem("user_preferred_time", formattedStr);
                     }
                     openBottomSheet();
                   }}
