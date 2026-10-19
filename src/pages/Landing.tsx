@@ -1068,7 +1068,7 @@ export default function Landing() {
 
             {/* Zona Media: Indicador flotante minimalista glassmorphism */}
             <div className="relative w-full flex-1 select-none flex items-center justify-center px-4">
-              <div className="absolute top-24 left-12 sm:left-16 z-20 bg-black/28 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-2xl rounded-br-none shadow-lg border border-white/20 border-r-white/45 border-b-white/45 select-none flex flex-col items-center text-center leading-[1.15]">
+              <div className="absolute top-20 left-12 sm:left-16 z-20 bg-black/28 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-2xl rounded-br-none shadow-lg border border-white/20 border-r-white/45 border-b-white/45 select-none flex flex-col items-center text-center leading-[1.15]">
                 <span className="text-[13.5px] font-normal whitespace-nowrap">capacidad</span>
                 <span className="whitespace-nowrap tracking-wide font-bold">5 kg</span>
               </div>
