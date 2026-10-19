@@ -1078,13 +1078,10 @@ export default function Landing() {
             <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
               <div className="w-full max-w-[320px] rounded-[26px] pt-[6px] pb-0 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5 overflow-hidden">
                 
-                {/* Título de la cápsula y subtítulo aclaratorio */}
-                <div className="w-full text-center px-1 pt-0.5 flex flex-col items-center">
-                  <p className="text-[15.5px] font-semibold text-slate-800 font-geist leading-tight">
-                    ¿Cuándo te llevamos tu cesto?
-                  </p>
-                  <p className="text-[13px] text-slate-600 font-normal font-geist leading-tight mt-0.5 whitespace-nowrap">
-                    Puedes llenarlo durante la semana
+                {/* Título de la cápsula */}
+                <div className="w-full text-center px-0.5">
+                  <p className="text-[16px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap relative top-[3px]">
+                    ¿Cuándo te lo llevamos?
                   </p>
                 </div>
 
