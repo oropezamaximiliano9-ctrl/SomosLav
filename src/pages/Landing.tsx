@@ -1043,9 +1043,9 @@ export default function Landing() {
                 <p className="w-full text-[27px] text-white font-bold leading-tight -mt-1 mb-3 text-center whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
                   Sin báscula ni enredos
                 </p>
-                <p className="w-full text-white text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] leading-[1.18]">
-                  <span className="block text-[24px] font-normal font-geist">Pide tu cesto gratis y llénalo</span>
-                  <span className="block text-[23px] font-medium font-geist">con la ropa que quieras</span>
+                <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
+                  Pide tu cesto gratis y llénalo<br />
+                  con la ropa que quieras
                 </p>
                 <div className="mt-1 w-full text-center">
                   <span className="relative inline-block">
