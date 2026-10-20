@@ -1043,23 +1043,23 @@ export default function Landing() {
                 <p className="w-full text-[27px] text-white font-bold leading-tight -mt-1 mb-3 text-center whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
                   Sin báscula ni enredos
                 </p>
-                <p className="w-full text-[24px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
+                <p className="w-full text-[25px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
                   Pide tu cesto gratis y llénalo<br />
                   con la ropa que quieras
                 </p>
                 <div className="mt-1 w-full text-center">
                   <span className="relative inline-block">
                     <span className="absolute -inset-x-[3px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#2563eb]/75 backdrop-blur-[2px] rounded-[5px] shadow-[0_2px_8px_rgba(37,99,235,0.4)] -z-0"></span>
-                    <span className="relative z-10 font-bold text-[24px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
-                      Lo lavamos todo por <span className="text-[24px] text-white"><span className="font-bold">$</span><span className="font-extrabold">95</span></span>
+                    <span className="relative z-10 font-bold text-[25px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
+                      Lo lavamos todo por <span className="text-[25px] text-white"><span className="font-bold">$</span><span className="font-extrabold">95</span></span>
                     </span>
                   </span>
                 </div>
                 <div className="w-full flex flex-col items-center text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-0.5">
-                  <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[23px] text-white font-medium font-geist leading-normal">
+                  <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[24px] text-white font-medium font-geist leading-normal">
                     <span>A domicilio</span>
                     <span>•</span>
-                    <span>En <span className="text-[22px]">24</span>h.</span>
+                    <span>En <span className="text-[23px]">24</span>h.</span>
                   </div>
                 </div>
 
