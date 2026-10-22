@@ -131,7 +131,35 @@ const FloatingBadge = ({
 };
 
 export default function Landing() {
-  const { role } = useContext(RoleContext);
+  const { role, setRole } = useContext(RoleContext);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isLongPressRef = useRef(false);
+
+  const handleNavbarPointerDown = () => {
+    isLongPressRef.current = false;
+    timerRef.current = setTimeout(() => {
+      isLongPressRef.current = true;
+      if (role !== 'associate' && role !== 'admin') {
+        navigate('/login');
+      }
+    }, 1500);
+  };
+
+  const handleNavbarPointerUpOrLeave = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const handleNavbarClick = () => {
+    if (isLongPressRef.current) return;
+    const container = document.querySelector('.overflow-y-auto');
+    if (container) {
+      container.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const navigate = useNavigate();
 
   const [name, setName] = useState(() => localStorage.getItem("user_name") || "");
@@ -1017,7 +1045,7 @@ export default function Landing() {
   return (
     <div className="flex-1 flex flex-col w-full bg-[#fdf0d5]">
       {/* Hero Section - 100% Pantalla completa con imagen de fondo continua */}
-      <section className="relative w-full px-0 pt-0 pb-0 flex flex-col items-start text-left justify-start snap-start snap-always min-h-[100dvh] min-h-[100svh]" style={{ scrollSnapAlign: 'start', minHeight: '100dvh' }}>
+      <section className="sticky top-0 z-0 w-full px-0 pt-0 pb-0 flex flex-col items-start text-left justify-start h-[100dvh] min-h-[100dvh] overflow-hidden will-change-transform">
 
         {/* Cesto grande a pantalla completa (Full Bleed Edge-to-Edge) de arriba a abajo */}
         <div className="w-full relative px-0 flex-1 flex flex-col">
@@ -1037,7 +1065,30 @@ export default function Landing() {
             {/* Degradado fino y sutil que solo abraza el texto sin invadir el resto de la foto */}
             <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black/75 via-black/30 via-50% to-transparent pointer-events-none" />
 
-            {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar flotante de 50px) */}
+            {/* Navbar 1: Navbar de la Primera Sección (Hero) - Transparente y anclado al inicio del Hero */}
+            <header 
+              className="absolute top-0 left-0 right-0 z-30 w-full h-[34px] bg-transparent text-white select-none cursor-pointer flex items-center justify-center"
+              style={{ WebkitTouchCallout: 'none' }}
+              onPointerDown={handleNavbarPointerDown}
+              onPointerUp={handleNavbarPointerUpOrLeave}
+              onPointerLeave={handleNavbarPointerUpOrLeave}
+              onPointerCancel={handleNavbarPointerUpOrLeave}
+              onClick={handleNavbarClick}
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              <div className="max-w-sm w-full mx-auto px-4 h-[34px] relative flex items-center justify-center">
+                {(role === 'associate' || role === 'admin') && (
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setRole('customer'); navigate('/'); }}
+                    className="text-xs font-semibold px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 uppercase tracking-wider text-white transition-all duration-200 absolute left-4 cursor-pointer"
+                  >
+                    Salir
+                  </button>
+                )}
+              </div>
+            </header>
+
+            {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar de 34px) */}
             <div className="relative z-10 w-full max-w-sm mx-auto px-3 sm:px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
               <div className="select-none w-full flex flex-col items-start text-left">
                 <p className="w-full text-[27px] text-white font-bold leading-tight -mt-1 mb-3 text-center whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
@@ -1140,8 +1191,130 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Contenedor apilado: Sube desde abajo, cubre al Hero, y mantiene fijo el Navbar en top: 0 */}
+      <div id="content-stack-wrapper" className="relative z-10 w-full bg-[#FAF8F5] rounded-t-xl will-change-transform">
+        
+        {/* Navbar 2: Ubicado en el borde superior de la segunda sección, sube con ella y se queda anclado fijo en top: 0 */}
+        <header 
+          className="sticky top-0 z-50 w-full h-[48px] bg-[#FAF8F5] border-b border-black/[0.04] transition-all select-none cursor-pointer rounded-t-xl flex items-center justify-center"
+          style={{ WebkitTouchCallout: 'none' }}
+          onPointerDown={handleNavbarPointerDown}
+          onPointerUp={handleNavbarPointerUpOrLeave}
+          onPointerLeave={handleNavbarPointerUpOrLeave}
+          onPointerCancel={handleNavbarPointerUpOrLeave}
+          onClick={handleNavbarClick}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <div className="max-w-sm w-full mx-auto px-4 h-[48px] relative flex items-center justify-center">
+            {(role === 'associate' || role === 'admin') && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setRole('customer'); navigate('/'); }}
+                className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 uppercase tracking-wider text-slate-600 transition-all duration-200 absolute left-4 cursor-pointer"
+              >
+                Salir
+              </button>
+            )}
+
+            {/* Marca somos ocupando todo el espacio vertical de la navbar (48px) alineada a la izquierda */}
+            <span 
+              className="font-unbounded font-normal text-[42px] tracking-[-0.04em] text-[#1a1a1a] lowercase select-none leading-none h-full flex items-center justify-start w-full px-2"
+              style={{ fontFamily: 'var(--font-unbounded, "Unbounded", sans-serif)', letterSpacing: '-0.04em' }}
+            >
+              somos
+            </span>
+          </div>
+        </header>
+
+        {/* Sección 2: Colecciones Destacadas */}
+        <section 
+          id="colecciones-destacadas-section" 
+          className="relative w-full px-4 py-8 sm:py-12 flex flex-col justify-center items-center bg-[#FAF8F5] min-h-[calc(100dvh-48px)]"
+        >
+        <div className="w-full max-w-[420px] sm:max-w-[460px] mx-auto flex flex-col gap-3.5 sm:gap-4 select-none">
+          
+          {/* Card 1: CESTOS SOMOS */}
+          <div 
+            onClick={() => openBottomSheet()}
+            className="group relative overflow-hidden rounded-2xl bg-[#ECE9E2] border border-black/[0.04] p-5 sm:p-6 min-h-[155px] sm:min-h-[165px] flex items-center justify-between cursor-pointer transition-all duration-200 active:scale-[0.99] hover:shadow-md"
+          >
+            <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
+              <div>
+                <h3 className="font-geist font-black text-[22px] sm:text-[24px] uppercase tracking-tight text-[#111111] leading-none">
+                  CESTOS SOMOS
+                </h3>
+                <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
+                  Capacidad de 1 semana, sin báscula ni enredos.
+                </p>
+              </div>
+              <div className="mt-4 sm:mt-5">
+                <span className="inline-block font-geist font-bold text-[13px] sm:text-[13.5px] uppercase tracking-wider text-[#111111] underline underline-offset-[5px] decoration-[1.5px] decoration-black group-hover:opacity-75 transition-opacity">
+                  PIDE TU CESTO GRATIS
+                </span>
+              </div>
+            </div>
+            
+            {/* Espacio reservado para imagen 1 */}
+            <div className="absolute right-0 top-0 bottom-0 w-[42%] sm:w-[40%] flex items-center justify-center pointer-events-none">
+            </div>
+          </div>
+
+          {/* Card 2: GARANTÍA & CUIDADO */}
+          <div 
+            onClick={() => openBottomSheet()}
+            className="group relative overflow-hidden rounded-2xl bg-[#ECE9E2] border border-black/[0.04] p-5 sm:p-6 min-h-[155px] sm:min-h-[165px] flex items-center justify-between cursor-pointer transition-all duration-200 active:scale-[0.99] hover:shadow-md"
+          >
+            <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
+              <div>
+                <h3 className="font-geist font-black text-[22px] sm:text-[24px] uppercase tracking-tight text-[#111111] leading-none">
+                  CUIDADO EXPERTO
+                </h3>
+                <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
+                  Lavado profesional por color y tipo de tela. Garantía 100%.
+                </p>
+              </div>
+              <div className="mt-4 sm:mt-5">
+                <span className="inline-block font-geist font-bold text-[13px] sm:text-[13.5px] uppercase tracking-wider text-[#111111] underline underline-offset-[5px] decoration-[1.5px] decoration-black group-hover:opacity-75 transition-opacity">
+                  SATISFACCIÓN GARANTIZADA
+                </span>
+              </div>
+            </div>
+            
+            {/* Espacio reservado para imagen 2 */}
+            <div className="absolute right-0 top-0 bottom-0 w-[42%] sm:w-[40%] flex items-center justify-center pointer-events-none">
+            </div>
+          </div>
+
+          {/* Card 3: CUIDADO TEXTIL */}
+          <div 
+            onClick={() => openBottomSheet()}
+            className="group relative overflow-hidden rounded-2xl bg-[#ECE9E2] border border-black/[0.04] p-5 sm:p-6 min-h-[155px] sm:min-h-[165px] flex items-center justify-between cursor-pointer transition-all duration-200 active:scale-[0.99] hover:shadow-md"
+          >
+            <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
+              <div>
+                <h3 className="font-geist font-black text-[22px] sm:text-[24px] uppercase tracking-tight text-[#111111] leading-none">
+                  CUIDADO TEXTIL
+                </h3>
+                <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
+                  Fórmulas hipoalergénicas y aromas que duran semanas.
+                </p>
+              </div>
+              <div className="mt-4 sm:mt-5">
+                <span className="inline-block font-geist font-bold text-[13px] sm:text-[13.5px] uppercase tracking-wider text-[#111111] underline underline-offset-[5px] decoration-[1.5px] decoration-black group-hover:opacity-75 transition-opacity">
+                  INCLUIDO SIN COSTO
+                </span>
+              </div>
+            </div>
+            
+            {/* Espacio reservado para imagen 3 */}
+            <div className="absolute right-0 top-0 bottom-0 w-[42%] sm:w-[40%] flex items-center justify-center pointer-events-none">
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
-      <section className="relative w-full px-0 pt-0 pb-8 sm:pb-12 flex flex-col justify-between bg-transparent snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="empieza-hoy-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+      <section className="relative z-10 w-full px-0 pt-4 pb-8 sm:pb-12 flex flex-col justify-between bg-[#fdf0d5] min-h-[calc(100dvh-50px)]" id="empieza-hoy-section">
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           {/* Título de la sección fuera de la tarjeta */}
           <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
@@ -1260,7 +1433,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="relative w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] snap-start snap-always min-h-[calc(100dvh-50px)] min-h-[calc(100svh-50px)]" id="editorial-location-section" style={{ scrollSnapAlign: 'start', minHeight: 'calc(100dvh - 50px)' }}>
+      <section className="relative z-10 w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] min-h-[calc(100dvh-50px)]" id="editorial-location-section">
         <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
           
           {/* Header directly in the layout, matching Empieza hoy title container */}
@@ -1417,8 +1590,7 @@ export default function Landing() {
       {/* Sección Asimétrica Editorial (Playeras) */}
       <section 
         id="lava-estrena-section" 
-        className="w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-16 sm:pb-24 flex flex-col justify-start items-center bg-[#4E0000] snap-start min-h-screen" 
-        style={{ scrollSnapAlign: 'start' }}
+        className="relative z-10 w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-16 sm:pb-24 flex flex-col justify-start items-center bg-[#4E0000] min-h-screen"
       >
         
         <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-0">
@@ -1478,6 +1650,7 @@ export default function Landing() {
         </div>
 
       </section>
+      </div>
 
       {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}
       <div 

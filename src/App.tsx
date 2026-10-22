@@ -96,90 +96,16 @@ function AppContent() {
       return;
     }
 
-    const guindaSection = document.getElementById("lava-estrena-section");
     const container = scrollContainerRef.current;
+    if (!container) return;
 
-    if (!guindaSection || !container) return;
-
-    let touchStartY = 0;
-    let touchStartedInsideGuinda = false;
-    let momentumRestrictedToGuinda = false;
     let lastScrollTop = container.scrollTop;
-    let scrollEndTimer: any = null;
-
-    const getGuindaOffsetTop = () => guindaSection.offsetTop;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      const guindaTop = getGuindaOffsetTop();
-      if (container.scrollTop > guindaTop + 15) {
-        touchStartedInsideGuinda = true;
-        momentumRestrictedToGuinda = true;
-      } else {
-        touchStartedInsideGuinda = false;
-        momentumRestrictedToGuinda = false;
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!touchStartedInsideGuinda) return;
-
-      const currentY = e.touches[0].clientY;
-      const isDraggingDown = currentY > touchStartY;
-      const guindaTop = getGuindaOffsetTop();
-
-      if (isDraggingDown && container.scrollTop <= guindaTop) {
-        container.scrollTop = guindaTop;
-        if (e.cancelable) {
-          e.preventDefault();
-        }
-      }
-    };
-
-    const handleTouchEnd = () => {
-      const guindaTop = getGuindaOffsetTop();
-      if (container.scrollTop <= guindaTop + 5) {
-        if (touchStartedInsideGuinda) {
-          container.scrollTop = guindaTop;
-        }
-        container.style.scrollSnapType = 'y mandatory';
-        momentumRestrictedToGuinda = false;
-      }
-      touchStartedInsideGuinda = false;
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      const guindaTop = getGuindaOffsetTop();
-
-      if (container.scrollTop > guindaTop + 10 && e.deltaY < 0) {
-        if (container.scrollTop + e.deltaY <= guindaTop) {
-          e.preventDefault();
-          container.scrollTop = guindaTop;
-          container.style.scrollSnapType = 'y mandatory';
-        }
-      }
-    };
 
     const handleScroll = () => {
       const currentScrollTop = container.scrollTop;
       const isScrollingDown = currentScrollTop > lastScrollTop;
-      const guindaTop = getGuindaOffsetTop();
 
       setIsAtHero(currentScrollTop < 60);
-
-      if (momentumRestrictedToGuinda && currentScrollTop < guindaTop) {
-        container.scrollTop = guindaTop;
-        momentumRestrictedToGuinda = false;
-      }
-
-      clearTimeout(scrollEndTimer);
-      scrollEndTimer = setTimeout(() => {
-        const top = container.scrollTop;
-        const gTop = getGuindaOffsetTop();
-        if (top > gTop - 90 && top < gTop) {
-          container.scrollTo({ top: gTop, behavior: 'smooth' });
-        }
-      }, 100);
 
       if (isScrollingDown) {
         if (currentScrollTop > lastScrollTop + 10) {
@@ -198,18 +124,10 @@ function AppContent() {
       lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
     };
 
-    container.addEventListener("touchstart", handleTouchStart, { passive: true });
-    container.addEventListener("touchmove", handleTouchMove, { passive: false });
-    container.addEventListener("touchend", handleTouchEnd, { passive: true });
     container.addEventListener("scroll", handleScroll, { passive: true });
-    container.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchmove", handleTouchMove);
-      container.removeEventListener("touchend", handleTouchEnd);
       container.removeEventListener("scroll", handleScroll);
-      container.removeEventListener("wheel", handleWheel);
     };
   }, [isLandingPage, location.pathname, hideNavbar, showAlwaysNavbar]);
 
@@ -221,7 +139,7 @@ function AppContent() {
     'duration-75',
     'overflow-x-hidden',
     'bg-[#fdf0d5]',
-    isLandingPage ? 'h-[100dvh] overflow-y-auto snap-y snap-mandatory' : 'min-h-[100dvh] overflow-y-auto'
+    isLandingPage ? 'h-[100dvh] overflow-y-auto overscroll-y-contain [scroll-behavior:smooth]' : 'min-h-[100dvh] overflow-y-auto'
   ].join(' ');
 
   const headerClasses = [
@@ -258,46 +176,48 @@ function AppContent() {
     'relative',
     'flex',
     'flex-col',
-    isLandingPage ? '-mt-[34px] pt-0 pb-0 px-0' : 'max-w-sm mx-auto px-4 pt-4 pb-4'
+    isLandingPage ? 'pt-0 pb-0 px-0' : 'max-w-sm mx-auto px-4 pt-4 pb-4'
   ].join(' ');
 
   return (
     <div 
       ref={scrollContainerRef}
       className={containerClasses}
-      style={{ scrollBehavior: 'smooth', scrollPaddingTop: '34px' }}
+      style={{ scrollBehavior: 'smooth', scrollPaddingTop: '34px', WebkitOverflowScrolling: 'touch' }}
     >
-      {/* Header con soporte de pulsación larga en cualquier punto de la navbar */}
-      <header 
-        className={headerClasses + " cursor-pointer"}
-        style={{ WebkitTouchCallout: 'none' }}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUpOrLeave}
-        onPointerLeave={handlePointerUpOrLeave}
-        onPointerCancel={handlePointerUpOrLeave}
-        onClick={handleNavbarClick}
-        onContextMenu={(e) => e.preventDefault()}
-      >
-        <div className={innerNavClasses}>
-          {(role === 'associate' || role === 'admin') && (
-            <button 
-              onClick={(e) => { e.stopPropagation(); setRole('customer'); setIsMenuOpen(false); navigate('/'); }}
-              className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 uppercase tracking-wider text-slate-600 transition-all duration-200 absolute left-4 cursor-pointer"
-            >
-              Salir
-            </button>
-          )}
-          {role === 'associate' && (
-            <button 
-              onClick={(e) => { e.stopPropagation(); setIsMenuOpen(!isMenuOpen); }}
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors animate-pulse absolute left-16 cursor-pointer"
-              title="Opciones de Asociado (Simulador)"
-            >
-              <MoreVertical className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-      </header>
+      {/* Header global (solo en rutas fuera de la landing, ya que Landing gestiona su propio Navbar con sticky stacking) */}
+      {!isLandingPage && (
+        <header 
+          className={headerClasses + " cursor-pointer"}
+          style={{ WebkitTouchCallout: 'none' }}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUpOrLeave}
+          onPointerLeave={handlePointerUpOrLeave}
+          onPointerCancel={handlePointerUpOrLeave}
+          onClick={handleNavbarClick}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <div className={innerNavClasses}>
+            {(role === 'associate' || role === 'admin') && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setRole('customer'); setIsMenuOpen(false); navigate('/'); }}
+                className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 uppercase tracking-wider text-slate-600 transition-all duration-200 absolute left-4 cursor-pointer"
+              >
+                Salir
+              </button>
+            )}
+            {role === 'associate' && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsMenuOpen(!isMenuOpen); }}
+                className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors animate-pulse absolute left-16 cursor-pointer"
+                title="Opciones de Asociado (Simulador)"
+              >
+                <MoreVertical className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </header>
+      )}
 
       {/* Main Content Area */}
       <main className={mainClasses}>
