@@ -1095,17 +1095,16 @@ export default function Landing() {
                   Sin báscula ni enredos
                 </p>
                 <p className="w-full text-[25px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
-                  Pide tu cesto gratis y llénalo<br />
-                  con la ropa que quieras
-                </p>
-                <div className="mt-1 w-full text-center">
-                  <span className="relative inline-block">
-                    <span className="absolute -inset-x-[3px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#2563eb]/75 backdrop-blur-[2px] rounded-[5px] shadow-[0_2px_8px_rgba(37,99,235,0.4)] -z-0"></span>
+                  Llena el cesto con<br />
+                  la ropa que quieras, lo<br />
+                  lavamos y doblamos todo<br />
+                  <span className="relative inline-block mt-1">
+                    <span className="absolute -inset-x-[6px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#2563eb]/75 backdrop-blur-[2px] rounded-[5px] shadow-[0_2px_8px_rgba(37,99,235,0.4)] -z-0"></span>
                     <span className="relative z-10 font-bold text-[25px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
-                      Lo lavamos todo por <span className="text-[25px] text-white"><span className="font-bold">$</span><span className="font-extrabold">95</span></span>
+                      por <span className="font-bold">$</span><span className="font-extrabold">95</span>
                     </span>
                   </span>
-                </div>
+                </p>
                 <div className="w-full flex flex-col items-center text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-0.5">
                   <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[24px] text-white font-medium font-geist leading-normal">
                     <span>A domicilio</span>
@@ -1196,7 +1195,7 @@ export default function Landing() {
         
         {/* Navbar 2: Ubicado en el borde superior de la segunda sección, sube con ella y se queda anclado fijo en top: 0 */}
         <header 
-          className="sticky top-0 z-50 w-full h-[48px] bg-[#FAF8F5] border-b border-black/[0.04] transition-all select-none cursor-pointer rounded-t-xl flex items-center justify-center"
+          className="sticky top-0 z-50 w-full h-[48px] bg-[#FAF8F5] border-b border-black/20 transition-all select-none cursor-pointer rounded-t-xl flex items-center justify-center"
           style={{ WebkitTouchCallout: 'none' }}
           onPointerDown={handleNavbarPointerDown}
           onPointerUp={handleNavbarPointerUpOrLeave}
@@ -1215,9 +1214,9 @@ export default function Landing() {
               </button>
             )}
 
-            {/* Marca somos ocupando todo el espacio vertical de la navbar (48px) alineada a la izquierda */}
+            {/* Marca somos en la navbar (22px) alineada a la izquierda */}
             <span 
-              className="font-unbounded font-normal text-[42px] tracking-[-0.04em] text-[#1a1a1a] lowercase select-none leading-none h-full flex items-center justify-start w-full px-2"
+              className="font-unbounded font-normal text-[22px] tracking-[-0.04em] text-[#1a1a1a] lowercase select-none leading-none h-full flex items-center justify-start w-full px-2"
               style={{ fontFamily: 'var(--font-unbounded, "Unbounded", sans-serif)', letterSpacing: '-0.04em' }}
             >
               somos
@@ -1239,11 +1238,11 @@ export default function Landing() {
           >
             <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
               <div>
-                <h3 className="font-geist font-black text-[22px] sm:text-[24px] uppercase tracking-tight text-[#111111] leading-none">
-                  CESTOS SOMOS
+                <h3 className="font-geist font-bold text-[22px] sm:text-[24px] tracking-tight text-[#111111] leading-none">
+                  Cestos SOMOS
                 </h3>
                 <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
-                  Capacidad de 1 semana, sin báscula ni enredos.
+                  Pídelo hoy y llénalo a tu propio ritmo. Caben hasta 7 días de ropa.
                 </p>
               </div>
               <div className="mt-4 sm:mt-5">
@@ -1265,8 +1264,8 @@ export default function Landing() {
           >
             <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
               <div>
-                <h3 className="font-geist font-black text-[22px] sm:text-[24px] uppercase tracking-tight text-[#111111] leading-none">
-                  CUIDADO EXPERTO
+                <h3 className="font-geist font-bold text-[22px] sm:text-[24px] tracking-tight text-[#111111] leading-none">
+                  Cuidado experto
                 </h3>
                 <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
                   Lavado profesional por color y tipo de tela. Garantía 100%.
@@ -1284,15 +1283,15 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Card 3: CUIDADO TEXTIL */}
+          {/* Card 3: TRANSPARENCIA */}
           <div 
             onClick={() => openBottomSheet()}
             className="group relative overflow-hidden rounded-2xl bg-[#ECE9E2] border border-black/[0.04] p-5 sm:p-6 min-h-[155px] sm:min-h-[165px] flex items-center justify-between cursor-pointer transition-all duration-200 active:scale-[0.99] hover:shadow-md"
           >
             <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
               <div>
-                <h3 className="font-geist font-black text-[22px] sm:text-[24px] uppercase tracking-tight text-[#111111] leading-none">
-                  CUIDADO TEXTIL
+                <h3 className="font-geist font-bold text-[22px] sm:text-[24px] tracking-tight text-[#111111] leading-none">
+                  Transparencia
                 </h3>
                 <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
                   Fórmulas hipoalergénicas y aromas que duran semanas.
