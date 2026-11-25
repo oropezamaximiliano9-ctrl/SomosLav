@@ -219,7 +219,7 @@ html, body {
   top: 0;
   left: 0;
   right: 0;
-  height: calc(305 * var(--u));
+  height: calc(333 * var(--u));
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.30) 50%, rgba(0, 0, 0, 0) 100%);
   pointer-events: none;
 }
@@ -230,7 +230,7 @@ html, body {
   width: 100%;
   max-width: calc(384 * var(--u));
   margin: 0 auto;
-  padding: calc(20 * var(--u) + env(safe-area-inset-top, 0px)) calc(16 * var(--u)) calc(4 * var(--u));
+  padding: calc(48 * var(--u) + env(safe-area-inset-top, 0px)) calc(16 * var(--u)) calc(4 * var(--u));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -344,7 +344,7 @@ html, body {
 .hero-badge {
   position: absolute;
   top: auto;
-  bottom: min(calc(55.5% - 10 * var(--u)), calc(100% - 307 * var(--u)));
+  bottom: min(calc(55.5% - 10 * var(--u)), calc(100% - 330 * var(--u)));
   left: calc(50% - 160 * var(--u));
   z-index: 20;
   background: rgba(0, 0, 0, 0.28);
