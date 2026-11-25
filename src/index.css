@@ -219,7 +219,7 @@ html, body {
 }
 
 .hero-subtitle {
-  font-size: calc(24 * var(--u));
+  font-size: calc(23 * var(--u));
   font-weight: 400;
   color: white;
   line-height: 1.15;
@@ -315,7 +315,7 @@ html, body {
 .hero-badge {
   position: absolute;
   top: auto;
-  bottom: min(55.5%, calc(100% - 288 * var(--u)));
+  bottom: min(calc(55.5% - 3 * var(--u)), calc(100% - 291 * var(--u)));
   left: calc(50% - 160 * var(--u));
   z-index: 20;
   background: rgba(0, 0, 0, 0.28);
