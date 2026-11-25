@@ -315,7 +315,7 @@ html, body {
 .hero-badge {
   position: absolute;
   top: auto;
-  bottom: min(calc(55.5% - 5 * var(--u)), calc(100% - 302 * var(--u)));
+  bottom: min(calc(55.5% - 10 * var(--u)), calc(100% - 307 * var(--u)));
   left: calc(50% - 160 * var(--u));
   z-index: 20;
   background: rgba(0, 0, 0, 0.28);
