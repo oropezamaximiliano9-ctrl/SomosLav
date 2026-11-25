@@ -25,9 +25,16 @@ function useGlobalKeyboardDismiss() {
         activeEl &&
         (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')
       ) {
-        if (!activeEl.contains(e.target as Node)) {
-          (activeEl as HTMLElement).blur();
+        const target = e.target as HTMLElement | null;
+        if (!target || activeEl.contains(target)) return;
+        if (
+          target.closest(
+            'button, a, label, input, textarea, select, [role="button"], [role="radio"], .form-bottom-sheet'
+          )
+        ) {
+          return;
         }
+        (activeEl as HTMLElement).blur();
       }
     };
 

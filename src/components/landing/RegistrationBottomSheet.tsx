@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import {
   X,
@@ -29,6 +30,7 @@ interface RegistrationBottomSheetProps {
   setAddressCalle: (calle: string) => void;
   addressColonia: string;
   setAddressColonia: (col: string) => void;
+  preferredTime?: string;
   formStep: 1 | 2 | 3 | 'verifying';
   setFormStep: (step: 1 | 2 | 3 | 'verifying') => void;
   verificationProgress: number;
@@ -69,6 +71,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   setAddressCalle,
   addressColonia,
   setAddressColonia,
+  preferredTime,
   formStep,
   setFormStep,
   verificationProgress,
@@ -94,13 +97,22 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   step3Ref,
   sliderHeight,
 }) => {
-  return (
+  const overlayPointerDownRef = useRef(false);
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <>
       {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}
       <div
         className="form-overlay"
         data-open={isOpen ? 'true' : 'false'}
-        onClick={() => {
+        onPointerDown={(e) => {
+          overlayPointerDownRef.current = e.target === e.currentTarget;
+        }}
+        onClick={(e) => {
+          if (!overlayPointerDownRef.current || e.target !== e.currentTarget) return;
+          overlayPointerDownRef.current = false;
           dismissKeyboard();
           onClose();
         }}
@@ -110,6 +122,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
         className="form-bottom-sheet h-auto pt-4 pb-8 px-6"
         data-open={isOpen ? 'true' : 'false'}
         id="bottom-sheet-container"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Visual drag indicator */}
         <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
@@ -135,61 +148,92 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
         {/* Form Inner Content Scroller with static height */}
         <div className="w-full relative mt-3">
           <div className="form-content-inner w-full flex flex-col">
-            {registered ? (
-              <motion.div
-                key="step-registered"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.15 }}
-                className="text-center flex flex-col items-center justify-center w-full py-4"
-              >
-                <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4 shrink-0">
-                  <CheckCircle2 className="w-6 h-6" />
-                </div>
+            {registered ? (() => {
+              const firstName = name.trim().split(/\s+/)[0] || '';
+              const digits = phone.replace(/\D/g, '');
+              const formattedPhone =
+                digits.length === 10
+                  ? `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
+                  : phone;
 
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight mb-2">
-                  ¡Listo, {name.split(' ')[0]}!
-                </h2>
+              const formattedDeliveryDay = (() => {
+                if (!preferredTime) return '';
+                const trimmed = preferredTime.trim();
+                const todayMatch = trimmed.match(/^HOY\s*\((.+)\)$/i);
+                if (todayMatch) return `Hoy · ${todayMatch[1]}`;
+                const tomorrowMatch = trimmed.match(/^MAÑANA\s*\((.+)\)$/i);
+                if (tomorrowMatch) return `Mañana · ${tomorrowMatch[1]}`;
+                return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+              })();
 
-                <p className="text-gray-500 text-xs leading-relaxed mb-5">
-                  Hemos asignado y guardado un cesto premium exclusivo a tu número. Tu ropa limpia llegará directo a
-                  tu puerta en <span className="font-bold text-gray-800">{addressColonia}</span>.
-                </p>
+              const cleanCalle = addressCalle?.trim() || '';
+              const cleanColonia = addressColonia?.trim() || '';
+              const formattedAddress =
+                !cleanColonia || cleanCalle.toLowerCase() === cleanColonia.toLowerCase()
+                  ? cleanCalle || cleanColonia
+                  : `${cleanCalle}, ${cleanColonia}`;
 
-                <div className="w-full border-t border-dashed border-gray-200 my-2 relative">
-                  <div className="absolute -left-[30px] -top-1.5 w-3 h-3 rounded-full bg-white border-r border-[#ebecef]" />
-                  <div className="absolute -right-[30px] -top-1.5 w-3 h-3 rounded-full bg-white border-l border-[#ebecef]" />
-                </div>
-
-                <div className="p-3 bg-slate-50 border rounded-xl w-full text-left space-y-1.5 mt-2">
-                  <div>
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">
-                      Dirección Registrada
-                    </p>
-                    <p className="font-extrabold text-xs text-slate-800">
-                      {addressCalle?.trim() === (addressColonia || '').trim()
-                        ? addressCalle
-                        : `${addressCalle}, ${addressColonia}`}
-                    </p>
-                  </div>
-
-                  <div className="border-t pt-1.5 flex justify-between items-center text-[10px]">
-                    <span className="text-slate-500 font-semibold">Pre-registro:</span>
-                    <span className="bg-[#EBECEF] text-slate-800 px-1.5 py-0.5 rounded font-bold text-[9px] uppercase tracking-wider">
-                      Activo
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm mt-4 select-none"
+              return (
+                <motion.div
+                  key="step-registered"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.15 }}
+                  className="text-center flex flex-col items-center justify-center w-full pt-2 pb-1 font-geist"
                 >
-                  Listo, ¡muchas gracias!
-                </button>
-              </motion.div>
-            ) : formStep === 'verifying' ? (
+                  <div className="w-11 h-11 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-3 shrink-0">
+                    <CheckCircle2 className="w-5.5 h-5.5" />
+                  </div>
+
+                  <h2 className="text-[20px] font-bold text-slate-900 tracking-tight mb-1.5 text-balance">
+                    {firstName ? `¡Todo listo, ${firstName}!` : '¡Todo listo!'}
+                  </h2>
+
+                  <p className="text-slate-500 text-[13.5px] leading-relaxed max-w-[320px] mb-4">
+                    Tu cesto ya está listo. Nos pondremos en contacto contigo al{' '}
+                    <span className="font-semibold text-slate-800 tabular-nums whitespace-nowrap">
+                      {formattedPhone}
+                    </span>{' '}
+                    para coordinar la entrega.
+                  </p>
+
+                  <div className="w-full rounded-2xl bg-slate-50 border border-slate-200/80 divide-y divide-slate-200/70 text-left">
+                    {formattedDeliveryDay && (
+                      <div className="px-3.5 py-2.5 flex items-center justify-between gap-3">
+                        <span className="text-xs font-medium text-slate-500 shrink-0">Día de entrega</span>
+                        <span className="text-xs font-semibold text-slate-800 text-right">
+                          {formattedDeliveryDay}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="px-3.5 py-2.5 flex items-center justify-between gap-3">
+                      <span className="text-xs font-medium text-slate-500 shrink-0">Contacto</span>
+                      <span className="text-xs font-semibold text-slate-800 tabular-nums text-right">
+                        {formattedPhone}
+                      </span>
+                    </div>
+
+                    {formattedAddress && (
+                      <div className="px-3.5 py-2.5 flex items-start justify-between gap-3">
+                        <span className="text-xs font-medium text-slate-500 shrink-0">Dirección</span>
+                        <span className="text-xs font-semibold text-slate-800 text-right leading-snug">
+                          {formattedAddress}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="w-full py-2.5 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] active:scale-[0.99] text-white font-extrabold text-base mt-4 transition-all duration-150 cursor-pointer select-none"
+                  >
+                    Entendido
+                  </button>
+                </motion.div>
+              );
+            })() : formStep === 'verifying' ? (
               <motion.div
                 key="step-verifying"
                 initial={{ opacity: 0 }}
@@ -426,7 +470,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                       }`}
                       aria-hidden={formStep !== 1}
                     >
-                      <form onSubmit={goToStep2} className="space-y-4 flex flex-col">
+                      <form noValidate onSubmit={goToStep2} className="space-y-4 flex flex-col">
                         <div className="space-y-3">
                           <div className="space-y-1">
                             <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5 select-none">
@@ -460,6 +504,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                         <button
                           type="submit"
                           tabIndex={formStep === 1 ? 0 : -1}
+                          onMouseDown={(e) => e.preventDefault()}
                           className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer select-none"
                         >
                           <span className="font-geist">Continuar</span>
@@ -476,7 +521,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                       }`}
                       aria-hidden={formStep !== 2}
                     >
-                      <form onSubmit={goToStep3} className="space-y-4 flex flex-col">
+                      <form noValidate onSubmit={goToStep3} className="space-y-4 flex flex-col">
                         <div className="space-y-3">
                           <div className="space-y-1">
                             <div className="flex justify-between items-center ml-0.5 select-none">
@@ -504,12 +549,32 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                               <input
                                 ref={phoneInputRef}
                                 type="tel"
+                                inputMode="tel"
                                 required
-                                autoComplete="tel"
+                                autoComplete="tel-national"
                                 tabIndex={formStep === 2 ? 0 : -1}
                                 value={phone}
                                 onChange={(e) => {
-                                  setPhone(e.target.value);
+                                  const trimmed = e.target.value.trim();
+                                  let digits = trimmed.replace(/\D/g, '');
+
+                                  if (trimmed.startsWith('+52')) {
+                                    digits = trimmed.slice(3).replace(/\D/g, '');
+                                    if (digits.length === 11 && digits.startsWith('1')) {
+                                      digits = digits.slice(1);
+                                    }
+                                  } else if (trimmed.startsWith('0052')) {
+                                    digits = trimmed.slice(4).replace(/\D/g, '');
+                                    if (digits.length === 11 && digits.startsWith('1')) {
+                                      digits = digits.slice(1);
+                                    }
+                                  } else if (digits.length === 12 && digits.startsWith('52')) {
+                                    digits = digits.slice(2);
+                                  } else if (digits.length === 13 && digits.startsWith('521')) {
+                                    digits = digits.slice(3);
+                                  }
+
+                                  setPhone(digits.slice(0, 10));
                                   setFormError(null);
                                 }}
                                 onBlur={handlePhoneBlur}
@@ -532,6 +597,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                         <button
                           type="submit"
                           tabIndex={formStep === 2 ? 0 : -1}
+                          onMouseDown={(e) => e.preventDefault()}
                           className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer select-none"
                         >
                           <span className="font-geist">Continuar</span>
@@ -548,7 +614,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                       }`}
                       aria-hidden={formStep !== 3}
                     >
-                      <form onSubmit={submitStep3AndVerify} className="space-y-4 flex flex-col">
+                      <form noValidate onSubmit={submitStep3AndVerify} className="space-y-4 flex flex-col">
                         {gpsAutofillError && (
                           <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg select-none">
                             {gpsAutofillError}
@@ -659,6 +725,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };

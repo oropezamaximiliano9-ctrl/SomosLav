@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, ArrowRight } from 'lucide-react';
 
@@ -87,6 +87,8 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
     onConfirm(selectedOption.date);
   };
 
+  const overlayPointerDownRef = useRef(false);
+
   if (typeof document === 'undefined') return null;
 
   return createPortal(
@@ -94,7 +96,14 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
       <div
         className="form-overlay"
         data-open={isOpen ? 'true' : 'false'}
-        onClick={onClose}
+        onPointerDown={(e) => {
+          overlayPointerDownRef.current = e.target === e.currentTarget;
+        }}
+        onClick={(e) => {
+          if (!overlayPointerDownRef.current || e.target !== e.currentTarget) return;
+          overlayPointerDownRef.current = false;
+          onClose();
+        }}
         aria-hidden={!isOpen}
       />
 

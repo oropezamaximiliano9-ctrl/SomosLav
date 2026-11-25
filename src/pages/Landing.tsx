@@ -46,7 +46,20 @@ export default function Landing() {
 
   // State: User Data & Registration Flow
   const [name, setName] = useState(() => localStorage.getItem('user_name') || '');
-  const [phone, setPhone] = useState(() => localStorage.getItem('user_phone') || '');
+  const [phone, setPhone] = useState(() => {
+    const raw = localStorage.getItem('user_phone') || '';
+    const trimmed = raw.trim();
+    let digits = trimmed.replace(/\D/g, '');
+    if (trimmed.startsWith('+52')) {
+      digits = trimmed.slice(3).replace(/\D/g, '');
+      if (digits.length === 11 && digits.startsWith('1')) digits = digits.slice(1);
+    } else if (digits.length === 12 && digits.startsWith('52')) {
+      digits = digits.slice(2);
+    } else if (digits.length === 13 && digits.startsWith('521')) {
+      digits = digits.slice(3);
+    }
+    return digits.slice(0, 10);
+  });
   const [deliveryPreference, setDeliveryPreference] = useState(
     () => localStorage.getItem('user_delivery_preference') || ''
   );
@@ -331,12 +344,15 @@ export default function Landing() {
 
     if (!name.trim()) {
       setFormError('Por favor ingresa tu nombre completo.');
-      nameInputRef.current?.focus();
+      nameInputRef.current?.focus({ preventScroll: true });
       return;
     }
 
     setFormStep(2);
-    setTimeout(() => phoneInputRef.current?.focus(), 150);
+    phoneInputRef.current?.focus({ preventScroll: true });
+    if (viewportRef.current) {
+      viewportRef.current.scrollLeft = 0;
+    }
   };
 
   const goToStep3 = (e: FormEvent) => {
@@ -346,24 +362,27 @@ export default function Landing() {
     const trimmedPhone = phone.trim();
     if (!trimmedPhone) {
       setFormError('Por favor ingresa tu teléfono.');
-      phoneInputRef.current?.focus();
+      phoneInputRef.current?.focus({ preventScroll: true });
       return;
     }
 
     if (trimmedPhone.length !== 10) {
       setFormError('El número de teléfono debe tener exactamente 10 caracteres.');
-      phoneInputRef.current?.focus();
+      phoneInputRef.current?.focus({ preventScroll: true });
       return;
     }
 
     if (/[a-zA-Z]/i.test(trimmedPhone)) {
       setFormError('El número de teléfono no puede contener letras.');
-      phoneInputRef.current?.focus();
+      phoneInputRef.current?.focus({ preventScroll: true });
       return;
     }
 
     setFormStep(3);
-    setTimeout(() => calleInputRef.current?.focus(), 150);
+    calleInputRef.current?.focus({ preventScroll: true });
+    if (viewportRef.current) {
+      viewportRef.current.scrollLeft = 0;
+    }
   };
 
   const dbPreregister = async (distanceKmValue: number) => {
@@ -530,6 +549,7 @@ export default function Landing() {
         setAddressCalle={setAddressCalle}
         addressColonia={addressColonia}
         setAddressColonia={setAddressColonia}
+        preferredTime={preferredTime}
         formStep={formStep}
         setFormStep={setFormStep}
         verificationProgress={verificationProgress}
