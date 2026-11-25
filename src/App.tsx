@@ -29,7 +29,7 @@ function useGlobalKeyboardDismiss() {
         if (!target || activeEl.contains(target)) return;
         if (
           target.closest(
-            'button, a, label, input, textarea, select, [role="button"], [role="radio"], .form-bottom-sheet'
+            'button, a, label, input, textarea, select, [role="button"], [role="radio"], .form-bottom-sheet, .form-overlay'
           )
         ) {
           return;

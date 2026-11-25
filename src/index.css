@@ -89,13 +89,17 @@ html, body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 280ms linear, visibility 280ms linear;
+  transition:
+    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity;
 }
 
 .form-overlay[data-open="true"] {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  cursor: pointer;
 }
 
 .form-bottom-sheet {
@@ -110,35 +114,53 @@ html, body {
   background-color: #ffffff;
   border-top-left-radius: 32px;
   border-top-right-radius: 32px;
-  max-height: 90vh;
+  max-height: 90svh;
 
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  transform: translateY(100%);
+  overflow: visible;
+  overscroll-behavior: contain;
+  transform: translate3d(0, 100%, 0);
   visibility: hidden;
   pointer-events: none;
-  transition: transform 280ms cubic-bezier(0.32, 0.94, 0.6, 1), visibility 280ms cubic-bezier(0.32, 0.94, 0.6, 1);
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 300ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
+/* Seamless white skirt below the sheet so keyboard slide-in/out never flashes a dark gap */
+.form-bottom-sheet::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 2px);
+  height: 65vh;
+  background-color: #ffffff;
+  pointer-events: none;
+}
+
 .form-bottom-sheet[data-open="true"] {
-  transform: translateY(0);
+  transform: translate3d(0, calc(-1 * var(--kb-offset, 0px)), 0);
   visibility: visible;
   pointer-events: auto;
 }
 
+.form-bottom-sheet[data-open="true"][data-vv-pan="true"] {
+  transition: none;
+}
+
 .form-content-inner {
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 280ms ease, transform 280ms ease;
+  transition: opacity 180ms ease;
   transition-delay: 0ms;
 }
 
 .form-bottom-sheet[data-open="true"] .form-content-inner {
   opacity: 1;
-  transform: translateY(0);
-  transition-delay: 50ms;
+  transition: opacity 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 40ms;
 }
 
 /* ==========================================================================

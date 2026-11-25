@@ -14,7 +14,7 @@ import {
   Check,
 } from 'lucide-react';
 import { ALL_COATZA_COLONIAS, normalizeText } from '../../utils/distance';
-import { dismissKeyboard } from '../../utils/keyboard';
+import { dismissKeyboard, useKeyboardSheetOffset } from '../../utils/keyboard';
 
 interface RegistrationBottomSheetProps {
   isOpen: boolean;
@@ -98,6 +98,9 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   sliderHeight,
 }) => {
   const overlayPointerDownRef = useRef(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
+
+  useKeyboardSheetOffset(isOpen, sheetRef);
 
   if (typeof document === 'undefined') return null;
 
@@ -107,33 +110,46 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
       <div
         className="form-overlay"
         data-open={isOpen ? 'true' : 'false'}
+        onMouseDown={(e) => e.preventDefault()}
         onPointerDown={(e) => {
           overlayPointerDownRef.current = e.target === e.currentTarget;
         }}
         onClick={(e) => {
           if (!overlayPointerDownRef.current || e.target !== e.currentTarget) return;
           overlayPointerDownRef.current = false;
-          dismissKeyboard();
           onClose();
+          dismissKeyboard();
         }}
       />
 
       <div
-        className="form-bottom-sheet h-auto pt-4 pb-8 px-6"
+        ref={sheetRef}
+        className="form-bottom-sheet h-auto pt-4 pb-7 px-6"
         data-open={isOpen ? 'true' : 'false'}
         id="bottom-sheet-container"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          const target = e.target as HTMLElement | null;
+          if (
+            target &&
+            !target.closest('input, textarea, button, a, label, [role="button"], [role="radio"]')
+          ) {
+            dismissKeyboard();
+          }
+        }}
       >
         {/* Visual drag indicator */}
         <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
 
         {/* Close Button X on top-right */}
         <button
+          type="button"
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
-            dismissKeyboard();
             onClose();
+            dismissKeyboard();
           }}
-          className="absolute right-4 top-4 p-1.5 text-slate-400 hover:bg-slate-50 transition-colors rounded-full pointer-events-auto z-20"
+          className="absolute right-4 top-4 p-1.5 text-slate-400 hover:bg-slate-50 transition-colors rounded-full pointer-events-auto cursor-pointer z-20"
         >
           <X className="w-4 h-4" />
         </button>
@@ -355,11 +371,12 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                         onClick={() => {
                           setFormError(null);
                           setFormStep(step as 1 | 2 | 3);
-                          setTimeout(() => {
-                            if (step === 1) nameInputRef.current?.focus();
-                            else if (step === 2) phoneInputRef.current?.focus();
-                            else if (step === 3) calleInputRef.current?.focus();
-                          }, 40);
+                          requestAnimationFrame(() => {
+                            if (step === 1) nameInputRef.current?.focus({ preventScroll: true });
+                            else if (step === 2) phoneInputRef.current?.focus({ preventScroll: true });
+                            else if (step === 3) calleInputRef.current?.focus({ preventScroll: true });
+                            if (viewportRef.current) viewportRef.current.scrollLeft = 0;
+                          });
                         }}
                         className="h-5 flex-1 relative group focus:outline-none pointer-events-auto cursor-pointer flex items-center"
                         title={`Ir al Paso ${step}`}

@@ -261,21 +261,18 @@ export default function Landing() {
   const [sliderHeight, setSliderHeight] = useState<number | string>('auto');
 
   useEffect(() => {
-    if (isBottomSheetOpen) {
-      const activeRef = formStep === 1 ? step1Ref : formStep === 2 ? step2Ref : step3Ref;
-      if (activeRef?.current) {
-        const handleResize = () => {
-          if (activeRef.current) {
-            setSliderHeight(activeRef.current.offsetHeight);
-          }
-        };
-        handleResize();
-        const observer = new ResizeObserver(handleResize);
-        observer.observe(activeRef.current);
-        return () => observer.disconnect();
-      }
-    } else {
-      setSliderHeight('auto');
+    if (!isBottomSheetOpen) return;
+    const activeRef = formStep === 1 ? step1Ref : formStep === 2 ? step2Ref : step3Ref;
+    if (activeRef?.current) {
+      const handleResize = () => {
+        if (activeRef.current) {
+          setSliderHeight(activeRef.current.offsetHeight);
+        }
+      };
+      handleResize();
+      const observer = new ResizeObserver(handleResize);
+      observer.observe(activeRef.current);
+      return () => observer.disconnect();
     }
   }, [formStep, isBottomSheetOpen, registered]);
 
@@ -353,6 +350,9 @@ export default function Landing() {
     if (viewportRef.current) {
       viewportRef.current.scrollLeft = 0;
     }
+    requestAnimationFrame(() => {
+      if (viewportRef.current) viewportRef.current.scrollLeft = 0;
+    });
   };
 
   const goToStep3 = (e: FormEvent) => {
@@ -383,6 +383,9 @@ export default function Landing() {
     if (viewportRef.current) {
       viewportRef.current.scrollLeft = 0;
     }
+    requestAnimationFrame(() => {
+      if (viewportRef.current) viewportRef.current.scrollLeft = 0;
+    });
   };
 
   const dbPreregister = async (distanceKmValue: number) => {
@@ -441,7 +444,7 @@ export default function Landing() {
     if (!name.trim()) {
       setFormError('Por favor ingresa tu nombre en el paso 1.');
       setFormStep(1);
-      setTimeout(() => nameInputRef.current?.focus(), 150);
+      setTimeout(() => nameInputRef.current?.focus({ preventScroll: true }), 150);
       return;
     }
 
@@ -449,14 +452,14 @@ export default function Landing() {
     if (!trimmedPhone || trimmedPhone.length !== 10 || /[a-zA-Z]/i.test(trimmedPhone)) {
       setFormError('Por favor verifica tu número de teléfono.');
       setFormStep(2);
-      setTimeout(() => phoneInputRef.current?.focus(), 150);
+      setTimeout(() => phoneInputRef.current?.focus({ preventScroll: true }), 150);
       return;
     }
 
     const fullAddress = addressCalle.trim() || addressColonia.trim();
     if (!fullAddress) {
       setFormError('Por favor ingresa tu dirección.');
-      calleInputRef.current?.focus();
+      calleInputRef.current?.focus({ preventScroll: true });
       return;
     }
 
