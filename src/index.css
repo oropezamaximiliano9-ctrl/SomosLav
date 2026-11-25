@@ -311,12 +311,12 @@ html, body {
   width: 100%;
 }
 
-/* Badge anclado desde abajo y centrado respecto al molde para no chocar en ninguna pantalla */
+/* Badge anclado sobre el espacio limpio de la pared, apuntando a la esquina superior izquierda del cesto */
 .hero-badge {
   position: absolute;
   top: auto;
-  bottom: calc(300 * var(--u) + env(safe-area-inset-bottom, 0px));
-  left: calc(50% - 163 * var(--u));
+  bottom: min(55.5%, calc(100% - 312 * var(--u)));
+  left: calc(50% - 160 * var(--u));
   z-index: 20;
   background: rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(12px);
