@@ -90,8 +90,8 @@ html, body {
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 240ms ease-out,
+    visibility 0s linear 240ms;
   will-change: opacity;
 }
 
@@ -100,6 +100,9 @@ html, body {
   visibility: visible;
   pointer-events: auto;
   cursor: pointer;
+  transition:
+    opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
 }
 
 .form-bottom-sheet {
@@ -120,47 +123,51 @@ html, body {
   flex-direction: column;
   overflow: visible;
   overscroll-behavior: contain;
-  transform: translate3d(0, 100%, 0);
+  transform: translate3d(0, calc(100% + 24px), 0);
+  opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 300ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
+    transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 220ms ease-out 40ms,
+    visibility 0s linear 280ms;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Seamless white skirt below the sheet so keyboard slide-in/out never flashes a dark gap */
+/* Seamless white skirt below the sheet while open so keyboard open/close never flashes a dark gap */
 .form-bottom-sheet::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   top: calc(100% - 2px);
-  height: 65vh;
+  height: 420px;
   background-color: #ffffff;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms ease-out;
 }
 
 .form-bottom-sheet[data-open="true"] {
   transform: translate3d(0, calc(-1 * var(--kb-offset, 0px)), 0);
+  opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease-out,
+    visibility 0s linear 0s;
 }
 
-.form-bottom-sheet[data-open="true"][data-vv-pan="true"] {
-  transition: none;
+.form-bottom-sheet[data-open="true"]::after {
+  opacity: 1;
+  transition: opacity 0s linear 0s;
 }
 
 .form-content-inner {
-  opacity: 0;
-  transition: opacity 180ms ease;
-  transition-delay: 0ms;
-}
-
-.form-bottom-sheet[data-open="true"] .form-content-inner {
   opacity: 1;
-  transition: opacity 240ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: 40ms;
 }
 
 /* ==========================================================================
@@ -241,7 +248,7 @@ html, body {
 }
 
 .hero-subtitle {
-  font-size: calc(23 * var(--u));
+  font-size: calc(22 * var(--u));
   font-weight: 400;
   color: white;
   line-height: 1.18;
@@ -256,7 +263,7 @@ html, body {
 }
 
 .hero-price {
-  font-size: calc(23 * var(--u));
+  font-size: calc(22 * var(--u));
   font-weight: 500;
   color: white;
   line-height: 1.2;
@@ -307,7 +314,7 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 0 calc(8 * var(--u));
-  font-size: calc(23 * var(--u));
+  font-size: calc(22 * var(--u));
   font-weight: 400;
   color: white;
   line-height: 1.2;

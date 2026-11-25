@@ -56,7 +56,6 @@ export function useKeyboardSheetOffset(
     if (!el || typeof window === "undefined") return;
 
     if (!isOpen) {
-      el.removeAttribute("data-vv-pan");
       // Wait for the sheet's exit transition to finish before zeroing --kb-offset
       // so closing while the keyboard is open glides out in a single fluid motion.
       const resetTimer = window.setTimeout(() => {
@@ -64,7 +63,7 @@ export function useKeyboardSheetOffset(
         if (window.scrollY !== 0 || window.scrollX !== 0) {
           window.scrollTo(0, 0);
         }
-      }, 340);
+      }, 320);
       return () => window.clearTimeout(resetTimer);
     }
 
@@ -75,16 +74,12 @@ export function useKeyboardSheetOffset(
     }
 
     let rafId: number | null = null;
-    let panClearTimer: number | null = null;
     let lastOffset = -1;
-    let lastKeyboardHeight = Math.round(window.innerHeight - vv.height);
 
-    const updateOffset = (isScrollEvent: boolean) => {
+    const updateOffset = () => {
       rafId = null;
       const keyboardHeight = Math.round(window.innerHeight - vv.height);
       const isKeyboardOpen = keyboardHeight > 100;
-      const heightChanged = Math.abs(keyboardHeight - lastKeyboardHeight) > 8;
-      lastKeyboardHeight = keyboardHeight;
 
       let nextOffset = 0;
       if (isKeyboardOpen) {
@@ -97,22 +92,14 @@ export function useKeyboardSheetOffset(
         nextOffset = vv.height < el.offsetHeight + 12 ? Math.min(rawOffset, maxSafeOffset) : rawOffset;
       }
 
-      if (nextOffset !== lastOffset) {
+      // Ignore tiny <=4px visualViewport jitter while open so the CSS glide never stutters
+      const isMeaningfulChange =
+        lastOffset === -1 ||
+        nextOffset === 0 !== (lastOffset === 0) ||
+        Math.abs(nextOffset - lastOffset) > 4;
+
+      if (isMeaningfulChange && nextOffset !== lastOffset) {
         lastOffset = nextOffset;
-
-        // If iOS is actively panning visualViewport.offsetTop (scroll without keyboard resize),
-        // track 1:1 without restarting the 300ms CSS transition to prevent wobble.
-        if (isScrollEvent && !heightChanged) {
-          el.setAttribute("data-vv-pan", "true");
-          if (panClearTimer !== null) window.clearTimeout(panClearTimer);
-          panClearTimer = window.setTimeout(() => {
-            el.removeAttribute("data-vv-pan");
-            panClearTimer = null;
-          }, 80);
-        } else {
-          el.removeAttribute("data-vv-pan");
-        }
-
         el.style.setProperty("--kb-offset", `${nextOffset}px`);
       }
 
@@ -121,28 +108,21 @@ export function useKeyboardSheetOffset(
       }
     };
 
-    const scheduleResize = () => {
+    const scheduleUpdate = () => {
       if (rafId !== null) window.cancelAnimationFrame(rafId);
-      rafId = window.requestAnimationFrame(() => updateOffset(false));
+      rafId = window.requestAnimationFrame(updateOffset);
     };
 
-    const scheduleScroll = () => {
-      if (rafId !== null) return;
-      rafId = window.requestAnimationFrame(() => updateOffset(true));
-    };
-
-    updateOffset(false);
-    vv.addEventListener("resize", scheduleResize);
-    vv.addEventListener("scroll", scheduleScroll);
-    window.addEventListener("resize", scheduleResize);
+    updateOffset();
+    vv.addEventListener("resize", scheduleUpdate);
+    vv.addEventListener("scroll", scheduleUpdate);
+    window.addEventListener("resize", scheduleUpdate);
 
     return () => {
       if (rafId !== null) window.cancelAnimationFrame(rafId);
-      if (panClearTimer !== null) window.clearTimeout(panClearTimer);
-      el.removeAttribute("data-vv-pan");
-      vv.removeEventListener("resize", scheduleResize);
-      vv.removeEventListener("scroll", scheduleScroll);
-      window.removeEventListener("resize", scheduleResize);
+      vv.removeEventListener("resize", scheduleUpdate);
+      vv.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
     };
   }, [isOpen, sheetRef]);
 }
