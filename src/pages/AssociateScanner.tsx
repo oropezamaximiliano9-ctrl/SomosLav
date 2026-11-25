@@ -23,7 +23,7 @@ export default function AssociateScanner() {
   }
 
   return (
-    <div className="flex-1 flex flex-col pt-4 animate-in fade-in h-full pb-12 overflow-y-auto px-4">
+    <div className="flex-1 flex flex-col pt-4 h-full pb-12 overflow-y-auto px-4">
       
       {/* Push Notification prompt for Associates */}
       <div className="w-full max-w-md mx-auto">

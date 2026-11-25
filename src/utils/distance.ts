@@ -1,6 +1,6 @@
-export const ORIGEN_LAVANDERIA = { lat: 18.1372216, lng: -94.4771462 };
+const ORIGEN_LAVANDERIA = { lat: 18.1372216, lng: -94.4771462 };
 
-export const distancesKm: Record<string, number> = {
+const distancesKm: Record<string, number> = {
   "las palmas": 0.5,
   "palmas": 0.5,
   "rancho alegre": 2.2,
@@ -34,9 +34,43 @@ export const distancesKm: Record<string, number> = {
   "barrillas": 10.5
 };
 
-export const getHardcodedDistance = (coloniaName: string): number | null => {
+export const ALL_COATZA_COLONIAS = [
+  "Las Palmas",
+  "Petrolera",
+  "Rancho Alegre",
+  "Rancho Alegre 1",
+  "Rancho Alegre 2",
+  "Paraíso",
+  "Puerto México",
+  "Pensiones",
+  "Vistalmar",
+  "María de la Piedad",
+  "Centro",
+  "Playa Sol",
+  "El Tesoro",
+  "FOVISSSTE",
+  "Guadalupe Victoria",
+  "Santa Isabel",
+  "Manuel Ávila Camacho",
+  "Benito Juárez Norte",
+  "Benito Juárez Sur",
+  "Adolfo López Mateos",
+  "Gaviotas",
+  "Trópico de la Rivera",
+  "Puerto Esmeralda",
+  "Teresa Morales",
+  "Lomas de Coatzacoalcos",
+  "Lomas de Barrillas",
+  "Ciudad Olmeca",
+  "San Martín"
+];
+
+export const normalizeText = (value: string): string =>
+  value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+const getHardcodedDistance = (coloniaName: string): number | null => {
   if (!coloniaName) return null;
-  const normalized = coloniaName.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalized = normalizeText(coloniaName);
   for (const [key, value] of Object.entries(distancesKm)) {
     if (normalized.includes(key)) {
       return value;
@@ -49,13 +83,40 @@ export const getColoniaDistance = (coloniaName: string): number => {
   if (!coloniaName) return 1.0;
   const explicitDistance = getHardcodedDistance(coloniaName);
   if (explicitDistance !== null) return explicitDistance;
-  const normalized = coloniaName.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalized = normalizeText(coloniaName);
   let hash = 0;
   for (let i = 0; i < normalized.length; i++) {
     hash = normalized.charCodeAt(i) + ((hash << 5) - hash);
   }
   return 3 + (Math.abs(hash) % 6) + parseFloat(((Math.abs(hash) % 10) / 10).toFixed(1));
 };
+
+async function fetchGoogleRouteDistanceKm(lat: number, lng: number, apiKey: string): Promise<number | null> {
+  const gmRes = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": apiKey,
+      "X-Goog-FieldMask": "routes.distanceMeters"
+    },
+    body: JSON.stringify({
+      origin: {
+        location: { latLng: { latitude: ORIGEN_LAVANDERIA.lat, longitude: ORIGEN_LAVANDERIA.lng } }
+      },
+      destination: {
+        location: { latLng: { latitude: lat, longitude: lng } }
+      },
+      travelMode: "DRIVE"
+    })
+  });
+
+  if (!gmRes.ok) return null;
+  const gmData = await gmRes.json();
+  if (gmData.routes && gmData.routes.length > 0) {
+    return parseFloat((gmData.routes[0].distanceMeters / 1000).toFixed(2));
+  }
+  return null;
+}
 
 export const asyncGetColoniaDistance = async (
   coloniaName: string,
@@ -66,44 +127,8 @@ export const asyncGetColoniaDistance = async (
   // If coords are available, query Google Maps directly via client side first
   if (coords) {
     try {
-      const url = `https://routes.googleapis.com/directions/v2:computeRoutes`;
-      const body = {
-        origin: {
-          location: {
-            latLng: {
-              latitude: ORIGEN_LAVANDERIA.lat,
-              longitude: ORIGEN_LAVANDERIA.lng
-            }
-          }
-        },
-        destination: {
-          location: {
-            latLng: {
-              latitude: coords.lat,
-              longitude: coords.lon
-            }
-          }
-        },
-        travelMode: "DRIVE"
-      };
-
-      const gmRes = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Goog-Api-Key": clientApiKey,
-          "X-Goog-FieldMask": "routes.distanceMeters"
-        },
-        body: JSON.stringify(body)
-      });
-      
-      if (gmRes.ok) {
-        const gmData = await gmRes.json();
-        if (gmData.routes && gmData.routes.length > 0) {
-          const distanceMeters = gmData.routes[0].distanceMeters;
-          return parseFloat((distanceMeters / 1000).toFixed(2));
-        }
-      }
+      const km = await fetchGoogleRouteDistanceKm(coords.lat, coords.lon, clientApiKey);
+      if (km !== null) return km;
     } catch (clientErr) {
       console.warn("Client-side Routes API v2 failed, trying server proxy:", clientErr);
     }
@@ -123,70 +148,33 @@ export const asyncGetColoniaDistance = async (
     // Mathematical fallback to ORIGEN_LAVANDERIA
     const targetLat = ORIGEN_LAVANDERIA.lat;
     const targetLon = ORIGEN_LAVANDERIA.lng;
-    const R = 6371; // Earth's radius in km
+    const R = 6371;
     const dLat = (coords.lat - targetLat) * Math.PI / 180;
     const dLon = (coords.lon - targetLon) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(targetLat * Math.PI / 180) * Math.cos(coords.lat * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    const distanceInKm = R * c;
-    return parseFloat(distanceInKm.toFixed(2));
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(targetLat * Math.PI / 180) * Math.cos(coords.lat * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return parseFloat((R * c).toFixed(2));
   }
 
-  // If coords are not provided, we query using the typed address/colonia name
+  // If coords are not provided, query using the typed address/colonia name
   if (coloniaName && coloniaName.trim()) {
     try {
-      const isColonia = coloniaName.toString().toLowerCase().includes("colonia");
-      const queryStr = isColonia 
+      const isColonia = coloniaName.toLowerCase().includes("colonia");
+      const queryStr = isColonia
         ? `${coloniaName}, Coatzacoalcos, Veracruz`
         : `Colonia ${coloniaName}, Coatzacoalcos, Veracruz`;
       const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(queryStr)}&key=${clientApiKey}&language=es`;
-      
+
       const geoRes = await fetch(geocodeUrl);
       if (geoRes.ok) {
         const geoData = await geoRes.json();
         if (geoData.results && geoData.results.length > 0) {
           const loc = geoData.results[0].geometry.location;
-          const url = `https://routes.googleapis.com/directions/v2:computeRoutes`;
-          const body = {
-            origin: {
-              location: {
-                latLng: {
-                  latitude: ORIGEN_LAVANDERIA.lat,
-                  longitude: ORIGEN_LAVANDERIA.lng
-                }
-              }
-            },
-            destination: {
-              location: {
-                latLng: {
-                  latitude: loc.lat,
-                  longitude: loc.lng
-                }
-              }
-            },
-            travelMode: "DRIVE"
-          };
-
-          const gmRes = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Goog-Api-Key": clientApiKey,
-              "X-Goog-FieldMask": "routes.distanceMeters"
-            },
-            body: JSON.stringify(body)
-          });
-          
-          if (gmRes.ok) {
-            const gmData = await gmRes.json();
-            if (gmData.routes && gmData.routes.length > 0) {
-              const distanceMeters = gmData.routes[0].distanceMeters;
-              return parseFloat((distanceMeters / 1000).toFixed(2));
-            }
-          }
+          const km = await fetchGoogleRouteDistanceKm(loc.lat, loc.lng, clientApiKey);
+          if (km !== null) return km;
         }
       }
     } catch (clientErr) {

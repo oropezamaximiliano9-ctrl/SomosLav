@@ -12,7 +12,7 @@ self.addEventListener("push", (event) => {
   let data = {
     title: "🧺 SOMOS - Aviso de Llegada",
     body: "Un cliente va en camino a dejar su cesto.",
-    url: "/associate-scanner",
+    url: "/scanner",
     tag: "somos-arrival"
   };
 
@@ -34,7 +34,7 @@ self.addEventListener("push", (event) => {
     tag: data.tag || "somos-arrival-tag",
     renotify: true,
     data: {
-      url: data.url || "/associate-scanner"
+      url: data.url || "/scanner"
     },
     actions: [
       { action: "open", title: "Ver Cesto 🧺" },
@@ -51,7 +51,7 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  const targetUrl = event.notification.data?.url || "/associate-scanner";
+  const targetUrl = event.notification.data?.url || "/scanner";
 
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {

@@ -2,16 +2,12 @@ import { useEffect, useState } from "react";
 import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { triggerLocalNotification } from "../utils/pushNotifications";
+import { playArrivalChime } from "../utils/audio";
 import { BellRing, ChevronRight, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-interface ArrivalListenerProps {
-  userRole: string;
-}
-
-export default function GlobalArrivalListener({ userRole }: ArrivalListenerProps) {
+export default function GlobalArrivalListener() {
   const [activeAlert, setActiveAlert] = useState<{
-    id: string;
     bagId: string;
     userName: string;
     deliveryPreference: string;
@@ -45,23 +41,7 @@ export default function GlobalArrivalListener({ userRole }: ArrivalListenerProps
             minute: "2-digit"
           });
 
-          // Play audio chime
-          try {
-            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.6);
-          } catch (e) {
-            console.warn("Chime playback error:", e);
-          }
+          playArrivalChime();
 
           // Trigger native device push / local notification
           triggerLocalNotification(
@@ -72,7 +52,6 @@ export default function GlobalArrivalListener({ userRole }: ArrivalListenerProps
 
           // Trigger floating in-app popup
           setActiveAlert({
-            id: change.doc.id,
             bagId: data.bagId,
             userName: data.userName || "Cliente Registrado",
             deliveryPreference: data.deliveryPreference || "24 horas",
@@ -88,7 +67,7 @@ export default function GlobalArrivalListener({ userRole }: ArrivalListenerProps
   if (!activeAlert) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 max-w-sm w-full p-2 animate-in slide-in-from-bottom-5 duration-300">
+    <div className="fixed bottom-5 right-5 z-50 max-w-sm w-full p-2">
       <div className="bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-800 flex items-start gap-3 backdrop-blur-md">
         <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 shadow-xs">
           <BellRing className="w-5 h-5 animate-bounce" />

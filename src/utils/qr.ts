@@ -31,7 +31,7 @@ export function extractBagId(value: string): string | null {
         return bagIdParam.trim();
       }
     }
-  } catch (error) {
+  } catch {
     // Fallback to manual parsing on URL parsing exceptions
   }
 

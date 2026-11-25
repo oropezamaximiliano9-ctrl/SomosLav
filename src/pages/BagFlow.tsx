@@ -1,13 +1,17 @@
-import { useState, useEffect, useContext, FormEvent, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { CheckCircle2, Package, Loader2, ArrowRight, Zap, Clock, Sun, Moon, Sparkles, Check, Info } from "lucide-react";
-import { RoleContext } from "../App";
+import { CheckCircle2, Package, Loader2, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import { toBlob } from "html-to-image";
-import { db } from "../firebase";
 import { doc, getDoc, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
+import { RoleContext } from "../App";
+import { db } from "../firebase";
 import { getColoniaDistance } from "../utils/distance";
 import { triggerLocalNotification } from "../utils/pushNotifications";
+import { playArrivalChime } from "../utils/audio";
+import { BagCustomerArrivalView } from "../components/bagflow/BagCustomerArrivalView";
+import { BagProcessingAndDeliveryView } from "../components/bagflow/BagProcessingAndDeliveryView";
+import { BagReceiptTicket } from "../components/bagflow/BagReceiptTicket";
+import { BagConfirmReceptionView } from "../components/bagflow/BagConfirmReceptionView";
 
 export default function BagFlow() {
   const { id } = useParams<{ id: string }>();
@@ -21,19 +25,12 @@ export default function BagFlow() {
   const [whatsappUrl, setWhatsAppUrl] = useState<string | null>(null);
   const [confirmedOrderData, setConfirmedOrderData] = useState<any>(null);
   const [isPrinting, setIsPrinting] = useState(false);
-  
-  const ticketRef = useRef<HTMLDivElement>(null);
-  const [copiedImage, setCopiedImage] = useState(false);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   // Associate state
   const [receiving, setReceiving] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [delivering, setDelivering] = useState(false);
   const [showDeliverySuccess, setShowDeliverySuccess] = useState(false);
-  
-  const [prefSpeed] = useState("24 horas");
   const [prefTime, setPrefTime] = useState("Mañana (8:00 AM – 10:00 AM)");
 
   const [washMinutes, setWashMinutes] = useState("");
@@ -47,28 +44,28 @@ export default function BagFlow() {
   const [arrivalNotified, setArrivalNotified] = useState(false);
 
   useEffect(() => {
-    if (bag) {
-      if (bag.user) {
-        if (bag.user.preferredTime) {
-          setPrefTime(bag.user.preferredTime);
-        }
-      }
+    if (!bag) return;
 
-      // Auto-fill transportKm with client distance data from registration/address
-      if (bag.activeOrder?.financialCalc?.transportKm !== undefined && bag.activeOrder?.financialCalc?.transportKm !== "") {
-        setTransportKm(String(bag.activeOrder.financialCalc.transportKm));
-      } else {
-        const userDist = bag.user?.distanceKm ?? bag.user?.distance ?? (bag.user?.addressColonia ? getColoniaDistance(bag.user.addressColonia) : null) ?? localStorage.getItem("user_distance_km");
-        if (userDist !== null && userDist !== undefined && userDist !== "") {
-          setTransportKm(String(userDist));
-        }
-      }
+    if (bag.user?.preferredTime) {
+      setPrefTime(bag.user.preferredTime);
+    }
 
-      if (bag.activeOrder?.financialCalc) {
-        if (bag.activeOrder.financialCalc.washMinutes) setWashMinutes(String(bag.activeOrder.financialCalc.washMinutes));
-        if (bag.activeOrder.financialCalc.dryMinutes) setDryMinutes(String(bag.activeOrder.financialCalc.dryMinutes));
-        if (bag.activeOrder.financialCalc.weightKilos) setWeightKilos(String(bag.activeOrder.financialCalc.weightKilos));
+    if (bag.activeOrder?.financialCalc?.transportKm !== undefined && bag.activeOrder?.financialCalc?.transportKm !== "") {
+      setTransportKm(String(bag.activeOrder.financialCalc.transportKm));
+    } else {
+      const userDist =
+        bag.user?.distanceKm ??
+        (bag.user?.addressColonia ? getColoniaDistance(bag.user.addressColonia) : null) ??
+        localStorage.getItem("user_distance_km");
+      if (userDist !== null && userDist !== undefined && userDist !== "") {
+        setTransportKm(String(userDist));
       }
+    }
+
+    if (bag.activeOrder?.financialCalc) {
+      if (bag.activeOrder.financialCalc.washMinutes) setWashMinutes(String(bag.activeOrder.financialCalc.washMinutes));
+      if (bag.activeOrder.financialCalc.dryMinutes) setDryMinutes(String(bag.activeOrder.financialCalc.dryMinutes));
+      if (bag.activeOrder.financialCalc.weightKilos) setWeightKilos(String(bag.activeOrder.financialCalc.weightKilos));
     }
   }, [bag]);
 
@@ -77,13 +74,10 @@ export default function BagFlow() {
   }, [id, orderConfirmed]);
 
   useEffect(() => {
-    if (orderConfirmed) {
-      setIsPrinting(true);
-      const timer = setTimeout(() => {
-        setIsPrinting(false);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
+    if (!orderConfirmed) return;
+    setIsPrinting(true);
+    const timer = setTimeout(() => setIsPrinting(false), 1500);
+    return () => clearTimeout(timer);
   }, [orderConfirmed]);
 
   const fetchBag = async () => {
@@ -94,6 +88,7 @@ export default function BagFlow() {
       if (!bagSnap.exists()) {
         throw new Error("Cesto no encontrado en la base de datos.");
       }
+
       const bagData = bagSnap.data() as any;
       let userData: any = null;
       let activeOrder: any = null;
@@ -115,15 +110,14 @@ export default function BagFlow() {
             }
           }
         });
-        // Check if there is an active arrival notice for this bag (created recently)
+
         const noticesSnap = await getDocs(collection(db, "arrival_notices"));
         let latestNoticeTime = 0;
         noticesSnap.forEach((nSnap) => {
           const nData = nSnap.data();
           if (nData.bagId === id && nData.status !== "dismissed" && nData.status !== "attended") {
             const time = nData.timestamp ? new Date(nData.timestamp).getTime() : 0;
-            // Only consider recent notices within the last 4 hours
-            if (time > latestNoticeTime && (Date.now() - time) < 4 * 60 * 60 * 1000) {
+            if (time > latestNoticeTime && Date.now() - time < 4 * 60 * 60 * 1000) {
               latestNoticeTime = time;
               latestNotice = { id: nSnap.id, ...nData };
             }
@@ -135,28 +129,24 @@ export default function BagFlow() {
         }
       }
 
-      const mergedBag = { ...bagData, user: userData, activeOrder, activeArrivalNotice: latestNotice };
-      setBag(mergedBag);
+      setBag({ ...bagData, user: userData, activeOrder, activeArrivalNotice: latestNotice });
 
-      // If there is an active order in the DB, pre-populate receipt view so the ticket is ready on demand, but do not force redirect
       if (activeOrder) {
         const formattedDate = new Date(activeOrder.createdAt).toLocaleDateString("es-MX", {
           year: "numeric",
           month: "long",
-          day: "numeric"
+          day: "numeric",
         });
 
         setConfirmedOrderData({
           orderId: activeOrder.id,
           user: userData,
           deliveryType: activeOrder.deliveryType || userData?.deliveryPreference || "24 horas",
-          date: formattedDate
+          date: formattedDate,
         });
 
-        if (userData && userData.phone) {
-          const phoneClean = userData.phone.replace(/\D/g, "");
-          const mxPhone = phoneClean.length === 10 ? `52${phoneClean}` : phoneClean;
-          setWhatsAppUrl(`https://wa.me/${mxPhone}`);
+        if (userData?.phone) {
+          setWhatsAppUrl(buildWhatsAppUrl(userData.phone));
         }
       }
     } catch (err: any) {
@@ -166,7 +156,13 @@ export default function BagFlow() {
     }
   };
 
-  const handleNotifyArrival = async (statusType: 'on_the_way' | 'arrived' = 'on_the_way') => {
+  const buildWhatsAppUrl = (phoneStr: string) => {
+    const phoneClean = phoneStr.replace(/\D/g, "");
+    const mxPhone = phoneClean.length === 10 ? `52${phoneClean}` : phoneClean;
+    return `https://wa.me/${mxPhone}`;
+  };
+
+  const handleNotifyArrival = async () => {
     if (!id || !bag?.user) return;
     setNotifyingArrival(true);
 
@@ -174,25 +170,7 @@ export default function BagFlow() {
     const userPhone = bag.user.phone || "";
     const deliveryPref = bag.user.deliveryPreference || "24 horas";
 
-    // 1. Play immediate audio feedback
-    try {
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.6);
-    } catch (e) {
-      console.warn("Audio feedback error:", e);
-    }
-
-    // 2. Trigger native Push / Local Notification immediately on this device
+    playArrivalChime();
     triggerLocalNotification(
       "🧺 ¡Cliente en Camino! - SOMOS",
       `${userName} va en camino a dejar el cesto #${id} (${deliveryPref}).`,
@@ -208,7 +186,7 @@ export default function BagFlow() {
         userName,
         userPhone,
         deliveryPreference: deliveryPref,
-        status: statusType,
+        status: "on_the_way",
         timestamp: new Date().toISOString(),
         createdAt: new Date().toISOString(),
       });
@@ -228,18 +206,23 @@ export default function BagFlow() {
       if (!bagSnap.exists() || bagSnap.data()?.status !== "assigned") {
         throw new Error("El cesto no está asignado o no fue encontrado.");
       }
+
       const bagData = bagSnap.data() as any;
       const userSnap = await getDoc(doc(db, "users", bagData.userId));
       if (!userSnap.exists()) {
         throw new Error("No se encontró la referencia del cliente.");
       }
-      let userData = userSnap.data() as any;
 
+      const userData = userSnap.data() as any;
       const pref = selectedDeliveryType || userData.deliveryPreference || "24 horas";
-      const prefTime = preferredTimePreference || userData.preferredTime || "Mañana (8:00 AM – 10:00 AM)";
-      await updateDoc(doc(db, "users", userData.id), { deliveryPreference: pref, preferredTime: prefTime });
+      const nextPrefTime = preferredTimePreference || userData.preferredTime || "Mañana (8:00 AM – 10:00 AM)";
+
+      await updateDoc(doc(db, "users", userData.id), {
+        deliveryPreference: pref,
+        preferredTime: nextPrefTime,
+      });
       userData.deliveryPreference = pref;
-      userData.preferredTime = prefTime;
+      userData.preferredTime = nextPrefTime;
 
       const ordersSnap = await getDocs(collection(db, "orders"));
       let nextIdVal = 1;
@@ -251,9 +234,7 @@ export default function BagFlow() {
       });
 
       const orderId = nextIdVal.toString();
-      const finalDeliveryType = selectedDeliveryType || userData.deliveryPreference || "24 horas";
 
-      // Complete any past uncompleted orders for this bag
       for (const oSnap of ordersSnap.docs) {
         const data = oSnap.data();
         if (data.bagId === id && data.status !== "completed") {
@@ -261,38 +242,31 @@ export default function BagFlow() {
         }
       }
 
-      const newOrder = {
+      await setDoc(doc(db, "orders", orderId), {
         id: orderId,
         bagId: id,
         userId: userData.id,
         status: "pending",
-        deliveryType: finalDeliveryType,
-        createdAt: new Date().toISOString()
-      };
+        deliveryType: pref,
+        createdAt: new Date().toISOString(),
+      });
 
-      await setDoc(doc(db, "orders", orderId), newOrder);
-
-      const formattedDate = new Date().toLocaleDateString('es-MX', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      const formattedDate = new Date().toLocaleDateString("es-MX", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
 
       setConfirmedOrderData({
-        orderId: orderId,
+        orderId,
         user: userData,
-        deliveryType: selectedDeliveryType || userData.deliveryPreference || '24 horas',
-        date: formattedDate
+        deliveryType: pref,
+        date: formattedDate,
       });
-
       setOrderConfirmed(true);
-      
-      if (userData && userData.phone) {
-        const phoneClean = userData.phone.replace(/\D/g, '');
-        const mxPhone = phoneClean.length === 10 ? `52${phoneClean}` : phoneClean;
-        
-        const waUrl = `https://wa.me/${mxPhone}`;
-        setWhatsAppUrl(waUrl);
+
+      if (userData?.phone) {
+        setWhatsAppUrl(buildWhatsAppUrl(userData.phone));
       }
     } catch (err: any) {
       alert(err.message);
@@ -307,7 +281,6 @@ export default function BagFlow() {
       alert("Error: No hay una orden activa identificada para este cesto.");
       return;
     }
-
     if (!weightKilos) {
       alert("Por favor ingresa el peso real en kilos antes de iniciar.");
       return;
@@ -315,24 +288,12 @@ export default function BagFlow() {
 
     setStartingProcess(true);
     try {
-      const orderRef = doc(db, "orders", String(activeOrderId));
-      
-      const calcData = {
-        washMinutes,
-        dryMinutes,
-        weightKilos,
-        transportKm
-      };
-
-      await updateDoc(orderRef, { 
+      const calcData = { washMinutes, dryMinutes, weightKilos, transportKm };
+      await updateDoc(doc(db, "orders", String(activeOrderId)), {
         status: "processing",
-        financialCalc: calcData
+        financialCalc: calcData,
       });
-
-      // Also save to localStorage to maintain compatibility with dashboard
       localStorage.setItem(`order_calc_${activeOrderId}`, JSON.stringify(calcData));
-
-      // Re-fetch to update view
       await fetchBag();
     } catch (err: any) {
       alert("Error al iniciar proceso: " + err.message);
@@ -350,9 +311,7 @@ export default function BagFlow() {
 
     setDelivering(true);
     try {
-      const orderRef = doc(db, "orders", String(activeOrderId));
-      await updateDoc(orderRef, { status: "completed" });
-      
+      await updateDoc(doc(db, "orders", String(activeOrderId)), { status: "completed" });
       setShowDeliverySuccess(true);
       setTimeout(async () => {
         setShowDeliverySuccess(false);
@@ -360,7 +319,6 @@ export default function BagFlow() {
         setConfirmedOrderData(null);
         await fetchBag();
       }, 2500);
-
     } catch (err: any) {
       alert("Error al entregar ropa: " + err.message);
     } finally {
@@ -378,7 +336,7 @@ export default function BagFlow() {
 
   if (showDeliverySuccess) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-6 animate-in fade-in zoom-in-95 duration-300">
+      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-6">
         <motion.div
           initial={{ scale: 0.5, rotate: -15 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -390,7 +348,8 @@ export default function BagFlow() {
         <div className="space-y-2">
           <h2 className="text-3xl font-black text-slate-900 tracking-tight">¡Ropa Entregada!</h2>
           <p className="text-sm text-slate-500 font-medium max-w-[280px] mx-auto leading-relaxed">
-            La orden ha sido marcada como completada y el cesto <span className="font-mono font-bold text-slate-700">#{id}</span> se liberó con éxito para nuevas recepciones.
+            La orden ha sido marcada como completada y el cesto{" "}
+            <span className="font-mono font-bold text-slate-700">#{id}</span> se liberó con éxito para nuevas recepciones.
           </p>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-mono bg-emerald-50/55 px-3 py-1.5 rounded-full border border-emerald-100">
@@ -405,16 +364,18 @@ export default function BagFlow() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center space-y-4">
         <div className="text-red-500 font-medium">{error || "Cesto no encontrado"}</div>
-        <button onClick={() => navigate("/")} className="text-blue-500 underline">Volver</button>
+        <button onClick={() => navigate("/")} className="text-blue-500 underline">
+          Volver
+        </button>
       </div>
     );
   }
 
   // FLUJO 1: UNASSIGNED BAG
-  if (bag.status === 'unassigned') {
-    if (role === 'customer') {
+  if (bag.status === "unassigned") {
+    if (role === "customer") {
       return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in zoom-in p-6">
+        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 p-6">
           <Package className="w-24 h-24 text-gray-300" />
           <div className="space-y-2">
             <h2 className="text-2xl font-light">Cesto no asignado</h2>
@@ -425,12 +386,14 @@ export default function BagFlow() {
 
           <div className="w-full max-w-sm mt-8 pt-8 border-t border-dashed border-gray-200">
             <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-center">
-              <span className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Acceso de Personal SOMOS</span>
+              <span className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">
+                Acceso de Personal SOMOS
+              </span>
               <p className="text-xs text-slate-500 mb-3.5 leading-relaxed">
                 Si eres asociado de SOMOS y abriste este enlace desde la cámara del celular, presiona el botón para activar tu vista de trabajo.
               </p>
               <button
-                onClick={() => setRole('associate')}
+                onClick={() => setRole("associate")}
                 className="w-full bg-[#0f55d8] text-white py-3 px-4 rounded-xl font-bold text-sm hover:-translate-y-0.5 transition-all outline-none"
               >
                 Activar Panel Asociado
@@ -440,10 +403,9 @@ export default function BagFlow() {
         </div>
       );
     }
-    
-    // Associate View - Unassigned Bag
+
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in p-6">
+      <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 p-6">
         <Package className="w-20 h-20 text-blue-500" />
         <div className="space-y-3">
           <div className="inline-block px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold uppercase tracking-widest border border-blue-100">
@@ -454,9 +416,13 @@ export default function BagFlow() {
             Este cesto está disponible. Para asignarlo a un cliente, utiliza el buscador de pre-registros.
           </p>
         </div>
-         <button 
-           onClick={() => navigate(`/associate/link?bagId=${encodeURIComponent(id || "")}`, { state: { prefilledBagId: id } })} 
-           className="w-full bg-[#0f55d8] text-white p-4 rounded-xl font-bold flex items-center justify-center mt-4 hover:-translate-y-1 hover:/30 transition-all"
+        <button
+          onClick={() =>
+            navigate(`/associate/link?bagId=${encodeURIComponent(id || "")}`, {
+              state: { prefilledBagId: id },
+            })
+          }
+          className="w-full bg-[#0f55d8] text-white p-4 rounded-xl font-bold flex items-center justify-center mt-4 hover:-translate-y-1 transition-all"
         >
           Asignar a Cliente
         </button>
@@ -465,672 +431,54 @@ export default function BagFlow() {
   }
 
   // FLUJO 2: ASSIGNED BAG
-  if (role === 'customer') {
-    const isEnCamino = bag.activeArrivalNotice?.status === 'on_the_way';
-    const isLlegue = bag.activeArrivalNotice?.status === 'arrived';
-    const clientFirstName = bag.user?.name?.split(' ')[0] || "Cliente";
-
+  if (role === "customer") {
     return (
-      <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full animate-in fade-in">
-        
-        {/* Header Badge */}
-        <div className="space-y-1.5 pt-2">
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Hola, {clientFirstName} 👋
-          </h2>
-          <p className="text-xs text-slate-500 max-w-[280px] mx-auto leading-relaxed">
-            ¿Vas a dejar tu ropa en sucursal? Avísanos para que nuestro equipo esté listo para recibirte.
-          </p>
-        </div>
-
-        {/* Action Card: Voy en camino */}
-        <div className="w-full bg-white border border-slate-100 rounded-3xl p-5 shadow-xs space-y-4 text-left">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-            <div>
-              <span className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 block">Titular</span>
-              <p className="text-sm font-bold text-slate-800">{bag.user?.name || "Cliente Registrado"}</p>
-            </div>
-            <div className="text-right">
-              <span className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 block">Horario Preferido</span>
-              <p className="text-xs font-bold text-[#0f55d8]">
-                {bag.user?.preferredTime?.includes("Noche") ? "Noche (8–10 PM)" : bag.user?.preferredTime?.includes("Mañana") ? "Mañana (8–10 AM)" : (bag.user?.preferredTime || "Mañana (8–10 AM)")}
-              </p>
-            </div>
-          </div>
-
-          {/* Status feedback if already notified */}
-          {arrivalNotified || isEnCamino || isLlegue ? (
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-4 text-center space-y-2"
-            >
-              <div className="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto shadow-xs">
-                <Check className="w-5 h-5 stroke-[2.5]" />
-              </div>
-              <div className="space-y-0.5">
-                <h4 className="text-sm font-extrabold text-emerald-900">¡Aviso enviado a recepción!</h4>
-                <p className="text-xs text-emerald-700 font-medium leading-relaxed">
-                  Nuestro asociado estará listo para recibir tu cesto al llegar.
-                </p>
-              </div>
-              <div className="pt-1 flex justify-center items-center gap-1.5 text-[11px] font-bold text-emerald-800">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>Asociado en espera de tu llegada</span>
-              </div>
-            </motion.div>
-          ) : (
-            <div className="pt-1">
-              <button
-                type="button"
-                onClick={() => handleNotifyArrival("on_the_way")}
-                disabled={notifyingArrival}
-                className="w-full py-4 px-4 bg-[#0f55d8] hover:bg-[#0c4ab9] active:scale-[0.98] text-white rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 shadow-md shadow-blue-500/20 transition-all cursor-pointer select-none"
-              >
-                {notifyingArrival ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Enviando aviso...</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-xl">🏃‍♂️</span>
-                    <span>Voy en camino</span>
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Info Box */}
-        <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left space-y-1.5">
-          <div className="flex items-center gap-1.5 text-slate-700 font-bold text-xs">
-            <Info className="w-4 h-4 text-[#0f55d8] shrink-0" />
-            <span>Entrega rápida sin filas</span>
-          </div>
-          <p className="text-[11px] text-slate-500 leading-relaxed">
-            Al escanear tu cesto y avisar, el asociado prepara tu orden automáticamente. Solo dejas el cesto y listo.
-          </p>
-        </div>
-      </div>
+      <BagCustomerArrivalView
+        bag={bag}
+        arrivalNotified={arrivalNotified}
+        notifyingArrival={notifyingArrival}
+        onNotifyArrival={handleNotifyArrival}
+      />
     );
   }
 
-  // Bypassed automatic blocking screen to allow making new receptions seamlessly
-
-  const handleSendTicketImage = async () => {
-    if (!ticketRef.current) return;
-    setIsGeneratingImage(true);
-    setErrorMessage("");
-    try {
-      const blob = await toBlob(ticketRef.current, {
-        cacheBust: true,
-        backgroundColor: "#f6eedd",
-        pixelRatio: 4
-      });
-      if (!blob) throw new Error("No se pudo generar el bloque de imagen.");
-
-      const orderNumber = confirmedOrderData?.orderId || "SOMOS";
-      const fileName = `Ticket-SOMOS-${orderNumber}.png`;
-      const file = new File([blob], fileName, { type: "image/png" });
-
-      // Action 1: Copy image ticket to clipboard so the user has the high-fidelity visual ready
-      try {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            [blob.type]: blob
-          })
-        ]);
-        setCopiedImage(true);
-        setTimeout(() => setCopiedImage(false), 3500);
-      } catch (clipErr) {
-        console.warn("Clipboard copy image failed, fallback to automatic download:", clipErr);
-        // Action 2: Fallback direct download link
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-
-      // Action 3: Directly open WhatsApp with target text & phone number (avoiding the generic contact picker)
-      if (whatsappUrl) {
-        const orderNumber = confirmedOrderData?.orderId || "SOMOS";
-        const clientName = confirmedOrderData?.user?.name || "Cliente";
-        const deliveryType = confirmedOrderData?.deliveryType || "24 horas";
-        const dateText = confirmedOrderData?.date || "Hoy";
-
-        const textMessage = `¡Hola, *${clientName}*! 🫧\n\nAquí tienes tu ticket digital de *SOMOS lavandería*:\n\n📦 *Orden:* #${String(orderNumber).padStart(4, '0')}\n📅 *Fecha:* ${dateText}\n🚀 *Servicio:* ${deliveryType}\n\n_(Te copiamos la imagen del ticket al portapapeles. ¡Solo mantén presionado el chat y dale Pegar para enviarla!)_`;
-
-        const finalWaUrl = `${whatsappUrl}?text=${encodeURIComponent(textMessage)}`;
-        window.open(finalWaUrl, "_blank");
-      }
-    } catch (err: any) {
-      setErrorMessage(err.message || "Ocurrió un error al preparar el ticket visual.");
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
-
-  // Associate View - Active Order Screen (Pending vs Processing)
-  if (bag && bag.activeOrder && !orderConfirmed) {
-    if (bag.activeOrder.status === 'pending') {
-       return (
-        <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full">
-          <div className="mb-4 text-center">
-            <h2 className="text-2xl font-medium tracking-widest text-gray-900 uppercase tracking-tight">Recepción en Central</h2>
-          </div>
-          
-          <div className="w-full bg-white rounded-2xl border border-gray-100 p-5 space-y-4 text-left">
-             <div className="space-y-1 pb-3 border-b border-gray-100">
-               <span className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block">Orden</span>
-               <h3 className="text-lg font-bold text-slate-900 leading-tight">#{String(bag.activeOrder.id).padStart(4, "0")}</h3>
-             </div>
-             <p className="text-sm text-gray-500 font-medium">Por favor pesa el cesto. Puedes dejar los demás campos vacíos por ahora.</p>
-             
-             <div className="space-y-3 pt-2">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Peso Real (Kilos)</label>
-                    <input type="number" value={weightKilos} onChange={e => setWeightKilos(e.target.value)} placeholder="Ej. 5" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-base outline-none focus:border-[#0f55d8]" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 mb-1">Transporte (Km)</label>
-                    <input type="number" disabled value={transportKm} placeholder="Calculado" className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 mb-1">Lavado (Ciclos)</label>
-                    <select disabled value={washMinutes} className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed appearance-none">
-                      <option value=""></option>
-                      <option value="15">15 min (Medio Ciclo)</option>
-                      <option value="30">30 min (1 Ciclo)</option>
-                      <option value="45">45 min (1.5 Ciclos)</option>
-                      <option value="60">60 min (2 Ciclos)</option>
-                      <option value="75">75 min (2.5 Ciclos)</option>
-                      <option value="90">90 min (3 Ciclos)</option>
-                      <option value="120">120 min (4 Ciclos)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 mb-1">Secado (Ciclos)</label>
-                    <select disabled value={dryMinutes} className="w-full border border-gray-200 bg-gray-100 text-gray-400 rounded-lg px-3 py-2.5 text-base outline-none cursor-not-allowed appearance-none">
-                      <option value=""></option>
-                      <option value="15">15 min (Medio Ciclo)</option>
-                      <option value="30">30 min (1 Ciclo)</option>
-                      <option value="45">45 min (1.5 Ciclos)</option>
-                      <option value="60">60 min (2 Ciclos)</option>
-                      <option value="75">75 min (2.5 Ciclos)</option>
-                      <option value="90">90 min (3 Ciclos)</option>
-                      <option value="120">120 min (4 Ciclos)</option>
-                    </select>
-                  </div>
-                </div>
-             </div>
-             <div className="flex justify-end border-t border-gray-100 pt-4 mt-4">
-               <button
-                 onClick={handleStartProcessing}
-                 disabled={startingProcess || !weightKilos}
-                 className="px-5 py-2.5 bg-[#0f55d8] hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
-               >
-                 {startingProcess ? "Iniciando..." : "Iniciar Lavado"}
-               </button>
-             </div>
-          </div>
-        </div>
-       );
-    }
-
+  if (bag.activeOrder && !orderConfirmed) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-start text-center py-4 px-4 space-y-6 max-w-sm mx-auto w-full">
-        
-        {/* Header Indicator */}
-        <div className="mb-8 text-center">
-          <h2 className="text-2xl font-medium tracking-widest text-gray-900 uppercase tracking-tight">Entrega de Ropa</h2>
-        </div>
-
-
-        {/* Customer Information Card */}
-        <div className="w-full border border-gray-100 p-5 rounded-3xl bg-white text-left space-y-4">
-          <div className="space-y-1.5 border-b border-gray-100 pb-4">
-            <span className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block">Cliente</span>
-            <h3 className="text-lg font-bold text-slate-900 leading-tight">{bag.user?.name || "Cliente Registrado"}</h3>
-            <p className="text-sm font-medium text-gray-500">{bag.user?.phone || "Sin teléfono registrado"}</p>
-          </div>
-
-          <div className="space-y-0.5">
-            <span className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block">No. Orden</span>
-            <p className="text-sm font-semibold text-slate-700 leading-none">
-              #{String(bag.activeOrder.id).padStart(4, "0")}
-            </p>
-          </div>
-
-          {(bag.user?.addressCalle || bag.user?.addressColonia) && (
-            <div className="space-y-1.5 pt-1">
-              <span className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block">Dirección de Entrega</span>
-              <p className="text-sm font-bold text-slate-900 leading-normal">
-                {bag.user?.addressCalle} {bag.user?.addressNumero || ""}, Col. {bag.user?.addressColonia || ""}
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Actions panel */}
-        <div className="w-full pt-4">
-          <button
-            type="button"
-            onClick={handleDeliverBag}
-            disabled={delivering}
-            className="w-full py-4 bg-[#0f55d8] hover:bg-[#0c4ab9] disabled:bg-blue-300 font-extrabold tracking-wide text-white rounded-2xl flex items-center justify-center transition-all cursor-pointer text-base"
-          >
-            {delivering ? "Entregando..." : "Entregar"}
-          </button>
-        </div>
-      </div>
+      <BagProcessingAndDeliveryView
+        bag={bag}
+        weightKilos={weightKilos}
+        setWeightKilos={setWeightKilos}
+        transportKm={transportKm}
+        washMinutes={washMinutes}
+        dryMinutes={dryMinutes}
+        startingProcess={startingProcess}
+        delivering={delivering}
+        onStartProcessing={handleStartProcessing}
+        onDeliverBag={handleDeliverBag}
+      />
     );
   }
 
-  // Associate View - Receiving
   if (orderConfirmed) {
-    if (isPrinting) {
-      return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-4 min-h-[400px]">
-          <div className="relative flex flex-col items-center">
-            {/* An animated ticket machine/slot with a ticking slip */}
-            <motion.div 
-              animate={{ y: [0, -4, 0] }}
-              transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-              className="text-5xl"
-            >
-              📥
-            </motion.div>
-            <motion.div 
-              initial={{ height: 4, opacity: 0.3 }}
-              animate={{ height: 28, opacity: 1 }}
-              transition={{ duration: 0.7, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-              className="w-16 bg-slate-200 border-x-2 border-b-2 border-slate-300 mt-2 rounded-b-md"
-            />
-          </div>
-          <div className="space-y-1">
-            <h3 className="font-sans font-semibold text-slate-800 text-sm">Generando Recibo Digital</h3>
-            <p className="text-gray-400 text-xs font-mono animate-pulse">Registrando internamente & adaptando ticket a WhatsApp...</p>
-          </div>
-        </div>
-      );
-    }
-
     return (
-      <div className="flex-1 flex flex-col items-center justify-start text-center py-2 px-4 space-y-6 animate-in fade-in max-w-sm mx-auto w-full animate-out duration-300">
-        {/* Confirmed Indicator */}
-        <div className="flex items-center space-x-2 text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100 animate-bounce mt-2">
-          <CheckCircle2 className="w-4 h-4" />
-          <span className="text-xs font-bold uppercase tracking-wider">Recepción Confirmada</span>
-        </div>
-
-        {/* The Aesthetic Thermal Paper Ticket */}
-        <motion.div
-          ref={ticketRef}
-          initial={{ y: -30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", damping: 15 }}
-          className="w-full bg-[#f6eedd] border border-[#0c3ab5]/15 rounded-sm p-5 text-left relative overflow-hidden flex flex-col items-stretch text-[#0c3ab5] font-sans text-sm leading-relaxed"
-        >
-          {/* Adhesive Tape on Top Center (mimicking the original image) */}
-          <div 
-            className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-28 h-6 bg-white/20 backdrop-blur-[0.5px] border border-white/10 rotate-[-1deg] pointer-events-none select-none z-20" 
-            style={{ 
-              clipPath: 'polygon(2% 18%, 8% 0%, 92% 4%, 98% 15%, 100% 88%, 91% 100%, 9% 95%, 0% 80%)'
-            }} 
-          />
-
-          {/* Header section with brand and Serial No. */}
-          <div className="flex justify-between items-start pt-3 pb-2 border-b border-[#0c3ab5]/30">
-            <div>
-              <h1 className="font-sans text-3xl font-black text-slate-900 tracking-tighter leading-none">
-                SOMOS
-              </h1>
-              <span className="font-sans text-[8px] uppercase tracking-[0.25em] font-black text-[#0c3ab5]/60 block mt-0.5">
-                LAVANDERÍA
-              </span>
-            </div>
-            
-            {/* Red Order counter */}
-            <div className="flex items-stretch gap-1.5 h-9">
-              <div className="w-[1px] bg-[#0c3ab5]/20 my-1"></div>
-              <div className="text-right flex flex-col justify-between">
-                <span className="text-[7px] font-black tracking-widest text-[#0c3ab5]/50 leading-none">ORDEN</span>
-                <span className="font-sans font-black text-2xl tracking-tight text-[#d1351b] leading-none">
-                  #{String(confirmedOrderData?.orderId || '1').padStart(4, '0')}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Form metadata fields in ruled grid */}
-          <div className="w-full border border-[#0c3ab5]/30 bg-transparent overflow-hidden mt-3 text-xs text-[#0c3ab5] font-sans">
-            {/* Row 1: Nombre and Teléfono */}
-            <div className="grid grid-cols-12 divide-x divide-[#0c3ab5]/30 border-b border-[#0c3ab5]/30">
-              <div className="col-span-7 p-1.5 py-1 space-y-0.5 text-left">
-                <span className="text-[8px] font-extrabold uppercase tracking-wider text-[#0c3ab5]/50 block">Nombre:</span>
-                <span className="font-bold text-slate-900 block truncate text-sm">{confirmedOrderData?.user?.name || 'Cliente'}</span>
-              </div>
-              <div className="col-span-5 p-1.5 py-1 space-y-0.5 text-left">
-                <span className="text-[8px] font-extrabold uppercase tracking-wider text-[#0c3ab5]/50 block">Teléfono:</span>
-                <span className="font-bold text-slate-900 block truncate text-sm">{confirmedOrderData?.user?.phone || '------'}</span>
-              </div>
-            </div>
-            {/* Row 2: Fecha (utilizes the full ticket width) */}
-            <div className="p-1.5 py-1 space-y-0.5 text-left">
-              <span className="text-[8px] font-extrabold uppercase tracking-wider text-[#0c3ab5]/50 block">Fecha de Recepción:</span>
-              <span className="font-bold text-slate-900 block text-sm truncate whitespace-nowrap">{confirmedOrderData?.date || '------'}</span>
-            </div>
-          </div>
-
-          {/* Ruled Columns Grid */}
-          <div className="mt-4 border-t-2 border-b-2 border-[#0c3ab5]/40 py-1.5 relative text-[#0c3ab5] font-sans">
-            {/* Background alignment lines mimicking physical column grid */}
-            <div className="absolute inset-y-0 right-10 w-[1px] bg-[#0c3ab5]/15 pointer-events-none" />
-            <div className="absolute inset-y-0 right-20 w-[1px] bg-[#0c3ab5]/15 pointer-events-none" />
-            <div className="absolute inset-y-0 right-30 w-[1px] bg-[#0c3ab5]/15 pointer-events-none" />
-
-            {/* Service Item 1: Lavado cesto mediano */}
-            <div className="py-2.5 border-b border-[#0c3ab5]/15 flex justify-between items-center relative z-10">
-              <div className="pr-3 text-left">
-                <h4 className="text-sm font-bold text-slate-900">Lavado cesto mediano</h4>
-              </div>
-              <div className="text-right font-sans text-[11px] font-black text-[#0c3ab5] shrink-0 pr-1 flex items-center justify-end min-w-[65px]">
-                <span>$150</span>
-              </div>
-            </div>
-
-            {/* Service Item 2: Entrega a domicilio */}
-            <div className="py-2.5 border-b border-[#0c3ab5]/15 flex justify-between items-center relative z-10">
-              <div className="pr-3 text-left">
-                <h4 className="text-sm font-bold text-slate-900">Entrega a domicilio</h4>
-              </div>
-              <div className="text-right font-sans text-[11px] font-black text-[#0c3ab5] shrink-0 pr-1 flex items-center justify-end min-w-[65px]">
-                <span>Gratis</span>
-              </div>
-            </div>
-
-            {/* Service Item 3: Cesto Inteligente SOMOS (Espacio vacío) */}
-            <div className="py-2.5 flex justify-between items-center relative z-10 min-h-[40px]">
-              <div className="pr-3 text-left">
-                {/* Manteniendo el espacio vacío */}
-              </div>
-              <div className="text-right font-sans text-[11px] font-black text-[#0c3ab5] shrink-0 pr-1 flex items-center justify-end min-w-[65px]">
-                <span></span>
-              </div>
-            </div>
-          </div>
-
-          {/* Double rule pricing line - Placed directly below the service grid */}
-          <div className="border-t-2 border-b border-[#0c3ab5]/30 py-2 flex justify-between items-baseline font-sans text-[#0c3ab5]">
-            <span className="text-xs font-black uppercase tracking-wider text-[#0c3ab5]/70">Total MXN:</span>
-            <span className="text-xl font-black font-sans text-[#0c3ab5]">$150.00</span>
-          </div>
-
-          {/* Dynamic Playful Handwriting Scribble Note in Blue Permanent Marker style - Placed below the total */}
-          <div className="my-5 flex justify-center items-center">
-            <div 
-              className="transform -rotate-[4deg] text-[#001bb0] font-bold text-center select-none bg-black/5 px-4 py-2 border border-[#0c3ab5]/10 rounded-xl"
-              style={{ fontFamily: '"Comic Sans MS", "Marker Felt", "Brush Script MT", cursive' }}
-            >
-              <span className="text-lg font-black tracking-wide block">
-                ¡Muchas gracias!
-              </span>
-              <span className="text-[11px] font-bold opacity-90 block mt-0.5">
-                ¡Gracias por su preferencia!
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Real Action Buttons for the associate */}
-        <div className="w-full space-y-3.5 pb-6">
-          {/* Link back to delivery/release screen if there is an active order */}
-          {bag?.activeOrder && (
-            <button
-              type="button"
-              onClick={() => setOrderConfirmed(false)}
-              className="w-full py-3.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-xs border border-amber-200 select-none cursor-pointer"
-            >
-              <span>🚚 Volver a Entrega </span>
-            </button>
-          )}
-
-          {copiedImage && (
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-emerald-50 text-emerald-800 border border-emerald-200 p-3 rounded-2xl text-xs flex flex-col items-center space-y-1 leading-normal text-slate-700"
-            >
-              <span className="font-bold text-emerald-700 flex items-center gap-1">✨ ¡Prisino Ticket Copiado!</span>
-              <span className="text-[11px] text-slate-500">Al abrir WhatsApp, mantén presionado el chat del cliente y selecciona *Pegar* (o presiona *Ctrl+V*) para mandar la imagen del Ticket.</span>
-            </motion.div>
-          )}
-
-          {errorMessage && (
-            <div className="bg-red-50 text-red-700 p-3 rounded-xl text-xs font-mono">
-              🚫 {errorMessage}
-            </div>
-          )}
-
-          {/* Main Action: Generate Ticket Image and dispatch to customer */}
-          <button 
-            type="button"
-            onClick={handleSendTicketImage}
-            disabled={isGeneratingImage}
-            className="w-full p-4.5 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-400 transition-all text-white rounded-2xl font-black flex items-center justify-center gap-2.5 text-base border-b-4 border-emerald-700 hover:border-emerald-800 select-none cursor-pointer"
-          >
-            {isGeneratingImage ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Generando Ticket en Imagen...</span>
-              </>
-            ) : (
-              <>
-                <svg className="w-5.5 h-5.5 fill-current shrink-0" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.102.99 11.999.99 6.562.99 2.135 5.361 2.131 10.793c-.001 1.741.47 3.442 1.364 4.958L2.525 21l5.3-1.378H7.8a9.412 9.412 0 0 0-1.153-.466zm10.59-6.394c-.3-.15-1.77-.875-2.043-.974-.275-.098-.475-.148-.674.15-.2.298-.773.974-.948 1.171-.175.199-.349.224-.65.075-.3-.15-1.261-.464-2.4-.1.478-1.018.918-1.519 1.17-1.192.175-.298.087-.56-.044-.81-.13-.252-.674-1.62-.924-2.22-.243-.585-.49-.505-.674-.515-.175-.01-.375-.01-.575-.01-.2 0-.524.075-.798.374-.275.299-1.047 1.022-1.047 2.493 0 1.47 1.072 2.89 1.222 3.09.15.199 2.11 3.221 5.11 4.516.713.308 1.27.492 1.704.63.717.228 1.37.195 1.884.118.574-.085 1.77-.723 2.019-1.419.25-.697.25-1.295.175-1.419-.075-.124-.275-.199-.575-.349z"/>
-                </svg>
-                <span>Enviar Ticket por WhatsApp 🫧</span>
-              </>
-            )}
-          </button>
-
-          {/* Quick Fallback Download */}
-          <button 
-            type="button"
-            onClick={async () => {
-              if (!ticketRef.current) return;
-              try {
-                const blob = await toBlob(ticketRef.current, { cacheBust: true, backgroundColor: "#f6eedd", pixelRatio: 4 });
-                if (!blob) return;
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `Ticket-SOMOS-${confirmedOrderData?.orderId || '0000'}.png`;
-                a.click();
-                URL.revokeObjectURL(url);
-              } catch (e) {
-                console.error(e);
-              }
-            }}
-            className="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all text-xs border border-gray-200 select-none cursor-pointer"
-          >
-            <span>💾 Descargar Imagen en Galería</span>
-          </button>
-
-          <button 
-            type="button"
-            onClick={() => navigate("/scanner")} 
-            className="p-3.5 rounded-xl bg-gray-150 font-bold w-full border border-gray-200 hover:bg-gray-200 transition-colors text-xs text-slate-700 mt-2 select-none"
-          >
-            Continuar al Escáner
-          </button>
-        </div>
-      </div>
+      <BagReceiptTicket
+        bag={bag}
+        isPrinting={isPrinting}
+        confirmedOrderData={confirmedOrderData}
+        whatsappUrl={whatsappUrl}
+        onBackToDelivery={() => setOrderConfirmed(false)}
+        onNavigateScanner={() => navigate("/scanner")}
+      />
     );
   }
-
-  const isFirstVisit = !bag.user || !bag.user.deliveryPreference || bag.user.deliveryPreference === '';
-  const isEligibleForDelivery = bag?.user?.addressColonia?.toLowerCase().includes("palmas") ?? false;
 
   return (
-    <div className="flex-1 flex flex-col mt-4 pb-6">
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-medium tracking-widest text-gray-900 uppercase tracking-tight">Confirmar Recepción</h1>
-      </div>
-
-      <div className="card p-6 border border-gray-100 space-y-4 rounded-none bg-white">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 w-full">
-          <div className="text-left space-y-4 w-full">
-            {isFirstVisit && (
-              <div className="space-y-1.5 pb-4 border-b border-gray-100 w-full">
-                <span className="inline-block px-2.5 py-0.5 bg-blue-50 text-[#0f55d8] border border-blue-100 rounded-md text-[10px] sm:text-xs font-bold tracking-widest uppercase">
-                  Nuevo Cliente
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 leading-tight">Configuración inicial.</h3>
-              </div>
-            )}
-            <div className="space-y-0.5">
-              <label className="text-[10px] uppercase tracking-widest font-semibold text-gray-400 block">Cliente</label>
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-lg font-bold text-gray-900 leading-none">{bag.user?.name}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {isFirstVisit ? (
-          <div className="space-y-4 py-1">
-            {/* Horario de Entrega Preferido */}
-            {isEligibleForDelivery && (
-              <div className="space-y-3 text-left">
-                <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block pb-0.5">Horario de Entrega Preferido</label>
-
-                <div className="grid grid-cols-2 gap-3 mt-1">
-                  {/* Mañana Card */}
-                  <motion.button
-                    whileHover={{ y: -1, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="button"
-                    onClick={() => setPrefTime("Mañana (8:00 AM – 10:00 AM)")}
-                    className={`relative py-3 px-3 rounded-xl border text-center transition-all duration-300 focus:outline-none flex flex-col items-center justify-center min-h-[4rem] cursor-pointer ${
-                      prefTime === "Mañana (8:00 AM – 10:00 AM)"
-                        ? "bg-blue-50/70 border-[#0f55d8] border-2"
-                        : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <span className={`font-black text-sm sm:text-base tracking-tight block ${prefTime === "Mañana (8:00 AM – 10:00 AM)" ? "text-[#0f55d8]" : "text-slate-800"}`}>
-                      Mañana
-                    </span>
-                    <span className="text-xs leading-tight text-gray-500 font-bold block mt-0.5">
-                      8 AM-10 AM
-                    </span>
-                  </motion.button>
-
-                  {/* Noche Card */}
-                  <motion.button
-                    whileHover={{ y: -1, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="button"
-                    onClick={() => setPrefTime("Noche (8:00 PM – 10:00 PM)")}
-                    className={`relative py-3 px-3 rounded-xl border text-center transition-all duration-300 focus:outline-none flex flex-col items-center justify-center min-h-[4rem] cursor-pointer ${
-                      prefTime === "Noche (8:00 PM – 10:00 PM)"
-                        ? "bg-blue-50/70 border-[#0f55d8] border-2"
-                        : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <span className={`font-black text-sm sm:text-base tracking-tight block ${prefTime === "Noche (8:00 PM – 10:00 PM)" ? "text-[#0f55d8]" : "text-slate-800"}`}>
-                      Noche
-                    </span>
-                    <span className="text-xs leading-tight text-gray-500 font-bold block mt-0.5">
-                      8 PM-10 PM
-                    </span>
-                  </motion.button>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="space-y-4 py-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400">
-                Preferencias de entrega
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3">
-              {/* Horario Row Card (only if eligible) */}
-              {isEligibleForDelivery && (
-                <div className="flex items-center justify-between p-3.5 bg-slate-50/50 hover:bg-slate-50 border border-slate-100 rounded-xl transition-all duration-200 animate-slide-in">
-                  <div className="space-y-0.5 text-left min-w-0">
-                    <span className="text-[8px] uppercase tracking-wider font-extrabold text-slate-400 block">Horario Preferido</span>
-                    <span className="text-sm sm:text-base font-black text-slate-800 flex items-center gap-1.5 flex-nowrap whitespace-nowrap">
-                      {prefTime === "Noche (8:00 PM – 10:00 PM)" ? (
-                        <>
-                          Noche
-                          <span className="text-xs font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100">8 PM-10 PM</span>
-                        </>
-                      ) : (
-                        <>
-                          Mañana
-                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-100">8 AM-10 AM</span>
-                        </>
-                      )}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPrefTime(p => p === "Mañana (8:00 AM – 10:00 AM)" ? "Noche (8:00 PM – 10:00 PM)" : "Mañana (8:00 AM – 10:00 AM)");
-                    }}
-                    className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-900 text-slate-900 hover:text-white rounded-lg font-bold text-[9px] sm:text-[10px] transition-all cursor-pointer uppercase border border-slate-200/60 hover:border-slate-900 shrink-0"
-                  >
-                    Cambiar
-                  </button>
-                </div>
-              )}
-
-              {/* Domicilio de Entrega */}
-              {(bag.user?.addressColonia || bag.user?.addressCalle) && (
-                <div className="p-3.5 bg-slate-50/50 border border-slate-100 rounded-xl text-left space-y-1">
-                  <span className="text-[8px] uppercase tracking-wider font-extrabold text-slate-400 block">Domicilio de Entrega</span>
-                  <p className="text-xs font-bold text-slate-700 leading-normal">
-                    {bag.user?.addressCalle} {bag.user?.addressNumero || ""}, Col. {bag.user?.addressColonia || ""}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-8 space-y-3">
-        {isFirstVisit ? (
-          <button 
-            onClick={() => handleReceiveBag(prefSpeed, isEligibleForDelivery ? prefTime : "")}
-            disabled={receiving}
-            className="w-full bg-[#0f55d8] text-white p-5 rounded-2xl font-bold flex items-center justify-center hover:-translate-y-1 hover:/30 transition-all disabled:opacity-50 text-lg cursor-pointer select-none"
-          >
-            {receiving ? <Loader2 className="w-5 h-5 animate-spin" /> : "Guardar y Confirmar Recepción"}
-          </button>
-        ) : (
-          <button 
-            onClick={() => handleReceiveBag(prefSpeed, isEligibleForDelivery ? prefTime : "")}
-            disabled={receiving}
-            className="w-full bg-[#0f55d8] text-white p-5 rounded-2xl font-bold flex items-center justify-center hover:-translate-y-1 hover:/30 transition-all disabled:opacity-50 text-lg cursor-pointer select-none"
-          >
-            {receiving ? <Loader2 className="w-5 h-5 animate-spin" /> : "Confirmar"}
-          </button>
-        )}
-      </div>
-    </div>
+    <BagConfirmReceptionView
+      bag={bag}
+      prefTime={prefTime}
+      setPrefTime={setPrefTime}
+      receiving={receiving}
+      onReceiveBag={handleReceiveBag}
+    />
   );
 }

@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, FormEvent } from "react";
-import { Link, useNavigate, useLocation, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Search, CheckCircle2, QrCode, Loader2, Camera, Package } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, FormEvent } from "react";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { ArrowLeft, Search, CheckCircle2, Loader2, Camera } from "lucide-react";
+import { motion } from "motion/react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { extractBagId } from "../utils/qr";
 import { db } from "../firebase";
@@ -24,47 +24,13 @@ export default function AssociateAssignPreRegistered() {
   // Success state
   const [successData, setSuccessData] = useState<{ name: string, bagId: string } | null>(null);
 
-  const [prefSpeed] = useState<string>("24 horas");
   const [prefTime, setPrefTime] = useState<string>("Mañana (8:00 AM – 10:00 AM)");
 
-  // Auto trigger search if prefilled phone parameter exists
-  useEffect(() => {
-    if (prefilledPhone) {
-      const fetchPrefilledUser = async () => {
-        setLoading(true);
-        setSearchError("");
-        try {
-          const q = query(collection(db, "users"), where("phone", "==", prefilledPhone));
-          const snap = await getDocs(q);
-          if (snap.empty) {
-            throw new Error("Cliente no encontrado.");
-          }
-          const uDoc = snap.docs[0];
-          const uData = uDoc.data();
-          setFoundUser({ id: uDoc.id, ...uData } as any);
-          if (uData.preferredTime) {
-            setPrefTime(uData.preferredTime);
-          }
-        } catch (err: any) {
-          setSearchError("No encontrado. Intenta con otro teléfono.");
-          setFoundUser(null);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchPrefilledUser();
-    }
-  }, [prefilledPhone]);
-
-  const handleSearch = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!phoneSearch) return;
-
-    dismissKeyboard();
+  const lookupCustomerByPhone = async (phoneValue: string) => {
     setLoading(true);
     setSearchError("");
     try {
-      const q = query(collection(db, "users"), where("phone", "==", phoneSearch.trim()));
+      const q = query(collection(db, "users"), where("phone", "==", phoneValue.trim()));
       const snap = await getDocs(q);
       if (snap.empty) {
         throw new Error("Cliente no encontrado.");
@@ -75,12 +41,26 @@ export default function AssociateAssignPreRegistered() {
       if (uData.preferredTime) {
         setPrefTime(uData.preferredTime);
       }
-    } catch (err: any) {
+    } catch {
       setSearchError("No encontrado. Intenta con otro teléfono.");
       setFoundUser(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Auto trigger search if prefilled phone parameter exists
+  useEffect(() => {
+    if (prefilledPhone) {
+      lookupCustomerByPhone(prefilledPhone);
+    }
+  }, [prefilledPhone]);
+
+  const handleSearch = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!phoneSearch) return;
+    dismissKeyboard();
+    await lookupCustomerByPhone(phoneSearch);
   };
 
   const simulateScan = async (bagId: string) => {
@@ -94,7 +74,7 @@ export default function AssociateAssignPreRegistered() {
       }
       const bagData = bagSnap.data() as any;
       if (bagData.status === "assigned") {
-        throw new Error("El cesto ya está asignada.");
+        throw new Error("El cesto ya está asignado.");
       }
 
       const usersQuery = query(collection(db, "users"), where("phone", "==", foundUser.phone));
@@ -157,7 +137,7 @@ export default function AssociateAssignPreRegistered() {
 
   if (successData) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center bg-green-500 text-white w-full absolute inset-0 z-50 animate-in fade-in duration-300">
+      <div className="flex-1 flex flex-col items-center justify-center text-center bg-green-500 text-white w-full absolute inset-0 z-50">
         <motion.div 
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -302,7 +282,7 @@ export default function AssociateAssignPreRegistered() {
                         setScanning(true);
                       }
                     }}
-                    className="w-full bg-[#0f55d8] text-white py-4 px-5 rounded-2xl font-bold flex flex-col items-center justify-center hover:bg-[#0c4ab9] transition-all disabled:opacity-50 text-base cursor-pointer select-none outline-none shadow-sm"
+                    className="w-full bg-[#0f55d8] text-white py-4 px-5 rounded-2xl font-bold flex flex-col items-center justify-center hover:bg-[#0c4ab9] transition-all text-base cursor-pointer select-none outline-none shadow-sm"
                   >
                     {prefilledBagId ? (
                       <div className="flex flex-col items-center gap-0.5">
@@ -346,15 +326,9 @@ export default function AssociateAssignPreRegistered() {
                <Scanner 
                   onScan={(result) => {
                     if (result && result.length > 0 && result[0].rawValue) {
-                      let value = extractBagId(result[0].rawValue) || "";
-                      if (value.includes('/cesto/')) {
-                        value = value.split('/cesto/').pop() || value;
-                      } else if (value.includes('=')) {
-                          // just in case they have it in search params
-                          value = value.split('=').pop() || value;
-                      }
+                      const value = extractBagId(result[0].rawValue);
                       if (value && !loading) {
-                         simulateScan(value);
+                        simulateScan(value);
                       }
                     }
                   }}

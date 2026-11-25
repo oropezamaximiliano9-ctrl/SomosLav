@@ -3,7 +3,7 @@
  * Ensures that no virtual keyboard on mobile or desktop text field gets stuck open.
  */
 
-export function isTextInputElement(element: Element | null): element is HTMLInputElement | HTMLTextAreaElement {
+function isTextInputElement(element: Element | null): element is HTMLInputElement | HTMLTextAreaElement {
   if (!element) return false;
   
   const tagName = element.tagName.toLowerCase();

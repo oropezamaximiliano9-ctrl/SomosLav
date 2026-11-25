@@ -1,137 +1,21 @@
-import { useNavigate } from "react-router-dom";
-import { Check, CheckCircle, CheckCircle2, Clock, Info, Loader2, MapPin, Phone, MessageCircleMore, User, X, ArrowRight, Building, Truck, Sparkles, Shirt, PackageCheck, Zap, BedDouble, ShoppingBag, ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import React, { useState, useContext, useRef, FormEvent, useEffect, ReactNode } from "react";
-import { motion } from "motion/react";
-import { RoleContext } from "../App";
-import canvasLaundryBag from "../assets/images/IMG_8321.jpg";
-import suavizantePremiumBanner from "../assets/images/suavizante_premium_banner_1786327159198.jpg";
-import blackShirtProduct from "../assets/images/black_tshirt_1786147466172.jpg";
-import blueShirtProduct from "../assets/images/blue_shirt_product_1786050242741.jpg";
-const servicioUrgenteBanner = "https://i.ibb.co/Zpk417q3/IMG-9181.webp";
-const suavizanteBannerUrl = "https://i.ibb.co/rRxjM5xb/IMG-9141.png";
-const ropaCamaBannerUrl = "https://i.ibb.co/V082zskj/IMG-9170.webp";
-const shirtCardBg = "https://i.ibb.co/LhzkrHzZ/IMG-9166.png";
-import sprayTagBg from "../assets/images/spray_tag_bg.png";
-import { db } from "../firebase";
-import { collection, doc, getDocs, updateDoc, setDoc, query, where } from "firebase/firestore";
-import { getColoniaDistance, asyncGetColoniaDistance, ORIGEN_LAVANDERIA } from "../utils/distance";
-import { dismissKeyboard } from "../utils/keyboard";
+import { useState, useContext, useRef, FormEvent, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { RoleContext } from '../App';
+import { db } from '../firebase';
+import { collection, doc, getDocs, updateDoc, setDoc, query, where } from 'firebase/firestore';
+import { getColoniaDistance, asyncGetColoniaDistance } from '../utils/distance';
+import { dismissKeyboard } from '../utils/keyboard';
 
-const drillVariants = {
-  enter: (direction: "forward" | "backward") => ({
-    x: direction === "forward" ? 8 : -8,
-    opacity: 0.85,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: "forward" | "backward") => ({
-    x: direction === "forward" ? -8 : 8,
-    opacity: 0,
-  }),
-};
-
-const drillTransition = {
-  type: "tween",
-  ease: "easeOut",
-  duration: 0.12,
-};
-
-const checkmarkContainerVariants = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.7,
-      delayChildren: 1.5,
-    },
-  },
-};
-
-const checkmarkItemVariants = {
-  hidden: { opacity: 0, scale: 0.15, y: 3 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 280,
-      damping: 12,
-      mass: 0.85,
-    },
-  },
-};
-
-const TypewriterTitle = () => {
-  return (
-    <div className="w-full text-center pt-2 pb-3 select-none px-4" id="rotating-title-container">
-      <div className="relative -top-2">
-        <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist">
-          <span className="relative inline-block px-0.5">
-            Olvídate
-            <svg
-              className="absolute left-0 -bottom-[2px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
-              viewBox="0 0 100 10"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-            >
-              <motion.path
-                d="M 1 6 C 30 4.5, 70 7, 99 5.5"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: false, amount: 0.5 }}
-                transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
-              />
-            </svg>
-          </span>{" "}
-          de
-        </h1>
-        <p className="text-center text-[26px] text-[#333333] font-semibold font-geist -mt-[3px]">
-          lavar esta semana
-        </p>
-      </div>
-    </div>
-  );
-};
-
-const FloatingBadge = ({ 
-  text, 
-  position = "top-left", 
-  className,
-  noBorder = false,
-  textClassName,
-  innerClassName
-}: { 
-  text: ReactNode; 
-  position?: "top-left" | "top-right"; 
-  className?: string;
-  noBorder?: boolean;
-  textClassName?: string;
-  innerClassName?: string;
-}) => {
-  const defaultPos = position === "top-right"
-    ? "absolute top-[2px] -right-[12px] sm:-right-[10px] z-20 rotate-[8deg] pointer-events-none"
-    : "absolute top-[2px] -left-[2px] sm:left-[0px] z-20 -rotate-[8deg] pointer-events-none";
-
-  return (
-    <div className={className || defaultPos}>
-      <div className={`bg-white ${noBorder ? '' : 'border-2 border-dashed border-[#333333]'} rounded-full ${innerClassName || 'px-2.5 h-[36px]'} flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.08)]`}>
-        <span className={textClassName || "font-geist font-semibold text-[#333333] text-[18px] tracking-tight whitespace-nowrap"}>
-          {text}
-        </span>
-      </div>
-    </div>
-  );
-};
+// Modular Landing Subcomponents
+import { HeroSection } from '../components/landing/HeroSection';
+import { FeatureCardsSection } from '../components/landing/FeatureCardsSection';
+import { RegistrationBottomSheet } from '../components/landing/RegistrationBottomSheet';
 
 export default function Landing() {
   const { role, setRole } = useContext(RoleContext);
+  const navigate = useNavigate();
+
+  // Long press for Associate / Admin login access
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLongPressRef = useRef(false);
 
@@ -158,146 +42,42 @@ export default function Landing() {
     if (container) {
       container.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  const navigate = useNavigate();
 
-  const [name, setName] = useState(() => localStorage.getItem("user_name") || "");
-  const [phone, setPhone] = useState(() => localStorage.getItem("user_phone") || "");
-  const [deliveryPreference, setDeliveryPreference] = useState(() => localStorage.getItem("user_delivery_preference") || "");
-  
-  const [addressColonia, setAddressColonia] = useState(() => localStorage.getItem("user_address_colonia") || "");
-  const [addressCalle, setAddressCalle] = useState(() => localStorage.getItem("user_address_calle") || "");
-  const [preferredTime, setPreferredTime] = useState(() => localStorage.getItem("user_preferred_time") || "");
-  
+  // State: User Data & Registration Flow
+  const [name, setName] = useState(() => localStorage.getItem('user_name') || '');
+  const [phone, setPhone] = useState(() => localStorage.getItem('user_phone') || '');
+  const [deliveryPreference, setDeliveryPreference] = useState(
+    () => localStorage.getItem('user_delivery_preference') || ''
+  );
+  const [addressColonia, setAddressColonia] = useState(() => localStorage.getItem('user_address_colonia') || '');
+  const [addressCalle, setAddressCalle] = useState(() => localStorage.getItem('user_address_calle') || '');
+  const [preferredTime, setPreferredTime] = useState(() => localStorage.getItem('user_preferred_time') || '');
+
   const [loading, setLoading] = useState(false);
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
-  const [isPriceInfoModalOpen, setIsPriceInfoModalOpen] = useState(false);
-  const [registered, setRegistered] = useState(() => localStorage.getItem("user_registered") === "true");
-  const [isWaitlisted, setIsWaitlisted] = useState(() => localStorage.getItem("user_is_waitlisted") === "true");
-  const [formStep, setFormStep] = useState<1 | 2 | 3 | "verifying" | "not_eligible_result">(1);
+  const [registered, setRegistered] = useState(() => localStorage.getItem('user_registered') === 'true');
+  const [formStep, setFormStep] = useState<1 | 2 | 3 | 'verifying'>(1);
   const [verificationProgress, setVerificationProgress] = useState(0);
-  const [calculatedDistance, setCalculatedDistance] = useState<number>(() => getColoniaDistance(addressColonia || ""));
+  const [calculatedDistance, setCalculatedDistance] = useState<number>(() =>
+    getColoniaDistance(addressColonia || '')
+  );
 
+  // Sync state to localStorage
   useEffect(() => {
-    localStorage.setItem("user_name", name);
-    localStorage.setItem("user_phone", phone);
-    localStorage.setItem("user_delivery_preference", deliveryPreference);
-    localStorage.setItem("user_address_colonia", addressColonia);
-    localStorage.setItem("user_address_calle", addressCalle);
-    localStorage.setItem("user_preferred_time", preferredTime);
-    localStorage.setItem("user_registered", registered ? "true" : "false");
-    localStorage.setItem("user_is_waitlisted", isWaitlisted ? "true" : "false");
-  }, [name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, registered, isWaitlisted]);
+    localStorage.setItem('user_name', name);
+    localStorage.setItem('user_phone', phone);
+    localStorage.setItem('user_delivery_preference', deliveryPreference);
+    localStorage.setItem('user_address_colonia', addressColonia);
+    localStorage.setItem('user_address_calle', addressCalle);
+    localStorage.setItem('user_preferred_time', preferredTime);
+    localStorage.setItem('user_registered', registered ? 'true' : 'false');
+  }, [name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, registered]);
 
-  const [isNavigatingGPS, setIsNavigatingGPS] = useState(false);
-  const [gpsLoadingStep, setGpsLoadingStep] = useState<string | null>(null);
-  const [geoError, setGeoError] = useState<string | null>(null);
-
+  // GPS Autofill state
   const [gpsCoords, setGpsCoords] = useState<{ lat: number; lon: number } | null>(null);
-  const [hasRequestedGps, setHasRequestedGps] = useState(false);
   const [gpsAutofillLoading, setGpsAutofillLoading] = useState(false);
   const [gpsAutofillError, setGpsAutofillError] = useState<string | null>(null);
   const [showColoniaSuggestions, setShowColoniaSuggestions] = useState(false);
-  const DIAS_ADELANTE = 365;
-
-  const [fechasList] = useState<Date[]>(() => {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    const arr: Date[] = [];
-    for (let i = 0; i <= DIAS_ADELANTE; i++) {
-      const d = new Date(hoy);
-      d.setDate(d.getDate() + i);
-      arr.push(d);
-    }
-    return arr;
-  });
-
-  const [dateWheelIndex, setDateWheelIndex] = useState<number>(0);
-
-  const formatWheelDate = (date: Date, idx?: number) => {
-    const weekday = date.toLocaleDateString('es-ES', { weekday: 'long' });
-    const dayNum = date.getDate();
-    const monthShort = date.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '');
-    const text = `${weekday}, ${dayNum} ${monthShort}`;
-    if (idx === 0) {
-      return { tag: "HOY", text };
-    }
-    if (idx === 1) {
-      return { tag: "MAÑANA", text };
-    }
-    return { tag: null, text };
-  };
-
-  const moveDateWheel = (step: number) => {
-    setDateWheelIndex(prev => {
-      const next = prev + step;
-      if (next < 0) return 0;
-      if (next >= fechasList.length) return fechasList.length - 1;
-      return next;
-    });
-  };
-
-  const [wheelTouchStartY, setWheelTouchStartY] = useState<number | null>(null);
-
-  const handleDateWheelTouchStart = (e: React.TouchEvent) => {
-    setWheelTouchStartY(e.touches[0].clientY);
-  };
-
-  const handleDateWheelTouchEnd = (e: React.TouchEvent) => {
-    if (wheelTouchStartY === null) return;
-    const endY = e.changedTouches[0].clientY;
-    const diff = wheelTouchStartY - endY;
-    if (Math.abs(diff) > 25) {
-      if (diff > 0) {
-        moveDateWheel(1);
-      } else {
-        moveDateWheel(-1);
-      }
-    }
-    setWheelTouchStartY(null);
-  };
-
-  const handleDateWheelWheel = (e: React.WheelEvent) => {
-    if (Math.abs(e.deltaY) > 15) {
-      if (e.deltaY > 0) {
-        moveDateWheel(1);
-      } else {
-        moveDateWheel(-1);
-      }
-    }
-  };
-
-  const ALL_COATZA_COLONIAS = [
-    "Las Palmas",
-    "Petrolera",
-    "Rancho Alegre",
-    "Rancho Alegre 1",
-    "Rancho Alegre 2",
-    "Paraíso",
-    "Puerto México",
-    "Pensiones",
-    "Vistalmar",
-    "María de la Piedad",
-    "Centro",
-    "Playa Sol",
-    "El Tesoro",
-    "FOVISSSTE",
-    "Guadalupe Victoria",
-    "Santa Isabel",
-    "Manuel Ávila Camacho",
-    "Benito Juárez Norte",
-    "Benito Juárez Sur",
-    "Adolfo López Mateos",
-    "Gaviotas",
-    "Trópico de la Rivera",
-    "Puerto Esmeralda",
-    "Teresa Morales",
-    "Lomas de Coatzacoalcos",
-    "Lomas de Barrillas",
-    "Ciudad Olmeca",
-    "San Martín"
-  ];
 
   const handleAddressInputClick = () => {
     if (!addressCalle.trim() && !gpsAutofillLoading) {
@@ -307,7 +87,7 @@ export default function Landing() {
 
   const handleAutofillGPS = () => {
     if (!navigator.geolocation) {
-      setGpsAutofillError("Tu dispositivo o navegador no soporta geolocalización directa.");
+      setGpsAutofillError('Tu dispositivo o navegador no soporta geolocalización directa.');
       return;
     }
 
@@ -331,118 +111,111 @@ export default function Landing() {
               fetchSuccess = true;
             }
           } catch (err) {
-            console.warn("Server proxy failed, trying direct client-side geocoding:", err);
+            console.warn('Server proxy failed, trying direct client-side geocoding:', err);
           }
 
-          // 2. Direct client-side Google Maps API query using hardcoded key
+          // 2. Direct client-side Google Maps API query
           if (!fetchSuccess) {
-            let clientApiKey = "AIzaSyAiAQXG7cEBvUFBOF5EW1p4HRzpq1_b-Cc";
+            const clientApiKey = 'AIzaSyAiAQXG7cEBvUFBOF5EW1p4HRzpq1_b-Cc';
+            try {
+              const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${clientApiKey}&language=es`;
+              const response = await fetch(url);
+              if (response.ok) {
+                const gData = await response.json();
+                if (gData.status === 'OK' && gData.results && gData.results.length > 0) {
+                  const firstResult = gData.results[0];
+                  const components = firstResult.address_components || [];
+                  let street_number = '';
+                  let route = '';
+                  let sublocality = '';
+                  let neighborhood = '';
 
-            if (clientApiKey) {
-              try {
-                const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${clientApiKey}&language=es`;
-                const response = await fetch(url);
-                if (response.ok) {
-                  const gData = await response.json();
-                  if (gData.status === "OK" && gData.results && gData.results.length > 0) {
-                    const firstResult = gData.results[0];
-                    const components = firstResult.address_components || [];
-                    
-                    let street_number = "";
-                    let route = "";
-                    let sublocality = "";
-                    let neighborhood = "";
-
-                    for (const comp of components) {
-                      const types = comp.types || [];
-                      if (types.includes("street_number")) {
-                        street_number = comp.long_name;
-                      } else if (types.includes("route")) {
-                        route = comp.long_name;
-                      } else if (types.includes("sublocality") || types.includes("sublocality_level_1")) {
-                        sublocality = comp.long_name;
-                      } else if (types.includes("neighborhood")) {
-                        neighborhood = comp.long_name;
-                      }
-                    }
-
-                    data = {
-                      calle: route,
-                      numero: street_number,
-                      colonia: sublocality || neighborhood || "Centro",
-                      source: "client-google"
-                    };
-                    fetchSuccess = true;
+                  for (const comp of components) {
+                    const types = comp.types || [];
+                    if (types.includes('street_number')) street_number = comp.long_name;
+                    else if (types.includes('route')) route = comp.long_name;
+                    else if (types.includes('sublocality') || types.includes('sublocality_level_1'))
+                      sublocality = comp.long_name;
+                    else if (types.includes('neighborhood')) neighborhood = comp.long_name;
                   }
+
+                  data = {
+                    calle: route,
+                    numero: street_number,
+                    colonia: sublocality || neighborhood || 'Centro',
+                    source: 'client-google',
+                  };
+                  fetchSuccess = true;
                 }
-              } catch (clientErr) {
-                console.error("Direct Google reverse geocode failed:", clientErr);
               }
+            } catch (clientErr) {
+              console.error('Direct Google reverse geocode failed:', clientErr);
             }
           }
 
-          // 3. Fallback to client-side OSM Nominatim if Google Maps API key is not available or fails
+          // 3. Fallback to OpenStreetMap Nominatim
           if (!fetchSuccess) {
             try {
               const response = await fetch(
                 `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
                 {
                   headers: {
-                    "User-Agent": "SomosLaundryApp/1.0 (oropezamaximiliano9@gmail.com)"
-                  }
+                    'User-Agent': 'SomosLaundryApp/1.0 (oropezamaximiliano9@gmail.com)',
+                  },
                 }
               );
               if (response.ok) {
                 const osmData = await response.json();
-                let colonia = "Centro";
-                let calle = "";
-                let numero = "";
+                let colonia = 'Centro';
+                let calle = '';
+                let numero = '';
 
                 if (osmData.address) {
                   const addr = osmData.address;
-                  colonia = addr.suburb || addr.neighbourhood || addr.quarter || addr.residential || addr.village || "Centro";
-                  calle = addr.road || "";
-                  numero = addr.house_number || "";
+                  colonia =
+                    addr.suburb ||
+                    addr.neighbourhood ||
+                    addr.quarter ||
+                    addr.residential ||
+                    addr.village ||
+                    'Centro';
+                  calle = addr.road || '';
+                  numero = addr.house_number || '';
                 }
-                data = {
-                  calle,
-                  numero,
-                  colonia,
-                  source: "nominatim"
-                };
+                data = { calle, numero, colonia, source: 'nominatim' };
                 fetchSuccess = true;
               }
             } catch (err) {
-              console.error("OSM direct fallback failed:", err);
+              console.error('OSM direct fallback failed:', err);
             }
           }
 
           if (fetchSuccess && data) {
-            let colonia = data.colonia || "Centro";
-            let calle = data.calle || "";
-            let numero = data.numero || "";
+            let colonia = data.colonia || 'Centro';
+            let calle = data.calle || '';
+            let numero = data.numero || '';
 
-            // Format address
             let calleYNum = calle;
-            if (numero) {
-              calleYNum = `${calle} ${numero}`;
+            if (numero) calleYNum = `${calle} ${numero}`;
+
+            if (
+              !colonia ||
+              colonia.toLowerCase() === 'coatzacoalcos' ||
+              colonia.toLowerCase() === 'coatzacoalcos centro'
+            ) {
+              colonia = 'Centro';
             }
 
-            // Filter out Coatzacoalcos as colonia name
-            if (!colonia || colonia.toLowerCase() === "coatzacoalcos" || colonia.toLowerCase() === "coatzacoalcos centro") {
-              colonia = "Centro";
-            }
-
-            const fullAddr = [calleYNum, colonia].filter(Boolean).join(", ");
+            const fullAddr = [calleYNum, colonia].filter(Boolean).join(', ');
             setAddressCalle(fullAddr || calleYNum || colonia);
             setAddressColonia(colonia || fullAddr);
             setFormError(null);
           } else {
-            setGpsAutofillError("Error al obtener la dirección desde el servidor de mapas.");
+            setGpsAutofillError('Error al obtener la dirección desde el servidor de mapas.');
           }
         } catch (err) {
-          console.error("GPS Autofill error:", err);
-          setGpsAutofillError("No se pudo conectar con el servicio de geocodificación.");
+          console.error('GPS Autofill error:', err);
+          setGpsAutofillError('No se pudo conectar con el servicio de geocodificación.');
         } finally {
           setGpsAutofillLoading(false);
         }
@@ -450,101 +223,29 @@ export default function Landing() {
       (error) => {
         setGpsAutofillLoading(false);
         if (error.code === error.PERMISSION_DENIED) {
-          setGpsAutofillError("Permiso de ubicación denegado. Por favor, actívalo en tu navegador.");
+          setGpsAutofillError('Permiso de ubicación denegado. Por favor, actívalo en tu navegador.');
         } else {
-          setGpsAutofillError("No se pudo obtener tu ubicación actual.");
+          setGpsAutofillError('No se pudo obtener tu ubicación actual.');
         }
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   };
 
-  const handleNavigationAndGPS = () => {
-    const DEST_ADDRESS = "Paseo de las Palmas 209, Coatzacoalcos, Veracruz";
-
-    if (!navigator.geolocation) {
-      setGeoError("Tu dispositivo o navegador no soporta geolocalización directa.");
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(DEST_ADDRESS)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
-      return;
-    }
-
-    setIsNavigatingGPS(true);
-    setGpsLoadingStep("Solicitando acceso a tu ubicación...");
-    setGeoError(null);
-
-    // Small delay to make state transitions feel stable and natural
-    setTimeout(() => {
-      setGpsLoadingStep("Determinando la ubicación exacta...");
-      
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setGpsLoadingStep("Ubicación obtenida. Abriendo Google Maps...");
-          
-          setTimeout(() => {
-            setIsNavigatingGPS(false);
-            setGpsLoadingStep(null);
-            // High precision route using real-time coordinates obtained from device
-            const url = `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodeURIComponent(DEST_ADDRESS)}`;
-            window.open(url, "_blank", "noopener,noreferrer");
-          }, 1000);
-        },
-        (error) => {
-          setIsNavigatingGPS(false);
-          setGpsLoadingStep(null);
-          
-          // Revert to reliable fallback
-          const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(DEST_ADDRESS)}`;
-          window.open(url, "_blank", "noopener,noreferrer");
-
-          if (error.code === error.PERMISSION_DENIED) {
-            setGeoError("Permiso de ubicación denegado. Se abrió la ruta estándar hacia Paseo de las Palmas 209 en Google Maps.");
-          } else {
-            setGeoError("No se pudo obtener tu ubicación actual. Se abrió la ruta estándar hacia Paseo de las Palmas 209.");
-          }
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
-    }, 600);
-  };
-
-  const [locations, setLocations] = useState<any[]>([]);
-  const [selectedLocationName, setSelectedLocationName] = useState<string>("Punto de recepción");
-  
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const [showLavaCta, setShowLavaCta] = useState(false);
-  const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [formError, setFormError] = useState<string | null>(null);
-  const [isShaking, setIsShaking] = useState(false);
 
-  const isNameError = formError ? formError.toLowerCase().includes("nombre") : false;
-  const isPhoneError = formError ? (
-    formError.toLowerCase().includes("teléfono") || 
-    formError.toLowerCase().includes("caracteres") || 
-    formError.toLowerCase().includes("letras")
-  ) : false;
-  const isCalleError = formError ? formError.toLowerCase().includes("calle") : false;
-  const isColoniaError = formError ? formError.toLowerCase().includes("colonia") : false;
+  const isPhoneError = Boolean(formError?.toLowerCase().includes('teléfono'));
 
-  const triggerShake = () => {
-    setIsShaking(true);
-    setTimeout(() => setIsShaking(false), 450);
-  };
-
-  const formRef = useRef<HTMLDivElement>(null);
+  // Input & slider refs
   const viewportRef = useRef<HTMLDivElement>(null);
-  
   const nameInputRef = useRef<HTMLInputElement>(null);
   const phoneInputRef = useRef<HTMLInputElement>(null);
   const calleInputRef = useRef<HTMLInputElement>(null);
-  const coloniaInputRef = useRef<HTMLInputElement>(null);
-
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
-  const step4Ref = useRef<HTMLDivElement>(null);
-  const [sliderHeight, setSliderHeight] = useState<number | string>("auto");
+  const [sliderHeight, setSliderHeight] = useState<number | string>('auto');
 
   useEffect(() => {
     if (isBottomSheetOpen) {
@@ -561,7 +262,7 @@ export default function Landing() {
         return () => observer.disconnect();
       }
     } else {
-      setSliderHeight("auto");
+      setSliderHeight('auto');
     }
   }, [formStep, isBottomSheetOpen, registered]);
 
@@ -569,114 +270,37 @@ export default function Landing() {
     if (viewportRef.current) {
       viewportRef.current.scrollLeft = 0;
     }
-  }, [formStep]);
-
-  useEffect(() => {
-    if (isBottomSheetOpen) {
-      const timer = setTimeout(() => {
-        if (viewportRef.current) {
-          viewportRef.current.scrollLeft = 0;
-        }
-      }, 180);
-      return () => clearTimeout(timer);
-    }
+    if (!isBottomSheetOpen) return;
+    const timer = setTimeout(() => {
+      if (viewportRef.current) {
+        viewportRef.current.scrollLeft = 0;
+      }
+    }, 180);
+    return () => clearTimeout(timer);
   }, [formStep, isBottomSheetOpen]);
-  
-  useEffect(() => {
-    console.log("[Firestore Call] Initiating fetch for 'locations' collection...");
-    const defaultLocation = {
-      id: "loc_1",
-      name: "Punto de recepción",
-      address: "Paseo de las Palmas 209, Coatzacoalcos, Veracruz",
-      isActive: 1,
-      latitude: 18.1404,
-      longitude: -94.4632
-    };
-
-    getDocs(collection(db, "locations"))
-      .then(async (snap) => {
-        console.log("[Firestore Call] Successfully fetched 'locations', document count:", snap.size);
-        const list: any[] = [];
-        snap.forEach(d => {
-          const data = d.data();
-          if (data.isActive === 1 || data.isActive === true) {
-            list.push(data);
-          }
-        });
-
-        if (list.length === 0) {
-          console.log("[Firestore Init] No active locations found in DB. Seeding default location...");
-          list.push(defaultLocation);
-          try {
-            await setDoc(doc(db, "locations", "loc_1"), defaultLocation);
-            console.log("[Firestore Init] Successfully seeded default location 'loc_1'.");
-          } catch (e) {
-            console.warn("[Firestore Init] Could not seed default location to DB:", e);
-          }
-        }
-
-        setLocations(list);
-        setSelectedLocationName(list[0].name);
-      })
-      .catch((err) => {
-        console.info("[Firestore] Using default location fallback:", err?.message || err);
-        setLocations([defaultLocation]);
-        setSelectedLocationName(defaultLocation.name);
-      });
-  }, []);
 
   const openBottomSheet = () => {
     setIsBottomSheetOpen(true);
     setRegistered(false);
-    setHasRequestedGps(false);
-    
+
     if (phone.trim().length === 10) {
-      if (!name.trim()) {
-        setFormStep(1);
-      } else {
-        setFormStep(3);
-      }
+      if (!name.trim()) setFormStep(1);
+      else setFormStep(3);
     } else if (name.trim().length > 0) {
       setFormStep(2);
     } else {
       setFormStep(1);
     }
-    
-    setDirection("forward");
+
     setFormError(null);
   };
-
-  useEffect(() => {
-    const section = document.getElementById("lava-estrena-section");
-    if (!section) return;
-
-    const checkVisibility = () => {
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      if (rect.top <= viewportHeight * 0.65 && rect.bottom >= 80) {
-        setShowLavaCta(true);
-      } else {
-        setShowLavaCta(false);
-      }
-    };
-
-    const container = section.closest(".overflow-y-auto") || window;
-    container.addEventListener("scroll", checkVisibility, { passive: true });
-    checkVisibility();
-
-    return () => {
-      container.removeEventListener("scroll", checkVisibility);
-    };
-  }, []);
 
   const handlePhoneBlur = async () => {
     if (!phone || phone.length < 5) return;
     try {
-      console.log(`[Firestore Call] Querying 'users' collection for phone number: ${phone.trim()}`);
-      const q = query(collection(db, "users"), where("phone", "==", phone.trim()));
+      const q = query(collection(db, 'users'), where('phone', '==', phone.trim()));
       const snap = await getDocs(q);
       if (!snap.empty) {
-        console.log(`[Firestore Call] Found existing user matching phone number.`);
         const data = snap.docs[0].data();
         if (data.name) setName(data.name);
         if (data.deliveryPreference) setDeliveryPreference(data.deliveryPreference);
@@ -684,12 +308,11 @@ export default function Landing() {
         if (data.addressCalle) setAddressCalle(data.addressCalle);
         if (data.preferredTime) setPreferredTime(data.preferredTime);
       } else {
-        throw new Error("Phone not found in DB");
+        throw new Error('Phone not found in DB');
       }
-    } catch(e) {
-      // Offline fallback: try reading from localStorage of simulated user database
+    } catch {
       try {
-        const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
+        const savedUsers = JSON.parse(localStorage.getItem('simulated_users') || '{}');
         const user = savedUsers[phone];
         if (user) {
           if (user.name) setName(user.name);
@@ -698,7 +321,7 @@ export default function Landing() {
           if (user.addressCalle) setAddressCalle(user.addressCalle);
           if (user.preferredTime) setPreferredTime(user.preferredTime);
         }
-      } catch (err) {}
+      } catch {}
     }
   };
 
@@ -707,13 +330,11 @@ export default function Landing() {
     setFormError(null);
 
     if (!name.trim()) {
-      setFormError("Por favor ingresa tu nombre completo.");
-      triggerShake();
+      setFormError('Por favor ingresa tu nombre completo.');
       nameInputRef.current?.focus();
       return;
     }
 
-    setDirection("forward");
     setFormStep(2);
     setTimeout(() => phoneInputRef.current?.focus(), 150);
   };
@@ -724,138 +345,98 @@ export default function Landing() {
 
     const trimmedPhone = phone.trim();
     if (!trimmedPhone) {
-      setFormError("Por favor ingresa tu teléfono.");
-      triggerShake();
+      setFormError('Por favor ingresa tu teléfono.');
       phoneInputRef.current?.focus();
       return;
     }
 
     if (trimmedPhone.length !== 10) {
-      setFormError("El número de teléfono debe tener exactamente 10 caracteres.");
-      triggerShake();
+      setFormError('El número de teléfono debe tener exactamente 10 caracteres.');
       phoneInputRef.current?.focus();
       return;
     }
 
     if (/[a-zA-Z]/i.test(trimmedPhone)) {
-      setFormError("El número de teléfono no puede contener letras.");
-      triggerShake();
+      setFormError('El número de teléfono no puede contener letras.');
       phoneInputRef.current?.focus();
       return;
     }
 
-    setDirection("forward");
     setFormStep(3);
     setTimeout(() => calleInputRef.current?.focus(), 150);
   };
 
-  const dbPreregister = async () => {
-    console.log(`[Firestore Call] dbPreregister: Searching users with phone: ${phone.trim()}`);
-    const usersQuery = query(collection(db, "users"), where("phone", "==", phone.trim()));
+  const dbPreregister = async (distanceKmValue: number) => {
+    const usersQuery = query(collection(db, 'users'), where('phone', '==', phone.trim()));
     const usersSnap = await getDocs(usersQuery);
-    let userId;
+    let userId: string;
 
     if (!usersSnap.empty) {
-      console.log(`[Firestore Call] dbPreregister: User already exists. Updating record...`);
       const docSnap = usersSnap.docs[0];
       userId = docSnap.id;
       const existingUser = docSnap.data();
 
-      const pref = deliveryPreference !== undefined ? deliveryPreference : (existingUser.deliveryPreference || "");
-      const col = addressColonia !== undefined ? addressColonia : (existingUser.addressColonia || null);
-      const calle = addressCalle !== undefined ? addressCalle : (existingUser.addressCalle || null);
-      const prefTime = preferredTime !== undefined ? preferredTime : (existingUser.preferredTime || "");
-      const distKm = calculatedDistance || (col ? getColoniaDistance(col) : existingUser.distanceKm || null);
+      const pref = deliveryPreference || existingUser.deliveryPreference || '';
+      const col = addressColonia || existingUser.addressColonia || null;
+      const calle = addressCalle || existingUser.addressCalle || null;
+      const prefTime = preferredTime || existingUser.preferredTime || '';
+      const distKm = distanceKmValue || (col ? getColoniaDistance(col) : existingUser.distanceKm || null);
 
-      if (distKm) {
-        localStorage.setItem("user_distance_km", String(distKm));
-      }
+      if (distKm) localStorage.setItem('user_distance_km', String(distKm));
 
-      await updateDoc(doc(db, "users", userId), {
+      await updateDoc(doc(db, 'users', userId), {
         name,
         deliveryPreference: pref,
         addressColonia: col,
         addressCalle: calle,
         preferredTime: prefTime,
-        distanceKm: distKm
+        distanceKm: distKm,
       });
-      console.log(`[Firestore Call] dbPreregister: Successfully updated user ${userId}`);
     } else {
-      console.log(`[Firestore Call] dbPreregister: User not found. Creating new record...`);
-      userId = "USR-" + Math.random().toString(36).substr(2, 9);
-      const pref = deliveryPreference !== undefined ? deliveryPreference : "";
-      const prefTime = preferredTime || "";
-      const distKm = calculatedDistance || (addressColonia ? getColoniaDistance(addressColonia) : null);
+      userId = 'USR-' + Math.random().toString(36).substr(2, 9);
+      const distKm = distanceKmValue || (addressColonia ? getColoniaDistance(addressColonia) : null);
 
-      if (distKm) {
-        localStorage.setItem("user_distance_km", String(distKm));
-      }
+      if (distKm) localStorage.setItem('user_distance_km', String(distKm));
 
-      await setDoc(doc(db, "users", userId), {
+      await setDoc(doc(db, 'users', userId), {
         id: userId,
         name,
         phone: phone.trim(),
-        deliveryPreference: pref,
+        deliveryPreference,
         addressColonia: addressColonia || null,
         addressCalle: addressCalle || null,
-        addressNumero: "",
-        preferredTime: prefTime,
-        addressReferences: "",
+        addressNumero: '',
+        preferredTime,
+        addressReferences: '',
         distanceKm: distKm,
         credits: 0.0,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       });
-      console.log(`[Firestore Call] dbPreregister: Successfully created new user ${userId}`);
     }
-    return { success: true, userId };
   };
 
   const submitStep3AndVerify = async (e: FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
-    // Guard: Validate Step 1 field
     if (!name.trim()) {
-      setFormError("Por favor ingresa tu nombre en el paso 1.");
-      triggerShake();
-      setDirection("backward");
+      setFormError('Por favor ingresa tu nombre en el paso 1.');
       setFormStep(1);
       setTimeout(() => nameInputRef.current?.focus(), 150);
       return;
     }
 
-    // Guard: Validate Step 2 field
     const trimmedPhone = phone.trim();
-    if (!trimmedPhone) {
-      setFormError("Por favor ingresa tu teléfono en el paso 2.");
-      triggerShake();
-      setDirection("backward");
-      setFormStep(2);
-      setTimeout(() => phoneInputRef.current?.focus(), 150);
-      return;
-    }
-    if (trimmedPhone.length !== 10) {
-      setFormError("El número de teléfono debe tener exactamente 10 caracteres.");
-      triggerShake();
-      setDirection("backward");
-      setFormStep(2);
-      setTimeout(() => phoneInputRef.current?.focus(), 150);
-      return;
-    }
-    if (/[a-zA-Z]/i.test(trimmedPhone)) {
-      setFormError("El número de teléfono no puede contener letras.");
-      triggerShake();
-      setDirection("backward");
+    if (!trimmedPhone || trimmedPhone.length !== 10 || /[a-zA-Z]/i.test(trimmedPhone)) {
+      setFormError('Por favor verifica tu número de teléfono.');
       setFormStep(2);
       setTimeout(() => phoneInputRef.current?.focus(), 150);
       return;
     }
 
-    // Guard: Validate Step 3 field (Dirección)
     const fullAddress = addressCalle.trim() || addressColonia.trim();
     if (!fullAddress) {
-      setFormError("Por favor ingresa tu dirección.");
-      triggerShake();
+      setFormError('Por favor ingresa tu dirección.');
       calleInputRef.current?.focus();
       return;
     }
@@ -864,1477 +445,116 @@ export default function Landing() {
     if (!addressColonia.trim()) setAddressColonia(fullAddress);
 
     dismissKeyboard();
-    setFormStep("verifying");
+    setFormStep('verifying');
     setVerificationProgress(0);
     setLoading(true);
 
-    let distance = 5.0;
+    let distance: number;
     try {
       distance = await asyncGetColoniaDistance(fullAddress, gpsCoords);
-    } catch (e) {
+    } catch {
       distance = getColoniaDistance(fullAddress);
     }
-    const eligible = distance <= 1.0;
     setCalculatedDistance(distance);
 
-    // Timed step-by-step verification phases
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1100));
-      setVerificationProgress(1);
-      await new Promise((resolve) => setTimeout(resolve, 1100));
-      setVerificationProgress(2);
-      await new Promise((resolve) => setTimeout(resolve, 1100));
-      setVerificationProgress(3);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (e) {}
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+    setVerificationProgress(1);
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+    setVerificationProgress(2);
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+    setVerificationProgress(3);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
-      await dbPreregister();
-
-      // Save simulated user details locally for subsequent loads
-      try {
-        const distVal = calculatedDistance || getColoniaDistance(fullAddress);
-        const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia: fullAddress, addressCalle: fullAddress, preferredTime, distanceKm: distVal };
-        localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
-      } catch(e) {}
-
-      setIsWaitlisted(false);
-      setDirection("forward");
-      setRegistered(true);
-    } catch (err: any) {
-      console.warn("API preregister failed, falling back to seamless client-side experience:", err);
-      // Seamless LocalStorage Fallback!
-      try {
-        const distVal = calculatedDistance || getColoniaDistance(fullAddress);
-        const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia: fullAddress, addressCalle: fullAddress, preferredTime, distanceKm: distVal };
-        localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
-      } catch(e) {}
-
-      setIsWaitlisted(false);
-      setDirection("forward");
-      setRegistered(true);
+      await dbPreregister(distance);
+    } catch (err) {
+      console.warn('API preregister fallback to client storage:', err);
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleStep1Submit = async (e: FormEvent) => {
-    e.preventDefault();
-    setFormError(null);
-    if (!name.trim() || !phone.trim() || !addressCalle.trim() || !addressColonia.trim()) {
-      setFormError("Por favor completa todos los campos.");
-      return;
-    }
-
-    setLoading(true);
-    const distance = await asyncGetColoniaDistance(addressColonia, gpsCoords);
-    const eligible = distance <= 1.0;
-    setCalculatedDistance(distance);
-
-    try {
-      await dbPreregister();
-      setFormStep(2);
-    } catch (err: any) {
-      // Offline fallback
-      setFormStep(2);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConfirmEligible = async (e?: FormEvent) => {
-    if (e) e.preventDefault();
-    setFormError(null);
-
-    // Validate Step 1
-    if (!name.trim()) {
-      setFormError("Por favor ingresa tu nombre en el paso 1.");
-      setDirection("backward");
-      setFormStep(1);
-      setTimeout(() => nameInputRef.current?.focus(), 150);
-      return;
-    }
-    if (!phone.trim()) {
-      setFormError("Por favor ingresa tu teléfono en el paso 1.");
-      setDirection("backward");
-      setFormStep(1);
-      setTimeout(() => phoneInputRef.current?.focus(), 150);
-      return;
-    }
-
-    // Validate Step 2
-    if (!addressCalle.trim() || !addressColonia.trim()) {
-      setFormError("Por favor ingresa tu dirección en el paso 2.");
-      setDirection("backward");
-      setFormStep(2);
-      setTimeout(() => {
-        if (!addressCalle.trim()) calleInputRef.current?.focus();
-        else coloniaInputRef.current?.focus();
-      }, 150);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await dbPreregister();
-
-      // Save simulated user details locally for subsequent loads
       try {
-        const distVal = calculatedDistance || (addressColonia ? getColoniaDistance(addressColonia) : null);
-        const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, distanceKm: distVal };
-        localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
-      } catch(e) {}
+        const distVal = distance || getColoniaDistance(fullAddress);
+        const savedUsers = JSON.parse(localStorage.getItem('simulated_users') || '{}');
+        savedUsers[phone] = {
+          name,
+          phone,
+          deliveryPreference,
+          addressColonia: fullAddress,
+          addressCalle: fullAddress,
+          preferredTime,
+          distanceKm: distVal,
+        };
+        localStorage.setItem('simulated_users', JSON.stringify(savedUsers));
+      } catch {}
 
-      setIsWaitlisted(false);
-      setDirection("forward");
       setRegistered(true);
-    } catch (err: any) {
-      console.warn("Offline confirmation fallback:", err);
-      try {
-        const distVal = calculatedDistance || (addressColonia ? getColoniaDistance(addressColonia) : null);
-        const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, distanceKm: distVal };
-        localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
-      } catch(e) {}
-
-      setIsWaitlisted(false);
-      setDirection("forward");
-      setRegistered(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConfirmWaitlist = async () => {
-    setFormError(null);
-    setLoading(true);
-    try {
-      await dbPreregister();
-
-      // Save simulated user details locally for subsequent loads
-      try {
-        const distVal = calculatedDistance || (addressColonia ? getColoniaDistance(addressColonia) : null);
-        const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, distanceKm: distVal };
-        localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
-      } catch(e) {}
-
-      setIsWaitlisted(true);
-      setDirection("forward");
-      setRegistered(true);
-    } catch (err: any) {
-      console.warn("Offline waitlist confirmation fallback:", err);
-      try {
-        const distVal = calculatedDistance || (addressColonia ? getColoniaDistance(addressColonia) : null);
-        const savedUsers = JSON.parse(localStorage.getItem("simulated_users") || "{}");
-        savedUsers[phone] = { name, phone, deliveryPreference, addressColonia, addressCalle, preferredTime, distanceKm: distVal };
-        localStorage.setItem("simulated_users", JSON.stringify(savedUsers));
-      } catch(e) {}
-
-      setIsWaitlisted(true);
-      setDirection("forward");
-      setRegistered(true);
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex-1 flex flex-col w-full bg-[#fdf0d5]">
-      {/* Hero Section - 100% Pantalla completa con imagen de fondo continua */}
-      <section className="sticky top-0 z-0 w-full px-0 pt-0 pb-0 flex flex-col items-start text-left justify-start h-[100dvh] min-h-[100dvh] overflow-hidden will-change-transform">
+    <div className="landing-page">
+      {/* 1. Primera pantalla: Hero sticky con fotografía y selector de fecha */}
+      <HeroSection
+        role={role}
+        setRole={setRole}
+        handleNavbarPointerDown={handleNavbarPointerDown}
+        handleNavbarPointerUpOrLeave={handleNavbarPointerUpOrLeave}
+        handleNavbarClick={handleNavbarClick}
+        setPreferredTime={setPreferredTime}
+        openBottomSheet={openBottomSheet}
+      />
 
-        {/* Cesto grande a pantalla completa (Full Bleed Edge-to-Edge) de arriba a abajo */}
-        <div className="w-full relative px-0 flex-1 flex flex-col">
-          <div className="w-full border-b border-black/10 overflow-hidden shadow-md relative flex-1 flex flex-col min-h-[100dvh] min-h-[100svh] pb-4 justify-between">
-            {/* Imagen de fondo anclada abajo para mostrar todo el piso y margen inferior original */}
-            <img 
-              src="https://i.ibb.co/cc81GSmJ/IMG-9746.jpg" 
-              alt="Cesto de lavandería SOMOS en ambiente real minimalista" 
-              className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none select-none"
-              fetchPriority="high"
-              decoding="sync"
-              onError={(e) => {
-                e.currentTarget.src = canvasLaundryBag;
-              }}
-            />
+      {/* 2. Segunda pantalla: Tarjetas editoriales sobre el Hero */}
+      <FeatureCardsSection
+        role={role}
+        setRole={setRole}
+        handleNavbarPointerDown={handleNavbarPointerDown}
+        handleNavbarPointerUpOrLeave={handleNavbarPointerUpOrLeave}
+        handleNavbarClick={handleNavbarClick}
+      />
 
-            {/* Degradado fino y sutil que solo abraza el texto sin invadir el resto de la foto */}
-            <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black/75 via-black/30 via-50% to-transparent pointer-events-none" />
-
-            {/* Navbar 1: Navbar de la Primera Sección (Hero) - Transparente y anclado al inicio del Hero */}
-            <header 
-              className="absolute top-0 left-0 right-0 z-30 w-full h-[34px] bg-transparent text-white select-none cursor-pointer flex items-center justify-center"
-              style={{ WebkitTouchCallout: 'none' }}
-              onPointerDown={handleNavbarPointerDown}
-              onPointerUp={handleNavbarPointerUpOrLeave}
-              onPointerLeave={handleNavbarPointerUpOrLeave}
-              onPointerCancel={handleNavbarPointerUpOrLeave}
-              onClick={handleNavbarClick}
-              onContextMenu={(e) => e.preventDefault()}
-            >
-              <div className="max-w-sm w-full mx-auto px-4 h-[34px] relative flex items-center justify-center">
-                {(role === 'associate' || role === 'admin') && (
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); setRole('customer'); navigate('/'); }}
-                    className="text-xs font-semibold px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 uppercase tracking-wider text-white transition-all duration-200 absolute left-4 cursor-pointer"
-                  >
-                    Salir
-                  </button>
-                )}
-              </div>
-            </header>
-
-            {/* Parte Superior: Texto de beneficios alineado a la izquierda (con espacio para la navbar de 34px) */}
-            <div className="relative z-10 w-full max-w-sm mx-auto px-3 sm:px-6 pt-[34px] sm:pt-[38px] pb-1 flex flex-col items-start justify-center text-left">
-              <div className="select-none w-full flex flex-col items-start text-left">
-                <p className="w-full text-[27px] text-white font-bold leading-tight -mt-1 mb-3 text-center whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]">
-                  Sin báscula ni enredos
-                </p>
-                <p className="w-full text-[25px] text-white font-normal font-geist leading-[1.18] text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)]">
-                  Llena el cesto con<br />
-                  la ropa que quieras, lo<br />
-                  lavamos y doblamos todo<br />
-                  <span className="relative inline-block mt-1">
-                    <span className="absolute -inset-x-[6px] -bottom-[0.5px] h-[calc(42%+13px)] bg-[#2563eb]/75 backdrop-blur-[2px] rounded-[5px] shadow-[0_2px_8px_rgba(37,99,235,0.4)] -z-0"></span>
-                    <span className="relative z-10 font-bold text-[25px] text-white leading-tight drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]">
-                      por <span className="font-bold">$</span><span className="font-extrabold">95</span>
-                    </span>
-                  </span>
-                </p>
-                <div className="w-full flex flex-col items-center text-center drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.55)] pt-0.5">
-                  <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[24px] text-white font-medium font-geist leading-normal">
-                    <span>A domicilio</span>
-                    <span>•</span>
-                    <span>En <span className="text-[23px]">24</span>h.</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Zona Media: Indicador flotante minimalista glassmorphism */}
-            <div className="relative w-full flex-1 select-none flex items-center justify-center px-4">
-              <div className="absolute top-20 left-10 sm:left-14 z-20 bg-black/28 backdrop-blur-md text-white text-[13px] font-geist px-3 py-1.5 rounded-2xl rounded-br-none shadow-lg border border-white/20 border-r-white/45 border-b-white/45 select-none flex flex-col items-center text-center leading-[1.15]">
-                <span className="text-[13.5px] font-normal whitespace-nowrap">capacidad</span>
-                <span className="whitespace-nowrap tracking-wide font-bold">5 kg</span>
-              </div>
-            </div>
-
-            {/* Selector de Fecha Integrado en Cápsula (mismo estilo, bordes, colores y fondo de cápsula) */}
-            <div className="relative z-10 pb-2 sm:pb-3 px-4 w-full flex flex-col items-center mt-auto">
-              <div className="w-full max-w-[320px] rounded-[26px] pt-[6px] pb-0 px-2 shadow-[0_8px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] bg-white/50 backdrop-blur-md border border-white/70 flex flex-col items-center gap-2.5 overflow-hidden">
-                
-                {/* Título de la cápsula */}
-                <div className="w-full text-center px-0.5">
-                  <p className="text-[16px] font-semibold text-slate-800 font-geist leading-none whitespace-nowrap relative top-[3px]">
-                    ¿Cuándo te lo llevamos?
-                  </p>
-                </div>
-
-                {/* Selector de Tarjetas Horizontales (Opción 3: Borde Azul Marcado y Resalte Tipográfico) */}
-                <div className="w-full grid grid-cols-3 gap-1.5 select-none">
-                  {[0, 1, 2].map((i) => {
-                    const fecha = fechasList[i];
-                    if (!fecha) return null;
-                    const isSelected = dateWheelIndex === i;
-                    const label = i === 0 ? "HOY" : i === 1 ? "MAÑANA" : fecha.toLocaleDateString('es-ES', { weekday: 'short' }).toUpperCase();
-                    const dayNum = fecha.getDate();
-                    const monthShort = fecha.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '');
-
-                    return (
-                      <button
-                        key={i}
-                        type="button"
-                        onClick={() => setDateWheelIndex(i)}
-                        className={`py-1.5 px-1 rounded-[14px] flex flex-col items-center justify-center transition-all duration-150 cursor-pointer ${
-                          isSelected 
-                            ? 'bg-white border-2 border-[#0f55d8] shadow-[0_2px_10px_rgba(15,85,216,0.18)]' 
-                            : 'bg-white/75 hover:bg-white border-2 border-slate-200/70 shadow-xs'
-                        }`}
-                      >
-                        <span className={`text-[9.5px] font-extrabold tracking-wider leading-none mb-0.5 ${isSelected ? 'text-[#0f55d8]' : 'text-slate-400'}`}>
-                          {label}
-                        </span>
-                        <span className={`text-[12px] leading-tight capitalize truncate max-w-full px-0.5 ${isSelected ? 'text-slate-950 font-bold' : 'text-slate-600 font-medium'}`}>
-                          {dayNum} {monthShort}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Botón píldora interior */}
-                <button 
-                  onClick={() => {
-                    const selDate = fechasList[dateWheelIndex];
-                    if (selDate) {
-                      const formattedObj = formatWheelDate(selDate, dateWheelIndex);
-                      const formattedStr = formattedObj.tag ? `${formattedObj.tag} (${formattedObj.text})` : formattedObj.text;
-                      setPreferredTime(formattedStr);
-                      localStorage.setItem("user_preferred_time", formattedStr);
-                    }
-                    openBottomSheet();
-                  }}
-                  className="w-full h-[39px] bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] active:scale-[0.99] transition-all border border-white/40 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65),0_2px_8px_rgba(15,85,216,0.3)] cursor-pointer"
-                >
-                  <span>Quiero mi cesto gratis</span>
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contenedor apilado: Sube desde abajo, cubre al Hero, y mantiene fijo el Navbar en top: 0 */}
-      <div id="content-stack-wrapper" className="relative z-10 w-full bg-[#FAF8F5] rounded-t-xl will-change-transform">
-        
-        {/* Navbar 2: Ubicado en el borde superior de la segunda sección, sube con ella y se queda anclado fijo en top: 0 */}
-        <header 
-          className="sticky top-0 z-50 w-full h-[48px] bg-[#FAF8F5] border-b border-black/20 transition-all select-none cursor-pointer rounded-t-xl flex items-center justify-center"
-          style={{ WebkitTouchCallout: 'none' }}
-          onPointerDown={handleNavbarPointerDown}
-          onPointerUp={handleNavbarPointerUpOrLeave}
-          onPointerLeave={handleNavbarPointerUpOrLeave}
-          onPointerCancel={handleNavbarPointerUpOrLeave}
-          onClick={handleNavbarClick}
-          onContextMenu={(e) => e.preventDefault()}
-        >
-          <div className="max-w-sm w-full mx-auto px-4 h-[48px] relative flex items-center justify-center">
-            {(role === 'associate' || role === 'admin') && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); setRole('customer'); navigate('/'); }}
-                className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 uppercase tracking-wider text-slate-600 transition-all duration-200 absolute left-4 cursor-pointer"
-              >
-                Salir
-              </button>
-            )}
-
-            {/* Marca somos en la navbar (22px) alineada a la izquierda */}
-            <span 
-              className="font-unbounded font-normal text-[22px] tracking-[-0.04em] text-[#1a1a1a] lowercase select-none leading-none h-full flex items-center justify-start w-full px-2"
-              style={{ fontFamily: 'var(--font-unbounded, "Unbounded", sans-serif)', letterSpacing: '-0.04em' }}
-            >
-              somos
-            </span>
-          </div>
-        </header>
-
-        {/* Sección 2: Colecciones Destacadas */}
-        <section 
-          id="colecciones-destacadas-section" 
-          className="relative w-full px-4 py-8 sm:py-12 flex flex-col justify-center items-center bg-[#FAF8F5] min-h-[calc(100dvh-48px)]"
-        >
-        <div className="w-full max-w-[420px] sm:max-w-[460px] mx-auto flex flex-col gap-3.5 sm:gap-4 select-none">
-          
-          {/* Card 1: CESTOS SOMOS */}
-          <div 
-            onClick={() => openBottomSheet()}
-            className="group relative overflow-hidden rounded-2xl bg-[#ECE9E2] border border-black/[0.04] p-5 sm:p-6 min-h-[155px] sm:min-h-[165px] flex items-center justify-between cursor-pointer transition-all duration-200 active:scale-[0.99] hover:shadow-md"
-          >
-            <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
-              <div>
-                <h3 className="font-geist font-bold text-[22px] sm:text-[24px] tracking-tight text-[#111111] leading-none">
-                  Cestos SOMOS
-                </h3>
-                <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
-                  Pídelo hoy y llénalo a tu propio ritmo. Caben hasta 7 días de ropa.
-                </p>
-              </div>
-              <div className="mt-4 sm:mt-5">
-                <span className="inline-block font-geist font-bold text-[13px] sm:text-[13.5px] uppercase tracking-wider text-[#111111] underline underline-offset-[5px] decoration-[1.5px] decoration-black group-hover:opacity-75 transition-opacity">
-                  PIDE TU CESTO GRATIS
-                </span>
-              </div>
-            </div>
-            
-            {/* Espacio reservado para imagen 1 */}
-            <div className="absolute right-0 top-0 bottom-0 w-[42%] sm:w-[40%] flex items-center justify-center pointer-events-none">
-            </div>
-          </div>
-
-          {/* Card 2: GARANTÍA & CUIDADO */}
-          <div 
-            onClick={() => openBottomSheet()}
-            className="group relative overflow-hidden rounded-2xl bg-[#ECE9E2] border border-black/[0.04] p-5 sm:p-6 min-h-[155px] sm:min-h-[165px] flex items-center justify-between cursor-pointer transition-all duration-200 active:scale-[0.99] hover:shadow-md"
-          >
-            <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
-              <div>
-                <h3 className="font-geist font-bold text-[22px] sm:text-[24px] tracking-tight text-[#111111] leading-none">
-                  Cuidado experto
-                </h3>
-                <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
-                  Lavado profesional por color y tipo de tela. Garantía 100%.
-                </p>
-              </div>
-              <div className="mt-4 sm:mt-5">
-                <span className="inline-block font-geist font-bold text-[13px] sm:text-[13.5px] uppercase tracking-wider text-[#111111] underline underline-offset-[5px] decoration-[1.5px] decoration-black group-hover:opacity-75 transition-opacity">
-                  SATISFACCIÓN GARANTIZADA
-                </span>
-              </div>
-            </div>
-            
-            {/* Espacio reservado para imagen 2 */}
-            <div className="absolute right-0 top-0 bottom-0 w-[42%] sm:w-[40%] flex items-center justify-center pointer-events-none">
-            </div>
-          </div>
-
-          {/* Card 3: TRANSPARENCIA */}
-          <div 
-            onClick={() => openBottomSheet()}
-            className="group relative overflow-hidden rounded-2xl bg-[#ECE9E2] border border-black/[0.04] p-5 sm:p-6 min-h-[155px] sm:min-h-[165px] flex items-center justify-between cursor-pointer transition-all duration-200 active:scale-[0.99] hover:shadow-md"
-          >
-            <div className="w-[58%] sm:w-[60%] flex flex-col justify-between z-10">
-              <div>
-                <h3 className="font-geist font-bold text-[22px] sm:text-[24px] tracking-tight text-[#111111] leading-none">
-                  Transparencia
-                </h3>
-                <p className="font-geist text-[13.5px] sm:text-[14px] text-[#222222] font-normal leading-snug mt-2">
-                  Fórmulas hipoalergénicas y aromas que duran semanas.
-                </p>
-              </div>
-              <div className="mt-4 sm:mt-5">
-                <span className="inline-block font-geist font-bold text-[13px] sm:text-[13.5px] uppercase tracking-wider text-[#111111] underline underline-offset-[5px] decoration-[1.5px] decoration-black group-hover:opacity-75 transition-opacity">
-                  INCLUIDO SIN COSTO
-                </span>
-              </div>
-            </div>
-            
-            {/* Espacio reservado para imagen 3 */}
-            <div className="absolute right-0 top-0 bottom-0 w-[42%] sm:w-[40%] flex items-center justify-center pointer-events-none">
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Nueva Sección: Empieza hoy (Sin salir de casa) */}
-      <section className="relative z-10 w-full px-0 pt-4 pb-8 sm:pb-12 flex flex-col justify-between bg-[#fdf0d5] min-h-[calc(100dvh-50px)]" id="empieza-hoy-section">
-        <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
-          {/* Título de la sección fuera de la tarjeta */}
-          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="empieza-hoy-title-container">
-            <div className="relative -top-2">
-              <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-                Empieza{" "}
-                <span className="relative inline-block px-0.5">
-                  gratis
-                  <svg
-                    className="absolute left-0 -bottom-[6px] w-full h-[8px] text-[#0f55d8] pointer-events-none overflow-visible"
-                    viewBox="0 0 100 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    preserveAspectRatio="none"
-                  >
-                    <motion.path
-                      d="M 1 6 C 30 4.5, 70 7, 99 5.5"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      viewport={{ once: false, amount: 0.5 }}
-                      transition={{ duration: 0.75, ease: "easeInOut", delay: 0.1 }}
-                    />
-                  </svg>
-                </span><br />
-                con tu cesto
-              </h1>
-            </div>
-          </div>
-
-          {/* Tarjeta de Servicio a Domicilio - Blanca */}
-          <div className="px-0 sm:px-0 -mt-1 w-full relative">
-            <div 
-              className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
-              id="empty-green-landing-card"
-            >
-              {/* Texto explicativo ARRIBA de la imagen */}
-              <div className="pt-5 pb-[20px] px-4 sm:pt-6 sm:pb-[20px] sm:px-6 w-full text-left relative">
-                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  Pídelo <span className="text-[#0f55d8] font-bold">hoy</span><br />
-                  y llénalo a tu propio ritmo
-                </p>
-              </div>
-
-              {/* Imagen en el MEDIO */}
-              <div className="w-full h-[258px] flex flex-col relative px-2.5 overflow-visible">
-                {/* Etiqueta "Caben hasta 7 días de ropa" */}
-                <div 
-                  className="absolute top-1 sm:top-1.5 right-2.5 sm:right-3 z-20 w-[146px] sm:w-[156px] h-[58px] sm:h-[62px] pointer-events-none"
-                >
-                  <img 
-                    src="https://iili.io/CU67SLX.webp" 
-                    alt="Hasta 1 semana de ropa" 
-                    className="w-full h-full object-fill drop-shadow-sm -rotate-[3deg]"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[1.05] font-semibold text-white/95 text-[17.5px] font-geist px-0 drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)] select-none">
-                    <span className="whitespace-nowrap">Caben hasta</span>
-                    <span className="whitespace-nowrap">7 días de ropa</span>
-                  </div>
-                </div>
-
-                {/* Línea curva punteada que conecta la etiqueta con el cesto (llega justo al borde) */}
-                <svg 
-                  className="absolute inset-0 w-full h-full pointer-events-none z-15 overflow-visible" 
-                  viewBox="0 0 100 100" 
-                  preserveAspectRatio="none"
-                >
-                  <path 
-                    d="M 76 22 Q 77 32, 69.5 41.5" 
-                    stroke="#333333" 
-                    strokeWidth="2" 
-                    strokeDasharray="5 5" 
-                    fill="none" 
-                    strokeLinecap="round" 
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
-
-                <div className="relative w-full h-full rounded-md overflow-hidden select-none bg-transparent">
-                  <img 
-                    src="https://i.ibb.co/sdyNTT4D/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png" 
-                    alt="Servicio a domicilio SOMOS" 
-                    className="w-full h-full object-cover object-center pointer-events-none select-none"
-                    onError={(e) => {
-                      e.currentTarget.src = "https://i.ibb.co/NdZJ00qk/1-E69988-B-12-E9-42-D8-A11-C-FA3-C665-B140-E.png";
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Texto explicativo DEBAJO de la imagen */}
-              <div className="pt-[20px] pb-3.5 px-4 sm:pt-[20px] sm:pb-4.5 sm:px-6 w-full text-left relative flex flex-col items-start">
-                <div className="w-full text-left">
-                  <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                    <span className="whitespace-nowrap">Todo lo que metas por <span className="text-[#0f55d8] font-bold">$95</span></span><br />
-                    <span className="whitespace-nowrap">sin límite de peso</span><br />
-                    <span className="whitespace-nowrap">sin sorpresas al pagar</span>
-                  </p>
-                </div>
-                <div className="w-full flex justify-end mt-3.5">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      document.getElementById('editorial-location-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="text-[#333333] underline underline-offset-4 decoration-[#333333] font-geist font-semibold text-[17px] hover:text-black transition-colors cursor-pointer select-none"
-                  >
-                    saber más
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative z-10 w-full px-0 pt-0 flex flex-col justify-between pb-8 sm:pb-12 bg-[#fdf0d5] min-h-[calc(100dvh-50px)]" id="editorial-location-section">
-        <div className="relative z-10 w-full max-w-sm mx-auto px-4 pt-0 font-sans">
-          
-          {/* Header directly in the layout, matching Empieza hoy title container */}
-          <div className="w-full text-center pt-2 pb-3 select-none px-4" id="location-editorial-head">
-            <div className="relative -top-2">
-              <h1 className="text-center text-[26px] text-[#333333] font-semibold font-geist leading-tight">
-                Nosotros<br />
-                hacemos el resto
-              </h1>
-            </div>
-          </div>
-
-          {/* Tarjeta de Recepción - Blanca del mismo tamaño y estilo exacto que la tarjeta Empieza hoy */}
-          <div className="px-0 sm:px-0 -mt-1 w-full relative">
-            <div 
-              className="w-full rounded-lg border border-gray-100/50 shadow-none flex flex-col bg-white relative" 
-              id="recepcion-landing-card"
-            >
-              {/* Textos explicativos ARRIBA del mapa */}
-              <div className="pt-5 px-4 sm:pt-6 sm:px-6 pb-2 sm:pb-3 w-full text-left">
-                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight">
-                  <span className="text-[#0f55d8] font-semibold">Recogemos</span> el cesto lleno y<br />
-                  te lo <span className="text-[#0f55d8] font-semibold">entregamos</span> con tu ropa lista para usar
-                </p>
-                <p className="text-[22px] text-[#333333] font-medium font-geist leading-tight mt-6">
-                  a domicilio o en punto:
-                </p>
-
-                {isNavigatingGPS && gpsLoadingStep && (
-                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-blue-50/60 border border-blue-100 rounded-xl text-center text-xs text-[#0f55d8] font-bold flex items-center justify-center gap-2 select-none">
-                    <span className="w-2 h-2 rounded-full bg-[#0f55d8] animate-pulse" />
-                    <span>{gpsLoadingStep}</span>
-                  </div>
-                )}
-
-                {geoError && (
-                  <div className="mt-3 w-full max-w-[280px] p-2.5 bg-rose-50 border border-rose-100 rounded-xl text-left text-[11.5px] text-rose-600 font-semibold leading-relaxed" id="gps-status-error">
-                    ⚠️ {geoError}
-                  </div>
-                )}
-              </div>
-
-              {/* Contenedor con Mapa con su tamaño original h-[270px] */}
-              <div className="w-full h-[270px] flex flex-col relative mb-[49px] sm:mb-[53px]">
-                <div className="relative w-full flex-1 select-none overflow-visible bg-transparent flex items-center justify-center px-2.5">
-                  <a 
-                    href="https://www.google.com/maps/place/Paseo+de+las+Palmas+209,+Coatzacoalcos,+Veracruz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative w-full h-full rounded-md overflow-visible bg-[#f4f5f5] border border-gray-300 flex items-center justify-center font-sans tracking-tight block cursor-pointer hover:opacity-95 transition-opacity" 
-                    id="location-dynamic-map-frame-container"
-                  >
-                    {/* Inner map canvas container to keep streets & markers clipped to map rounded corners */}
-                    <div className="absolute inset-0 rounded-md overflow-hidden bg-[#f4f5f5]">
-                      {/* Streets & Roads Layer */}
-                      {/* Paseo de las palmas */}
-                      <div className="absolute top-[-20%] bottom-[40%] left-[48%] w-[32px] bg-[#cbcfdb] z-0">
-                         <span translate="no" className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Paseo de las Palmas</span>
-                      </div>
-                      
-                      {/* Avestruces */}
-                      <div className="absolute top-[-20%] bottom-[-20%] right-0 w-[32px] bg-[#cbcfdb] z-0">
-                        <span translate="no" className="absolute top-[34%] left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 whitespace-nowrap text-[#495464] text-[10px] font-semibold tracking-wide notranslate">Avestruces</span>
-                      </div>
-
-                      {/* Middle horizontal street - Río Calzadas (colinda con Paseo de las Palmas) */}
-                      <div className="absolute bottom-[40%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
-                         <span translate="no" className="absolute left-[38%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
-                         <ArrowRight className="absolute right-12 top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5 rotate-180" />
-                      </div>
-                      
-                      {/* Bottom horizontal street (Calle del Oxxo) - Río Calzadas */}
-                      <div className="absolute bottom-[15%] -left-10 right-0 h-[32px] bg-[#cbcfdb] z-0 flex items-center">
-                         <span translate="no" className="absolute left-[20%] top-1/2 -translate-y-1/2 text-[#495464] text-[10px] font-semibold tracking-wide whitespace-nowrap notranslate">Río Calzadas</span>
-                         <ArrowRight className="absolute left-[47%] top-1/2 -translate-y-1/2 text-[#6e7682] w-3.5 h-3.5" />
-                      </div>
-                      
-                      {/* Conexión de calles izquierda */}
-                      <div className="absolute bottom-[15%] -left-6 w-[50px] h-[30%] bg-[#cbcfdb] z-0"></div>
-
-                      {/* Markers & Labels */}
-                      
-                      {/* Red Pin - Positioned at left-[38%] to keep the blue circle near but not touching the street text */}
-                      <div className="absolute top-[19%] left-[38%] z-20 cursor-pointer flex flex-col items-center">
-                        {/* Attached label positioned to the left without affecting the marker's position */}
-                        <div className="absolute right-[100%] pr-1.5 top-[2px] flex flex-col items-center text-center leading-tight whitespace-nowrap font-geist">
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">Punto de</span>
-                          <span translate="no" className="text-[#333333] text-[15px] sm:text-[16px] font-semibold tracking-tight notranslate">recepción</span>
-                        </div>
-                        <div 
-                          className="relative origin-bottom flex items-center justify-center w-[38px] h-[38px]"
-                        >
-                          {/* Circle enclosing the pin marker */}
-                          <div className="absolute -inset-0.5 border-2 border-[#0f55d8] bg-[#0f55d8]/10 rounded-full pointer-events-none"></div>
-                          <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm relative z-10">
-                            <defs>
-                              <mask id="google-pin-cutout">
-                                <rect width="24" height="24" fill="white" />
-                                <circle cx="12" cy="9" r="2.8" fill="black" />
-                              </mask>
-                            </defs>
-                            <path 
-                              d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
-                              fill="#ea4335" 
-                              mask="url(#google-pin-cutout)"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* Ferreteria */}
-                      <div className="absolute bottom-[50%] left-[65%] flex flex-col items-center z-10 transition-transform cursor-pointer">
-                        <span translate="no" className="text-black text-[12px] font-medium tracking-tight notranslate mb-0.5">Ferretería</span>
-                        <div className="w-[22px] h-[22px] bg-[#9ca3af] rounded-full flex items-center justify-center text-white border-2 border-white">
-                          <div className="w-[6px] h-[6px] bg-white rounded-full"></div>
-                        </div>
-                      </div>
-
-                      {/* OXXO Santa Isabel */}
-                      <div className="absolute bottom-[3%] right-[15%] flex flex-col items-center z-10 transition-transform cursor-pointer">
-                        <div className="bg-white w-[34px] h-[22px] rounded-[2px] border-2 border-white shadow-sm flex items-center justify-center mb-1 overflow-hidden">
-                          <img src="https://upload.wikimedia.org/wikipedia/en/4/40/OXXO_logo.svg" alt="OXXO" className="w-full h-full object-contain" />
-                        </div>
-                        <span translate="no" className="text-black text-[12px] font-medium whitespace-nowrap tracking-tight notranslate">OXXO Santa Isabel</span>
-                      </div>
-                    </div>
-
-                    {/* Botón Ver ubicación ubicado en la esquina inferior izquierda sobresaliendo del mapa */}
-                    <button 
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleNavigationAndGPS();
-                      }}
-                      disabled={isNavigatingGPS}
-                      className="absolute bottom-[-19px] left-[14px] sm:left-[16px] z-30 h-[38px] px-5 bg-[#0f55d8] text-white rounded-full font-semibold text-[16px] font-geist flex items-center justify-center gap-1.5 select-none cursor-pointer disabled:opacity-85 transition-colors whitespace-nowrap border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)]"
-                      id="location-cta-navigation-button"
-                    >
-                      {isNavigatingGPS ? (
-                        <span>Conectando...</span>
-                      ) : (
-                        <span>Ver ubicación</span>
-                      )}
-                    </button>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sección Asimétrica Editorial (Playeras) */}
-      <section 
-        id="lava-estrena-section" 
-        className="relative z-10 w-full px-3 sm:px-6 pt-2 sm:pt-4 pb-16 sm:pb-24 flex flex-col justify-start items-center bg-[#4E0000] min-h-screen"
-      >
-        
-        <div className="w-full max-w-[520px] mx-auto flex flex-col relative px-2 sm:px-4 pt-0">
-          {/* Título Grande y Subtítulo */}
-          <div className="mb-2 sm:mb-4 w-full px-1">
-            <h2 className="font-geist text-white text-[56px] sm:text-[72px] font-bold drop-shadow-sm leading-[0.95] tracking-[-0.03em] uppercase">
-              Lava <span className="font-serif italic font-light lowercase text-[0.6em] text-white/85 tracking-normal inline-block align-middle transform -translate-y-1 sm:-translate-y-1.5 ml-1">y</span><br />
-              Estrena
-            </h2>
-            <p className="mt-3.5 sm:mt-4 text-white/90 text-[17px] sm:text-xl font-medium tracking-tight leading-snug">
-              Pruébate todo en casa<br />
-              quédate solo con lo que te guste
-            </p>
-          </div>
-
-          <div className="w-full flex items-start justify-between gap-3 sm:gap-6 relative mt-4 sm:mt-6">
-            
-            {/* Left Column - Elevated (Card 1 & Card 3) */}
-            <div className="w-[48%] mt-0 sm:mt-2 flex flex-col gap-6 sm:gap-8 relative">
-              {/* Card 1 */}
-              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_6px_20px_rgba(0,0,0,0.2)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
-                <span className="font-geist text-neutral-800/35 text-base sm:text-lg font-medium tracking-wider select-none">
-                  ropa
-                </span>
-              </div>
-
-              {/* Card 3 - Continuing the sequence */}
-              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_8px_22px_rgba(0,0,0,0.22)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
-              </div>
-            </div>
-            
-            {/* Right Column - Pushed down (Card 2 & Card 4) */}
-            <div className="w-[48%] mt-12 sm:mt-18 flex flex-col gap-6 sm:gap-8 relative">
-              {/* Card 2 */}
-              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
-              </div>
-
-              {/* Card 4 - Beside Card 3 */}
-              <div className="w-full bg-[#f3f3f4] rounded-none shadow-[0_10px_25px_rgba(0,0,0,0.25)] overflow-hidden relative aspect-[3/4] flex items-center justify-center border border-white/20">
-              </div>
-            </div>
-
-          </div>
-
-          {/* Texto explicativo y botón debajo de las tarjetas */}
-          <div className="mt-8 sm:mt-12 mb-2 w-full px-1 flex flex-col items-start text-left select-none gap-3 sm:gap-3.5">
-            <p className="font-geist text-white/90 text-[17px] sm:text-xl font-medium tracking-tight leading-snug">
-              Recíbelo junto con tu ropa limpia
-            </p>
-            <button
-              onClick={openBottomSheet}
-              className="h-[43px] px-4 shrink-0 bg-[#0f55d8] text-white rounded-full font-semibold text-[17px] font-geist flex items-center justify-center gap-1.5 select-none disabled:opacity-85 hover:bg-[#0d4bc0] transition-colors border border-white/50 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.65)] cursor-pointer"
-            >
-              <span>Quiero mi cesto</span>
-            </button>
-          </div>
-        </div>
-
-      </section>
-      </div>
-
-      {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}
-      <div 
-        className="form-overlay" 
-        data-open={isBottomSheetOpen ? "true" : "false"}
-        onClick={() => {
+      {/* 3. Bottom Sheet de Registro / Verificación */}
+      <RegistrationBottomSheet
+        isOpen={isBottomSheetOpen}
+        onClose={() => {
           dismissKeyboard();
           setIsBottomSheetOpen(false);
         }}
+        formError={formError}
+        setFormError={setFormError}
+        registered={registered}
+        name={name}
+        setName={setName}
+        phone={phone}
+        setPhone={setPhone}
+        addressCalle={addressCalle}
+        setAddressCalle={setAddressCalle}
+        addressColonia={addressColonia}
+        setAddressColonia={setAddressColonia}
+        formStep={formStep}
+        setFormStep={setFormStep}
+        verificationProgress={verificationProgress}
+        calculatedDistance={calculatedDistance}
+        loading={loading}
+        isPhoneError={isPhoneError}
+        handlePhoneBlur={handlePhoneBlur}
+        goToStep2={goToStep2}
+        goToStep3={goToStep3}
+        submitStep3AndVerify={submitStep3AndVerify}
+        gpsAutofillLoading={gpsAutofillLoading}
+        gpsAutofillError={gpsAutofillError}
+        handleAddressInputClick={handleAddressInputClick}
+        showColoniaSuggestions={showColoniaSuggestions}
+        setShowColoniaSuggestions={setShowColoniaSuggestions}
+        setGpsCoords={setGpsCoords}
+        viewportRef={viewportRef}
+        nameInputRef={nameInputRef}
+        phoneInputRef={phoneInputRef}
+        calleInputRef={calleInputRef}
+        step1Ref={step1Ref}
+        step2Ref={step2Ref}
+        step3Ref={step3Ref}
+        sliderHeight={sliderHeight}
       />
-
-      <div 
-        className="form-bottom-sheet h-auto pt-4 pb-8 px-6" 
-        data-open={isBottomSheetOpen ? "true" : "false"}
-        id="bottom-sheet-container"
-      >
-        {/* Visual drag indicator (mobile-native premium aesthetic) */}
-        <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
-
-        {/* Close Button X on top-right */}
-        <button
-          onClick={() => {
-            dismissKeyboard();
-            setIsBottomSheetOpen(false);
-          }}
-          className="absolute right-4 top-4 p-1.5 text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-colors rounded-full pointer-events-auto z-20"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        {formError && (
-          <div className="mx-0 mt-2 p-2 bg-red-50 border border-red-100 text-red-650 rounded-xl text-[11px] font-bold flex items-center gap-2 select-none shrink-0 z-20">
-            <Info className="w-4.5 h-4.5 text-red-500 shrink-0" />
-            <span className="leading-tight">{formError}</span>
-          </div>
-        )}
-
-        {/* Form Inner Content Scroller with static height */}
-        <div className="w-full relative mt-3">
-          <div className="form-content-inner w-full flex flex-col">
-            
-              {registered ? (
-                <motion.div 
-                  key="step-registered"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-center flex flex-col items-center justify-center w-full py-4"
-                >
-                  <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4 shrink-0">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                  
-                  <h2 className="text-xl font-bold text-slate-900 tracking-tight mb-2">
-                    ¡Listo, {name.split(' ')[0]}!
-                  </h2>
-
-                  {isWaitlisted ? (
-                    <>
-                      <p className="text-gray-550 text-xs leading-relaxed mb-5">
-                        Hemos asignado y reservado tu cesto premium gratis. Aunque no contamos con reparto a domicilio en tu zona, te esperamos en nuestro mostrador para recibir y entregar tu ropa limpia.
-                      </p>
-
-                      {/* simulated coupon notches */}
-                      <div className="w-full border-t border-dashed border-gray-200 my-2 relative">
-                        <div className="absolute -left-[30px] -top-1.5 w-3 h-3 rounded-full bg-white border-r border-[#ebecef]"></div>
-                        <div className="absolute -right-[30px] -top-1.5 w-3 h-3 rounded-full bg-white border-l border-[#ebecef]"></div>
-                      </div>
-
-                      <div className="p-3 bg-slate-50 border border-slate-150 rounded-xl w-full text-left space-y-1.5 mt-2">
-                        <div>
-                          <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">
-                            Punto de Entrega y Recepción
-                          </p>
-                          <p className="font-extrabold text-gray-800 text-xs">
-                            {selectedLocationName || 'Punto de recepción (Mostrador)'}
-                          </p>
-                          <p className="text-[10px] text-gray-500 mt-1">
-                            Tu colonia ({addressColonia}) queda fuera de reparto, ¡pero tu cesto te espera en mostrador!
-                          </p>
-                        </div>
-                        
-                        <div className="border-t border-slate-150 pt-1.5 flex justify-between items-center text-[10px]">
-                          <span className="text-slate-500 font-semibold">Pre-registro:</span>
-                          <span className="bg-[#EBECEF] text-slate-800 px-1.5 py-0.5 rounded font-bold text-[9px] uppercase tracking-wider">Activo — Mostrador</span>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => setIsBottomSheetOpen(false)}
-                        className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm mt-4 select-none"
-                      >
-                        Entendido, ¡gracias!
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-gray-500 text-xs leading-relaxed mb-5">
-                        Hemos asignado y guardado un cesto premium exclusivo a tu número. Tu ropa limpia llegará directo a tu puerta en <span className="font-bold text-gray-800">{addressColonia}</span>.
-                      </p>
-
-                      {/* simulated coupon notches */}
-                      <div className="w-full border-t border-dashed border-gray-200 my-2 relative">
-                        <div className="absolute -left-[30px] -top-1.5 w-3 h-3 rounded-full bg-white border-r border-[#ebecef]"></div>
-                        <div className="absolute -right-[30px] -top-1.5 w-3 h-3 rounded-full bg-white border-l border-[#ebecef]"></div>
-                      </div>
-
-                      <div className="p-3 bg-slate-50 border border-slate-150 rounded-xl w-full text-left space-y-1.5 mt-2">
-                         <div>
-                           <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">
-                             Dirección Registrada
-                           </p>
-                           <p className="font-extrabold text-gray-800 text-xs text-slate-800">
-                             {addressCalle?.trim() === (addressColonia || "").trim() 
-                               ? addressCalle
-                               : `${addressCalle}, ${addressColonia}`
-                             }
-                           </p>
-                         </div>
-                         
-                         <div className="border-t border-slate-150 pt-1.5 flex justify-between items-center text-[10px]">
-                           <span className="text-slate-500 font-semibold">Pre-registro:</span>
-                           <span className="bg-[#EBECEF] text-slate-800 px-1.5 py-0.5 rounded font-bold text-[9px] uppercase tracking-wider">Activo</span>
-                         </div>
-                       </div>
-
-                       <button
-                         type="button"
-                         onClick={() => setIsBottomSheetOpen(false)}
-                         className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm mt-4 select-none"
-                       >
-                         Listo, ¡muchas gracias!
-                       </button>
-                    </>
-                  )}
-                </motion.div>
-              ) : formStep === "verifying" ? (
-                <motion.div
-                  key="step-verifying"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-center flex flex-col items-center justify-center w-full py-6 select-none"
-                >
-                  <div className="relative w-20 h-20 flex items-center justify-center mb-6">
-                    {/* Animated pulsing target ring representing the routing check */}
-                    <div className="absolute inset-0 border-[2.5px] border-dashed border-[#0f55d8]/40 rounded-full animate-spin" style={{ animationDuration: '10s' }} />
-                    <div className="absolute inset-2 bg-[#0f55d8]/5 rounded-full" />
-                    <MapPin className="w-8 h-8 text-[#0f55d8] relative z-10" />
-                  </div>
-
-                  <h3 className="text-lg font-bold text-slate-900 tracking-tight mb-1.5 font-geist">
-                    Verificando Cobertura
-                  </h3>
-                  <p className="text-gray-400 text-[19px] font-semibold uppercase tracking-wider mb-5">
-                    Análisis de Ruta en Tiempo Real
-                  </p>
-
-                  <div className="w-full max-w-sm space-y-3 bg-slate-50 border border-slate-150 rounded-xl p-4 text-left font-geist">
-                    {/* Step 1 */}
-                    <div className="flex items-center gap-3">
-                      {verificationProgress >= 1 ? (
-                        <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                      ) : (
-                        <Loader2 className="w-4 h-4 text-blue-500 shrink-0" />
-                      )}
-                      <p className={`text-xs font-semibold ${verificationProgress >= 1 ? 'text-emerald-700' : 'text-slate-600'}`}>
-                        Geolocalizando dirección ({addressColonia})...
-                      </p>
-                    </div>
-
-                    {/* Step 2 */}
-                    <div className="flex items-center gap-3">
-                      {verificationProgress >= 2 ? (
-                        <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                      ) : verificationProgress === 1 ? (
-                        <Loader2 className="w-4 h-4 text-blue-500 shrink-0" />
-                      ) : (
-                        <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />
-                      )}
-                      <p className={`text-xs font-semibold ${verificationProgress >= 2 ? 'text-emerald-700' : verificationProgress === 1 ? 'text-slate-600' : 'text-slate-400'}`}>
-                        Trazando ruta óptima y vías de acceso...
-                      </p>
-                    </div>
-
-                    {/* Step 3 */}
-                    <div className="flex items-center gap-3">
-                      {verificationProgress >= 3 ? (
-                        <CheckCircle className="w-4 h-4 text-[#0f55d8] shrink-0" />
-                      ) : verificationProgress === 2 ? (
-                        <Loader2 className="w-4 h-4 text-blue-500 shrink-0" />
-                      ) : (
-                        <div className="w-4 h-4 rounded-full border border-slate-300 shrink-0" />
-                      )}
-                      <p className={`text-xs font-semibold ${verificationProgress >= 3 ? 'text-emerald-700' : verificationProgress === 2 ? 'text-slate-600' : 'text-slate-400'}`}>
-                        {verificationProgress >= 3 
-                          ? `Distancia de traslado calculada: ~${calculatedDistance.toFixed(1)} km` 
-                          : "Estimando distancia de traslado..."}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden mt-6 max-w-sm">
-                    <motion.div
-                      className="bg-[#0f55d8] h-full"
-                      initial={{ width: "0%" }}
-                      animate={{
-                        width:
-                          verificationProgress === 0 ? "15%" :
-                          verificationProgress === 1 ? "45%" :
-                          verificationProgress === 2 ? "75%" : "100%"
-                      }}
-                      transition={{ duration: 0.8 }}
-                    />
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="active-steps-slider"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="w-full relative flex flex-col"
-                >
-                  {/* Elegant Segmented Progress Indicator (3 Steps) */}
-                  <div className="flex gap-2 shrink-0 justify-center mb-1">
-                    {[1, 2, 3].map((step) => {
-                      const currentStepNum = typeof formStep === "number" ? formStep : 1;
-                      const isActive = step <= currentStepNum;
-                      return (
-                        <button 
-                          key={step}
-                          type="button"
-                          onClick={() => {
-                            setFormError(null);
-                            setDirection(step > currentStepNum ? "forward" : "backward");
-                            setFormStep(step as 1 | 2 | 3);
-                            setTimeout(() => {
-                              if (step === 1) nameInputRef.current?.focus();
-                              else if (step === 2) phoneInputRef.current?.focus();
-                              else if (step === 3) calleInputRef.current?.focus();
-                            }, 40);
-                          }}
-                          className="h-5 flex-1 relative group focus:outline-none pointer-events-auto cursor-pointer flex items-center"
-                          title={`Ir al Paso ${step}`}
-                        >
-                          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden group-hover:bg-slate-300 transition-colors">
-                            <div className="h-full bg-[#0f55d8] rounded-full transition-all duration-300" style={{ width: isActive ? "100%" : "0%" }} />
-                          </div>
-                          <span className="sr-only">Paso {step}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Static Title/Subtitle block (does not slide) */}
-                  <div className="pt-2 pb-1 shrink-0 select-none">
-                    <h2 className="text-[19px] font-semibold text-slate-800 tracking-tight leading-snug flex items-center gap-1.5">
-                      {formStep === 1 && (
-                        <span className="inline-flex items-center gap-1">
-                          <motion.span
-                            key={`wave-${isBottomSheetOpen}`}
-                            className="inline-block origin-bottom-right select-none"
-                            animate={{ rotate: [0, 18, -10, 18, -6, 0, 0] }}
-                            transition={{
-                              duration: 2.2,
-                              times: [0, 0.12, 0.24, 0.36, 0.48, 0.6, 1],
-                              ease: "easeInOut",
-                              repeat: Infinity
-                            }}
-                          >
-                            👋
-                          </motion.span>
-                          <motion.span
-                            key={`grin-${isBottomSheetOpen}`}
-                            className="inline-block origin-center select-none"
-                            animate={{ 
-                              scale: [1, 1.2, 0.95, 1.1, 1, 1],
-                              rotate: [0, 6, -4, 2, 0, 0]
-                            }}
-                            transition={{
-                              duration: 2.2,
-                              times: [0, 0.12, 0.24, 0.36, 0.48, 0.6, 1],
-                              ease: "easeInOut",
-                              repeat: Infinity
-                            }}
-                          >
-                            😁
-                          </motion.span>
-                          <span>¿Cuál es tu nombre?</span>
-                        </span>
-                      )}
-                      {formStep === 2 && (
-                        <span className="inline-flex items-center gap-1.5">
-                          <motion.span
-                            key={`phone-${formStep}`}
-                            className="inline-block"
-                            animate={{ rotate: [0, -12, 12, -12, 12, 0] }}
-                            transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }}
-                          >
-                            📱
-                          </motion.span>
-                          <span>¿Tu número de teléfono?</span>
-                        </span>
-                      )}
-                      {formStep === 3 && (
-                        <span className="inline-flex items-center gap-1.5">
-                          <motion.span
-                            key={`pin-${formStep}`}
-                            className="inline-block"
-                            animate={{ y: [0, -6, 0] }}
-                            transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.8, ease: "easeInOut" }}
-                          >
-                            📍
-                          </motion.span>
-                          <span>¿Dónde te lo entregamos?</span>
-                        </span>
-                      )}
-                    </h2>
-                  </div>
-
-                  {/* Slider viewport */}
-                  <div 
-                    ref={viewportRef}
-                    onScroll={(e) => { e.currentTarget.scrollLeft = 0; }}
-                    className="w-full overflow-hidden relative mt-3"
-                    style={{ 
-                      height: typeof sliderHeight === "number" ? `${sliderHeight}px` : sliderHeight,
-                      transition: 'height 250ms ease'
-                    }}
-                  >
-                    <div 
-                      className="w-full flex transform-gpu"
-                      style={{
-                        transform: 
-                          formStep === 2 ? 'translateX(-100%)' : 
-                          formStep === 3 ? 'translateX(-200%)' : 'translateX(0%)',
-                        transition: 'transform 300ms cubic-bezier(0.32, 0.94, 0.6, 1)'
-                      }}
-                    >
-                      {/* Paso 1: Nombre Completo */}
-                      <div 
-                        ref={step1Ref} 
-                        className={`w-full shrink-0 px-0.5 transition-opacity duration-200 ${formStep !== 1 ? "pointer-events-none opacity-40 select-none" : "opacity-100"}`}
-                        aria-hidden={formStep !== 1}
-                      >
-                        <form onSubmit={goToStep2} className="space-y-4 flex flex-col">
-                          <div className="space-y-3">
-                            <div className="space-y-1">
-                              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5 select-none">Nombre Completo</label>
-                              <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                                <input
-                                  ref={nameInputRef}
-                                  type="text"
-                                  required
-                                  autoComplete="name"
-                                  tabIndex={formStep === 1 ? 0 : -1}
-                                  value={name}
-                                  onChange={(e) => { setName(e.target.value); setFormError(null); }}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      goToStep2(e);
-                                    }
-                                  }}
-                                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400 select-text"
-                                  placeholder=""
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          <button
-                            type="submit"
-                            tabIndex={formStep === 1 ? 0 : -1}
-                            className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer select-none"
-                          >
-                            <span className="font-geist">Continuar</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </button>
-                          
-                        </form>
-                      </div>
-
-                      {/* Paso 2: Teléfono */}
-                      <div 
-                        ref={step2Ref} 
-                        className={`w-full shrink-0 px-0.5 transition-opacity duration-200 ${formStep !== 2 ? "pointer-events-none opacity-40 select-none" : "opacity-100"}`}
-                        aria-hidden={formStep !== 2}
-                      >
-                        <form onSubmit={goToStep3} className="space-y-4 flex flex-col">
-                          <div className="space-y-3">
-                            <div className="space-y-1">
-                              <div className="flex justify-between items-center ml-0.5 select-none">
-                                <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">WhatsApp</label>
-                                <span className={`text-[11px] font-semibold tracking-wider transition-colors font-geist ${
-                                  phone.length === 10 
-                                    ? "text-emerald-600 font-bold" 
-                                    : phone.length > 10 
-                                      ? "text-red-600 font-bold" 
-                                      : "text-gray-400"
-                                }`}>
-                                  {phone.length}/10
-                                </span>
-                              </div>
-                              <div className={`relative ${isShaking ? "" : ""}`}>
-                                <Phone className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors pointer-events-none ${isPhoneError ? "text-red-500" : "text-slate-400"}`} />
-                                <input
-                                  ref={phoneInputRef}
-                                  type="tel"
-                                  required
-                                  autoComplete="tel"
-                                  tabIndex={formStep === 2 ? 0 : -1}
-                                  value={phone}
-                                  onChange={(e) => { setPhone(e.target.value); setFormError(null); }}
-                                  onBlur={handlePhoneBlur}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      goToStep3(e);
-                                    }
-                                  }}
-                                  className={`w-full pl-9 pr-4 py-2 rounded-xl outline-none font-semibold text-base focus:ring-2 select-text ${
-                                    isPhoneError
-                                      ? "bg-red-50/30 border border-red-300 text-red-900 focus:border-red-500 focus:ring-red-100"
-                                      : "bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white focus:ring-blue-100 placeholder:text-slate-400"
-                                  }`}
-                                  placeholder=""
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          <button
-                            type="submit"
-                            tabIndex={formStep === 2 ? 0 : -1}
-                            className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer select-none"
-                          >
-                            <span className="font-geist">Continuar</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </button>
-                          
-                        </form>
-                      </div>
-
-                      {/* Paso 3: Dirección (Calle, número y colonia unificado) */}
-                      <div 
-                        ref={step3Ref} 
-                        className={`w-full shrink-0 px-0.5 transition-opacity duration-200 ${formStep !== 3 ? "pointer-events-none opacity-40 select-none" : "opacity-100"}`}
-                        aria-hidden={formStep !== 3}
-                      >
-                        <form onSubmit={submitStep3AndVerify} className="space-y-4 flex flex-col">
-                          {gpsAutofillError && (
-                            <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg select-none">
-                              {gpsAutofillError}
-                            </p>
-                          )}
-
-                          <div className="space-y-3">
-                            <div className="space-y-1 relative">
-                              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">Dirección</label>
-                              <div className="relative">
-                                {gpsAutofillLoading ? (
-                                  <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin pointer-events-none" />
-                                ) : (
-                                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                                )}
-                                <input
-                                  ref={calleInputRef}
-                                  type="text"
-                                  required
-                                  autoComplete="street-address"
-                                  tabIndex={formStep === 3 ? 0 : -1}
-                                  value={addressCalle}
-                                  onClick={handleAddressInputClick}
-                                  onFocus={() => {
-                                    setShowColoniaSuggestions(true);
-                                  }}
-                                  onChange={(e) => { 
-                                    const val = e.target.value;
-                                    setAddressCalle(val);
-                                    setAddressColonia(val);
-                                    setShowColoniaSuggestions(true);
-                                    setFormError(null); 
-                                    setGpsCoords(null); 
-                                  }}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      setShowColoniaSuggestions(false);
-                                      submitStep3AndVerify(e);
-                                    }
-                                  }}
-                                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
-                                  placeholder="Compartir ubicación"
-                                />
-                              </div>
-
-                              {/* Menu desplegable de sugerencias autocompletables */}
-                              {showColoniaSuggestions && addressCalle.trim().length > 0 && (() => {
-                                const matches = ALL_COATZA_COLONIAS.filter(c => 
-                                  c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                                   .includes(addressCalle.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
-                                ).slice(0, 5);
-
-                                if (matches.length === 0) return null;
-
-                                return (
-                                  <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-50 max-h-36 overflow-y-auto divide-y divide-slate-100">
-                                    {matches.map((col) => (
-                                      <button
-                                        key={col}
-                                        type="button"
-                                        onClick={() => {
-                                          const newAddr = addressCalle.toLowerCase().includes(col.toLowerCase()) ? addressCalle : `${addressCalle}, ${col}`;
-                                          setAddressCalle(newAddr);
-                                          setAddressColonia(col);
-                                          setShowColoniaSuggestions(false);
-                                          setFormError(null);
-                                        }}
-                                        className="w-full text-left px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0f55d8] flex items-center justify-between cursor-pointer transition-colors select-none"
-                                      >
-                                        <span>Colonia {col}</span>
-                                        <Check className="w-3.5 h-3.5 opacity-0 hover:opacity-100 text-[#0f55d8]" />
-                                      </button>
-                                    ))}
-                                  </div>
-                                );
-                              })()}
-                            </div>
-                          </div>
-
-                          <button
-                            type="submit"
-                            disabled={loading}
-                            tabIndex={formStep === 3 ? 0 : -1}
-                            className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 select-none"
-                          >
-                            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
-                              <>
-                                <span className="font-geist">Terminar</span>
-                                <ArrowRight className="w-4 h-4" />
-                              </>
-                            )}
-                          </button>
-                          
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            
-          </div>
-        </div>
-      </div>
-
-      {/* Modal de Políticas de Privacidad */}
-      {isPrivacyOpen && (
-        <div 
-          className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setIsPrivacyOpen(false)}
-        >
-          <div 
-            className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto space-y-4 text-left shadow-2xl relative z-[101]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b pb-3 border-gray-100">
-              <h3 className="font-geist font-bold text-lg text-gray-900">Políticas de Privacidad</h3>
-              <button 
-                type="button"
-                onClick={() => setIsPrivacyOpen(false)}
-                className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="text-sm font-geist text-gray-600 space-y-3 leading-relaxed">
-              <p>
-                En <strong>Somos Lavandería</strong>, valoramos y respetamos tu privacidad. Esta política describe cómo recopilamos, usamos y protegemos la información personal que nos proporcionas al utilizar nuestros servicios.
-              </p>
-              
-              <h4 className="font-bold text-gray-800 text-sm pt-1">1. Información recopilada</h4>
-              <p>
-                Recopilamos información básica como tu nombre, número de teléfono, dirección de entrega y preferencias de servicio únicamente para procesar y entregar tus pedidos de lavandería.
-              </p>
-
-              <h4 className="font-bold text-gray-800 text-sm pt-1">2. Uso de la información</h4>
-              <p>
-                Tus datos son utilizados exclusivamente para la coordinación de la recolección y entrega de tu cesto, comunicación sobre el estado de tu ropa y mejoras en el servicio. No vendemos ni compartimos tu información personal con terceros.
-              </p>
-
-              <h4 className="font-bold text-gray-800 text-sm pt-1">3. Seguridad de los datos</h4>
-              <p>
-                Implementamos medidas de seguridad técnicas y administrativas para proteger tus datos contra acceso no autorizado, alteración o divulgación.
-              </p>
-
-              <h4 className="font-bold text-gray-800 text-sm pt-1">4. Tus derechos</h4>
-              <p>
-                Puedes solicitar el acceso, rectificación o eliminación de tus datos personales en cualquier momento poniéndote en contacto con nosotros a través de nuestros canales oficiales de atención.
-              </p>
-            </div>
-
-            <div className="pt-2">
-              <button 
-                type="button"
-                onClick={() => setIsPrivacyOpen(false)}
-                className="w-full py-2.5 bg-[#0f55d8] text-white font-semibold rounded-xl text-sm hover:brightness-110 transition-all cursor-pointer"
-              >
-                Entendido
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Información de Precio / Modelo por Cesto */}
-      {isPriceInfoModalOpen && (
-        <div 
-          className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn"
-          onClick={() => setIsPriceInfoModalOpen(false)}
-        >
-          <div 
-            className="bg-white rounded-t-2xl sm:rounded-2xl p-5 max-w-md w-full max-h-[85vh] overflow-y-auto text-left shadow-2xl relative z-[101] border border-gray-100"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button 
-              type="button"
-              onClick={() => setIsPriceInfoModalOpen(false)}
-              className="absolute top-3.5 right-3.5 p-1.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer z-10"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            
-            {/* Content */}
-            <div className="font-geist text-gray-700 space-y-3.5 pt-1 text-[14px] leading-relaxed">
-              {/* Especificaciones del cesto / Capacidad y tamaño */}
-              <div className="space-y-2">
-                <h4 className="font-bold text-[#333333] text-[14px] flex items-center gap-1.5">
-                  <ShoppingBag className="w-4 h-4 text-[#0f55d8]" />
-                  Especificaciones del cesto
-                </h4>
-                <div className="space-y-2.5 text-[13px] text-slate-600 bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>Capacidad aproximada:</strong> 8 a 10 kg de ropa de uso diario (~30 a 35 prendas).</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>Volumen y tamaño:</strong> ~50 Litros (55 cm × 38 cm × 32 cm).</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>Límite de llenado:</strong> Toda la ropa debe colocarse dentro del cesto de forma razonable sin desbordar el borde superior.</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Condiciones y restricciones */}
-              <div className="space-y-2 pt-1 border-t border-gray-100">
-                <h4 className="font-bold text-[#333333] text-[14px]">Condiciones de uso</h4>
-                <div className="space-y-2.5 text-[13px] text-slate-600">
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>Ropa de uso diario:</strong> Incluye playeras, pantalones, ropa interior, toallas y prendas personales.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Info className="w-4 h-4 text-[#0f55d8] shrink-0 mt-0.5" />
-                    <span><strong>Piezas especiales:</strong> Edredones, cobertores o ropa de cama voluminosa se cobran por separado.</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
-

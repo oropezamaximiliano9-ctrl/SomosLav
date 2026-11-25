@@ -74,7 +74,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col mt-8 animate-in fade-in">
+    <div className="flex-1 flex flex-col mt-8">
       <div className="mb-10 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 text-blue-600 rounded-full mb-6 border border-blue-100">
           <Lock className="w-8 h-8" />
@@ -113,7 +113,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="form-group space-y-1.5 focus-within:text-blue-600 transition-colors">
+            <div className="space-y-1.5 focus-within:text-blue-600 transition-colors">
               <label className="text-xs uppercase tracking-widest font-semibold ml-1 opacity-70">Correo electrónico</label>
               <div className="relative">
                 <input 
@@ -128,7 +128,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="form-group space-y-1.5 focus-within:text-blue-600 transition-colors">
+            <div className="space-y-1.5 focus-within:text-blue-600 transition-colors">
               <label className="text-xs uppercase tracking-widest font-semibold ml-1 opacity-70">Contraseña de acceso</label>
               <div className="relative">
                 <input 

@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Somos — Landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   1. SISTEMA DE ESCALADO PROPORCIONAL UNIFORME (MOLDE REAL 390 × 680 PX)
+   Calcula 1 unidad proporcional (--u) usando el menor factor entre el ancho
+   visible y el alto útil real del navegador (descontando barras con svh),
+   con un tope de 1.15px para mantener proporciones cómodas en pantallas grandes.
+   ========================================================================== */
+:root {
+  --base-w: 390;
+  --base-h: 680;
+  --u: min(calc(100vw / var(--base-w)), calc(100vh / var(--base-h)), 1.15px);
+}
+
+@supports (height: 100svh) {
+  :root {
+    --u: min(calc(100vw / var(--base-w)), calc(100svh / var(--base-h)), 1.15px);
+  }
+}
+
+/* ==========================================================================
+   2. RESET Y CONFIGURACIÓN BASE
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background-color: #FDF0D5;
+  color: #1a1a1a;
+  overflow: hidden;
+  letter-spacing: -0.02em;
+}
+
+::-webkit-scrollbar { display: none !important; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================================================
+   3. HERO SECTION (CON ESCALADO PROPORCIONAL --u)
+   ========================================================================== */
+.hero {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 0;
+  background-color: #2b2622;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: bottom;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(320 * var(--u));
+  background: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.30) 50%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: calc(384 * var(--u));
+  margin: 0 auto;
+  padding: calc(32 * var(--u)) calc(16 * var(--u)) calc(8 * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: calc(32 * var(--u));
+  font-weight: 600;
+  color: white;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin-bottom: calc(24 * var(--u));
+  font-family: "Inter", sans-serif;
+}
+
+.hero-subtitle {
+  font-size: calc(24 * var(--u));
+  font-weight: 400;
+  color: white;
+  line-height: 1.2;
+  text-shadow: 0 calc(1 * var(--u)) calc(2 * var(--u)) rgba(0,0,0,0.35);
+  font-family: "Geist", sans-serif;
+}
+
+.hero-price-wrap {
+  margin-top: calc(8 * var(--u));
+  width: 100%;
+  text-align: center;
+}
+
+.hero-price {
+  font-size: calc(24 * var(--u));
+  font-weight: 500;
+  color: white;
+  line-height: 1.2;
+  text-shadow: 0 calc(1 * var(--u)) calc(2 * var(--u)) rgba(0,0,0,0.3);
+  font-family: "Geist", sans-serif;
+}
+
+.hero-price .dollar { font-weight: 600; }
+.hero-price .amount { font-weight: 700; }
+
+/* Etiqueta animada del precio con corte dinámico */
+.mi-resaltado {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  padding: 0 calc(2 * var(--u));
+}
+
+.mi-resaltado::before {
+  content: "";
+  position: absolute;
+  inset: -8% calc(-10 * var(--u)) -8% calc(-10 * var(--u));
+  background: rgba(37, 99, 235, 0.85);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  box-shadow: 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(37, 99, 235, 0.4);
+  z-index: -1;
+  animation: 1s step-end 0s infinite normal none running statement-tag-cut;
+}
+
+@keyframes statement-tag-cut {
+  0%   { clip-path: polygon(1% 7%, 99% 0%, 100% 93%, 2% 100%); }
+  25%  { clip-path: polygon(0% 3%, 98% 3%, 99% 97%, 1% 97%); }
+  50%  { clip-path: polygon(2% 1%, 100% 6%, 98% 100%, 0% 94%); }
+  75%  { clip-path: polygon(1% 9%, 99% 2%, 100% 95%, 3% 98%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mi-resaltado::before { animation: none; clip-path: none; }
+}
+
+.hero-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 calc(8 * var(--u));
+  font-size: calc(23 * var(--u));
+  font-weight: 400;
+  color: white;
+  line-height: 1.2;
+  text-shadow: 0 calc(1 * var(--u)) calc(2 * var(--u)) rgba(0,0,0,0.35);
+  font-family: "Geist", sans-serif;
+  position: relative;
+  z-index: 1;
+  width: max-content;
+  margin: calc(4 * var(--u)) auto 0 auto;
+}
+
+.hero-info::before {
+  content: "";
+  position: absolute;
+  inset: -25% -20%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero-spacer {
+  flex: 1;
+  width: 100%;
+}
+
+/* Badge anclado desde abajo y centrado respecto al molde para no chocar en ninguna pantalla */
+.hero-badge {
+  position: absolute;
+  top: auto;
+  bottom: calc(300 * var(--u) + env(safe-area-inset-bottom, 0px));
+  left: calc(50% - 163 * var(--u));
+  z-index: 20;
+  background: rgba(0,0,0,0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
+  padding: calc(8 * var(--u)) calc(14 * var(--u));
+  border-radius: calc(12 * var(--u)) calc(12 * var(--u)) 0 calc(12 * var(--u));
+  border: 1px solid rgba(255,255,255,0.2);
+  border-right-color: rgba(255,255,255,0.45);
+  border-bottom-color: rgba(255,255,255,0.45);
+  box-shadow: 0 calc(10 * var(--u)) calc(15 * var(--u)) calc(-3 * var(--u)) rgba(0,0,0,0.1),
+              0 calc(4 * var(--u)) calc(6 * var(--u)) calc(-4 * var(--u)) rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  line-height: 1.2;
+  font-family: "Geist", sans-serif;
+  white-space: nowrap;
+}
+
+.hero-badge-main { font-size: calc(14 * var(--u)); font-weight: 400; }
+.hero-badge-sub  { font-size: calc(14 * var(--u)); font-weight: 700; }
+
+/* ==========================================================================
+   4. SELECTOR DE FECHAS — RELIEVE TÁCTIL (ESCALADO PROPORCIONAL --u)
+   ========================================================================== */
+.hero-date-wrap {
+  position: relative;
+  z-index: 10;
+  padding: 0 calc(16 * var(--u));
+  padding-bottom: calc(16 * var(--u));
+  padding-bottom: calc(16 * var(--u) + env(safe-area-inset-bottom, 0px));
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+}
+
+.hero-capsule {
+  width: 100%;
+  max-width: calc(320 * var(--u));
+  padding: calc(12 * var(--u)) calc(8 * var(--u));
+  background: rgba(255,255,255,0.68);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.85);
+  border-radius: calc(24 * var(--u));
+  box-shadow: 0 calc(10 * var(--u)) calc(28 * var(--u)) rgba(0,0,0,0.16),
+              0 calc(1 * var(--u)) calc(2 * var(--u)) rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.date-title {
+  font-size: calc(16 * var(--u));
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.2;
+  text-align: center;
+  font-family: "Geist", sans-serif;
+  letter-spacing: 0;
+  margin-bottom: calc(12 * var(--u));
+}
+
+.date-subtitle {
+  display: block;
+  margin-top: calc(12 * var(--u));
+  font-size: calc(13.5 * var(--u));
+  font-weight: 400;
+  color: #475569;
+  text-align: center;
+  padding: 0 calc(4 * var(--u));
+  width: 100%;
+  font-family: "Geist", sans-serif;
+}
+
+.date-subtitle .highlight {
+  font-weight: 500;
+}
+
+.date-grid-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.date-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(8 * var(--u));
+  user-select: none;
+  align-items: stretch;
+}
+
+.date-card {
+  position: relative;
+  padding: calc(10 * var(--u)) calc(4 * var(--u));
+  border-radius: calc(13 * var(--u));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #ffffff;
+  border: calc(1.5 * var(--u)) solid rgba(15, 85, 216, 0.28);
+  box-shadow: 0 calc(2 * var(--u)) 0 rgba(15, 85, 216, 0.14);
+  cursor: pointer;
+  overflow: hidden;
+  font-family: inherit;
+  color: #0f55d8;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.date-card:hover {
+  border-color: rgba(15, 85, 216, 0.6);
+  box-shadow: 0 calc(2 * var(--u)) 0 rgba(15, 85, 216, 0.25);
+}
+
+.date-card:active {
+  transform: translateY(calc(1.5 * var(--u)));
+  box-shadow: 0 0 0 rgba(15, 85, 216, 0.14);
+}
+
+.date-card.selected {
+  border-color: #0f55d8;
+  background: #eff5ff;
+  box-shadow: 0 calc(2 * var(--u)) 0 #0f55d8;
+}
+
+.date-card:focus-visible {
+  outline: calc(2 * var(--u)) solid #0f55d8;
+  outline-offset: calc(2 * var(--u));
+}
+
+.date-card-arrow-spacer {
+  width: calc(10 * var(--u));
+  height: calc(10 * var(--u));
+  flex-shrink: 0;
+}
+
+.date-card-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-card-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(3 * var(--u));
+  font-size: calc(14 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-bottom: calc(4 * var(--u));
+  color: #0f55d8;
+  font-family: "Geist", sans-serif;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.date-card-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(3 * var(--u));
+  font-size: calc(12 * var(--u));
+  line-height: 1.2;
+  color: #0f172a;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-family: "Geist", sans-serif;
+  white-space: nowrap;
+}
+
+.date-card-other.is-empty .date-card-day {
+  font-size: calc(14 * var(--u));
+  text-transform: none;
+  color: #0f55d8;
+}
+
+.date-card-other .date-card-label {
+  color: #0f55d8;
+  margin-bottom: calc(1 * var(--u));
+}
+
+.date-card-arrow {
+  width: calc(12 * var(--u));
+  height: calc(12 * var(--u));
+  flex-shrink: 0;
+  color: #0f55d8;
+  display: block;
+  opacity: 1;
+}
+
+.edit-hint {
+  width: calc(12 * var(--u));
+  height: calc(12 * var(--u));
+  flex-shrink: 0;
+  color: #0f55d8;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-hint svg {
+  width: calc(12 * var(--u));
+  height: calc(12 * var(--u));
+  display: block;
+}
+
+.date-card-other.selected .edit-hint { display: inline-flex; }
+.date-card-other.selected .date-card-arrow { display: none; }
+
+.native-date-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 3;
+}
+
+.native-date-overlay::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.sr-date-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  bottom: 0;
+  right: 0;
+}
+
+/* ==========================================================================
+   5. SEGUNDA PANTALLA — TARJETAS EDITORIALES (ESCALADO PROPORCIONAL --u)
+   ========================================================================== */
+#content-stack-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  background: #FFFCEF;
+  border-top-left-radius: calc(20 * var(--u));
+  border-top-right-radius: calc(20 * var(--u));
+  box-shadow: 0 calc(-24 * var(--u)) calc(48 * var(--u)) calc(-16 * var(--u)) rgba(42, 30, 18, 0.30);
+  min-height: calc(100vh + 8 * var(--u));
+  min-height: calc(100svh + 8 * var(--u));
+}
+
+.header-2 {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  height: calc(32 * var(--u));
+  background-color: rgba(255, 252, 239, 0.85);
+  border-top-left-radius: calc(20 * var(--u));
+  border-top-right-radius: calc(20 * var(--u));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.section-colecciones {
+  position: relative;
+  width: 100%;
+  padding: calc(24 * var(--u)) calc(22 * var(--u)) calc(80 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: calc(100vh - 32 * var(--u));
+  min-height: calc(100svh - 32 * var(--u));
+}
+
+/* Tarjetas editoriales */
+.title-group {
+  position: relative;
+  width: 100%;
+  max-width: calc(384 * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: calc(18 * var(--u));
+  background: #FFFFFF;
+  padding: calc(24 * var(--u)) calc(22 * var(--u)) calc(20 * var(--u));
+  border-radius: calc(24 * var(--u));
+  border: 1px solid rgba(10, 15, 35, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 calc(2 * var(--u)) calc(4 * var(--u)) rgba(10, 15, 35, 0.03),
+    0 calc(12 * var(--u)) calc(26 * var(--u)) calc(-8 * var(--u)) rgba(42, 30, 18, 0.09);
+  box-sizing: border-box;
+}
+
+.title-group:has(+ .card-connector) {
+  margin-bottom: 0;
+}
+
+/* Conector de flecha ondulada entre tarjetas */
+.card-connector {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: calc(4 * var(--u)) 0 0;
+  background: transparent;
+}
+
+.card-connector svg {
+  width: calc(84 * var(--u));
+  height: calc(189 * var(--u));
+  display: block;
+}
+
+.section-title {
+  font-family: "Inter", sans-serif;
+  font-size: calc(32 * var(--u));
+  font-weight: 600;
+  color: #0A0F23;
+  text-align: center;
+  margin-bottom: calc(12 * var(--u));
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  width: 100%;
+}
+
+.section-title .word-blue {
+  color: #0f55d8;
+}
+
+.subtitle-desc {
+  color: #0A0F23;
+  font-family: "Geist", sans-serif;
+  font-size: calc(23 * var(--u));
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.card-tray {
+  width: 100%;
+  margin-top: calc(20 * var(--u));
+  padding: calc(12 * var(--u)) calc(14 * var(--u));
+  border-radius: calc(14 * var(--u));
+  background: #F7F4EC;
+  border: 1px solid rgba(10, 15, 35, 0.05);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(10 * var(--u)) calc(12 * var(--u));
+  align-items: center;
+}
+
+.card-tray-item {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(8 * var(--u));
+  font-family: "Geist", sans-serif;
+  font-size: calc(12.5 * var(--u));
+  font-weight: 600;
+  color: #0A0F23;
+  min-width: 0;
+}
+
+.card-tray-item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Palomitas limpias sin círculo, en tinta oscura #0A0F23 */
+.card-tray-item svg {
+  width: calc(16 * var(--u));
+  height: calc(16 * var(--u));
+  color: #0A0F23;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- Primera pantalla: Hero sticky con fotografía y selector de fecha -->
+  <section class="hero">
+    <img
+      class="hero-bg"
+      src="https://i.ibb.co/cc81GSmJ/IMG-9746.jpg"
+      alt="Cesto de lavandería Somos"
+      fetchpriority="high"
+      decoding="async"
+      onerror="this.onerror=null;this.src='https://placehold.co/780x1360/2b2622/ffffff?text=Somos+Lavanderia';"
+    />
+    <div class="hero-gradient"></div>
+
+    <div class="hero-content">
+      <p class="hero-title">Lavado profesional<br>a un precio fijo</p>
+
+      <p class="hero-subtitle">
+        Recibe nuestro cesto gratis y<br>
+        llénalo con la ropa que quieras
+      </p>
+
+      <div class="hero-price-wrap">
+        <span class="hero-price mi-resaltado">
+          Lo lavamos todo por <span class="dollar">$</span><span class="amount">95</span>
+        </span>
+      </div>
+
+      <div class="hero-info">
+        <span>A domicilio</span>
+        <span>•</span>
+        <span>En 24 horas</span>
+      </div>
+    </div>
+
+    <div class="hero-spacer"></div>
+
+    <!-- Etiqueta flotante de capacidad anclada proporcionalmente -->
+    <div class="hero-badge">
+      <span class="hero-badge-main">Caben</span>
+      <span class="hero-badge-sub">hasta 5 kg</span>
+    </div>
+
+    <!-- Cápsula inferior con selector de fechas -->
+    <div class="hero-date-wrap">
+      <div class="hero-capsule">
+        <p class="date-title">¿Cuándo te llevamos tu cesto?</p>
+        <div class="date-grid-wrap">
+          <div class="date-grid" id="dateGrid"></div>
+          <input type="date" class="sr-date-input" id="hiddenDatePicker" aria-hidden="true" tabindex="-1" />
+        </div>
+        <p class="date-subtitle"><span class="highlight">¿Sin ropa sucia?</span> Pídelo gratis y llénalo después.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Segunda pantalla: Tarjetas editoriales sobre el Hero -->
+  <div id="content-stack-wrapper">
+
+    <header class="header-2"></header>
+
+    <section class="section-colecciones">
+
+      <!-- Tarjeta 1: Precio único -->
+      <article class="title-group">
+        <h2 class="section-title"><span class="word-blue">Sin pagar</span> de más</h2>
+        <p class="subtitle-desc">Si cabe en el cesto, se lava al mismo precio. No importa el peso ni la cantidad.</p>
+        <div class="card-tray">
+          <span class="card-tray-item">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 011.414-1.42l2.543 2.543 6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </span>
+          <span class="card-tray-item">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 011.414-1.42l2.543 2.543 6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </span>
+        </div>
+      </article>
+
+      <!-- Flecha ondulada animada que conecta la primera tarjeta con la segunda -->
+      <div class="card-connector" aria-hidden="true">
+        <svg id="flecha-ondulada" width="84" height="189" viewBox="0 0 84 189" fill="none">
+          <path id="fo-linea" stroke="#0A0F23" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+          <path id="fo-punta" stroke="#0A0F23" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <!-- Tarjeta 2: Entrega -->
+      <article class="title-group">
+        <h2 class="section-title"><span class="word-blue">Sin salir</span> de casa</h2>
+        <p class="subtitle-desc">Pasamos por tu ropa sucia y te la devolvemos limpia en 24 horas.</p>
+        <div class="card-tray">
+          <span class="card-tray-item">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 011.414-1.42l2.543 2.543 6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </span>
+          <span class="card-tray-item">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 011.414-1.42l2.543 2.543 6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </span>
+        </div>
+      </article>
+
+    </section>
+  </div>
+
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ========================================================================
+     CONFIGURACIÓN Y ESTADO DEL SELECTOR DE FECHAS
+     ======================================================================== */
+  const CONFIG = {
+    cutoffHour: 21,
+    quickDays: 2,
+    whatsappPhone: '529212393938',
+    storageKey: 'somos:selected-date',
+  };
+
+  const state = {
+    dates: [],
+    customDate: null,
+    selectedKey: null,
+  };
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const dateKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const $ = (sel, root = document) => root.querySelector(sel);
+
+  const ARROW_SVG = '<svg class="date-card-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4.5L13 10L7.5 15.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /**
+   * Devuelve las fechas de hoy y mañana normalizadas a las 00:00:00.000
+   * para comparaciones exactas sin desfase de horas.
+   */
+  const getBaseDays = (now = new Date()) => {
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    return { today, tomorrow };
+  };
+
+  /**
+   * Parsea una clave YYYY-MM-DD en un objeto Date local a medianoche.
+   */
+  const parseDateKey = (key) => {
+    if (!key || !/^\d{4}-\d{2}-\d{2}$/.test(key)) return null;
+    const [y, m, d] = key.split('-').map(Number);
+    const parsed = new Date(y, m - 1, d);
+    parsed.setHours(0, 0, 0, 0);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  };
+
+  /**
+   * Genera la representación visual (etiqueta, día y mes corto) de una fecha.
+   */
+  const formatDateItem = (d, base = getBaseDays()) => {
+    const { today, tomorrow } = base;
+    let label;
+    if (d.getTime() === today.getTime()) label = 'Hoy';
+    else if (d.getTime() === tomorrow.getTime()) label = 'Mañana';
+    else label = d.toLocaleDateString('es-ES', { weekday: 'short' }).replace('.', '');
+
+    return {
+      date: d,
+      key: dateKey(d),
+      label,
+      dayNum: d.getDate(),
+      monthShort: d.toLocaleDateString('es-ES', { month: 'short' }).replace('.', ''),
+    };
+  };
+
+  /**
+   * Lee y guarda de forma segura la fecha seleccionada en sessionStorage.
+   */
+  const loadSelection = () => {
+    try { return sessionStorage.getItem(CONFIG.storageKey); }
+    catch { return null; }
+  };
+
+  const saveSelection = (key) => {
+    try {
+      if (key) sessionStorage.setItem(CONFIG.storageKey, key);
+      else sessionStorage.removeItem(CONFIG.storageKey);
+    } catch {}
+  };
+
+  /**
+   * Construye las opciones rápidas de fecha respetando la hora de corte (cutoffHour).
+   */
+  const buildDates = (now = new Date()) => {
+    const base = getBaseDays(now);
+    const startOffset = now.getHours() >= CONFIG.cutoffHour ? 1 : 0;
+
+    const items = [];
+    for (let i = startOffset; i < startOffset + CONFIG.quickDays; i++) {
+      const d = new Date(base.today);
+      d.setDate(d.getDate() + i);
+      items.push(formatDateItem(d, base));
+    }
+    return items;
+  };
+
+  /**
+   * Calcula la fecha mínima permitida para la tarjeta de calendario personalizado.
+   */
+  const getMinCustomDate = () => {
+    const lastQuick = state.dates[state.dates.length - 1];
+    const min = new Date(lastQuick.date);
+    min.setDate(min.getDate() + 1);
+    return min;
+  };
+
+  /**
+   * Sincroniza la selección guardada con las fechas vigentes y limpia fechas vencidas.
+   */
+  const syncDatesState = () => {
+    const quickKeys = state.dates.map((d) => d.key);
+    const minCustom = getMinCustomDate();
+    const base = getBaseDays();
+
+    if (state.customDate && state.customDate.date.getTime() < minCustom.getTime()) {
+      state.customDate = null;
+    }
+
+    if (!state.selectedKey || quickKeys.includes(state.selectedKey)) return;
+
+    const parsed = parseDateKey(state.selectedKey);
+    if (parsed && parsed.getTime() >= minCustom.getTime()) {
+      state.customDate = formatDateItem(parsed, base);
+    } else {
+      state.selectedKey = null;
+      saveSelection(null);
+    }
+  };
+
+  /**
+   * Abre el selector de fecha nativo del navegador como respaldo accesible.
+   */
+  const openNativePicker = () => {
+    const picker = $('#hiddenDatePicker');
+    if (!picker) return;
+    if (typeof picker.showPicker === 'function') {
+      try {
+        picker.showPicker();
+        return;
+      } catch {}
+    }
+    picker.focus();
+    picker.click();
+  };
+
+  /**
+   * Actualiza las clases visuales y atributos ARIA de la tarjeta activa.
+   */
+  const updateSelectedClasses = () => {
+    const grid = $('#dateGrid');
+    if (!grid) return;
+    const customKey = state.customDate ? state.customDate.key : null;
+
+    grid.querySelectorAll('.date-card').forEach((btn) => {
+      let isSelected;
+      if (btn.dataset.action === 'other') {
+        isSelected = Boolean(customKey) && state.selectedKey === customKey;
+      } else {
+        isSelected = btn.dataset.key === state.selectedKey;
+      }
+      btn.classList.toggle('selected', isSelected);
+      btn.setAttribute('aria-checked', String(isSelected));
+    });
+  };
+
+  /**
+   * Renderiza las 2 tarjetas rápidas y la tarjeta "Elegir otro día" en #dateGrid.
+   */
+  const renderGrid = () => {
+    const grid = $('#dateGrid');
+    const hiddenPicker = $('#hiddenDatePicker');
+    if (!grid) return;
+
+    const minCustomKey = dateKey(getMinCustomDate());
+    const hasCustom = Boolean(state.customDate);
+    const isCustomSelected = hasCustom && state.customDate.key === state.selectedKey;
+    const customValue = hasCustom ? state.customDate.key : minCustomKey;
+
+    if (hiddenPicker) {
+      hiddenPicker.min = minCustomKey;
+      hiddenPicker.value = customValue;
+    }
+
+    grid.setAttribute('role', 'radiogroup');
+    grid.setAttribute('aria-label', 'Día de entrega del cesto');
+
+    const quickCardsHtml = state.dates.map((item) => {
+      const isSelected = item.key === state.selectedKey;
+      return `
+        <button
+          type="button"
+          class="date-card${isSelected ? ' selected' : ''}"
+          role="radio"
+          aria-checked="${isSelected}"
+          data-key="${item.key}"
+        >
+          <span class="date-card-arrow-spacer" aria-hidden="true"></span>
+          <span class="date-card-content">
+            <span class="date-card-label">${item.label}</span>
+            <span class="date-card-day">${item.dayNum} ${item.monthShort}</span>
+          </span>
+          ${ARROW_SVG}
+        </button>
+      `;
+    }).join('');
+
+    const shouldOverlayPicker = !hasCustom || isCustomSelected;
+
+    const otherCardInnerHtml = hasCustom
+      ? `
+        <span class="date-card-arrow-spacer" aria-hidden="true"></span>
+        <span class="date-card-content">
+          <span class="date-card-label">${state.customDate.label}</span>
+          <span class="date-card-day">${state.customDate.dayNum} ${state.customDate.monthShort}</span>
+        </span>
+        <span class="edit-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+        ${ARROW_SVG}
+      `
+      : `
+        <span class="date-card-arrow-spacer" aria-hidden="true"></span>
+        <span class="date-card-content">
+          <span class="date-card-label">Elegir</span>
+          <span class="date-card-day">otro día</span>
+        </span>
+        ${ARROW_SVG}
+      `;
+
+    const otherCardHtml = `
+      <button
+        type="button"
+        class="date-card date-card-other${!hasCustom ? ' is-empty' : ''}${isCustomSelected ? ' selected' : ''}"
+        role="radio"
+        aria-checked="${isCustomSelected}"
+        data-action="other"
+        aria-label="${hasCustom
+          ? (isCustomSelected
+            ? `${state.customDate.dayNum} ${state.customDate.monthShort}, tocar para elegir otro día`
+            : `Seleccionar ${state.customDate.dayNum} ${state.customDate.monthShort}`)
+          : 'Elegir otro día en el calendario'}"
+      >
+        ${otherCardInnerHtml}
+        ${shouldOverlayPicker ? `
+          <input
+            type="date"
+            class="native-date-overlay"
+            id="otherDateOverlay"
+            min="${minCustomKey}"
+            value="${customValue}"
+            tabindex="-1"
+            aria-hidden="true"
+          />
+        ` : ''}
+      </button>
+    `;
+
+    grid.innerHTML = quickCardsHtml + otherCardHtml;
+  };
+
+  /**
+   * Selecciona una fecha por clave, la persiste y actualiza la UI.
+   */
+  const selectDate = (key) => {
+    if (!key || key === state.selectedKey) return;
+    state.selectedKey = key;
+    saveSelection(key);
+    updateSelectedClasses();
+  };
+
+  /**
+   * Procesa la fecha elegida desde el calendario nativo del dispositivo.
+   */
+  const handleCustomDateChange = (rawValue) => {
+    const parsed = parseDateKey(rawValue);
+    if (!parsed) return false;
+
+    const key = dateKey(parsed);
+    const quickKeys = state.dates.map((d) => d.key);
+
+    if (quickKeys.includes(key)) {
+      selectDate(key);
+      return true;
+    }
+
+    if (parsed.getTime() < getMinCustomDate().getTime()) return false;
+
+    state.customDate = formatDateItem(parsed);
+    state.selectedKey = state.customDate.key;
+    saveSelection(state.selectedKey);
+    renderGrid();
+    return true;
+  };
+
+  /**
+   * Conecta los eventos de clic y cambio del selector de fechas.
+   */
+  const bindEvents = () => {
+    const grid = $('#dateGrid');
+    const hiddenPicker = $('#hiddenDatePicker');
+
+    if (grid) {
+      grid.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'otherDateOverlay') return;
+
+        const btn = e.target.closest('.date-card');
+        if (!btn) return;
+
+        if (btn.dataset.action === 'other') {
+          if (state.customDate && state.selectedKey !== state.customDate.key) {
+            selectDate(state.customDate.key);
+          } else {
+            openNativePicker();
+          }
+          return;
+        }
+
+        selectDate(btn.dataset.key);
+      });
+
+      grid.addEventListener('change', (e) => {
+        if (e.target && e.target.id === 'otherDateOverlay') {
+          handleCustomDateChange(e.target.value);
+        }
+      });
+    }
+
+    if (hiddenPicker) {
+      hiddenPicker.addEventListener('change', (e) => {
+        handleCustomDateChange(e.target.value);
+      });
+    }
+  };
+
+  /**
+   * Recalcula y vuelve a dibujar las tarjetas cuando cambia la hora de corte o el día.
+   */
+  const rebuild = () => {
+    state.dates = buildDates();
+    syncDatesState();
+    renderGrid();
+  };
+
+  /**
+   * Programa la próxima actualización automática a medianoche o a la hora de corte.
+   */
+  const scheduleNextRebuild = () => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(0, 0, 0, 0);
+    midnight.setDate(midnight.getDate() + 1);
+
+    const cutoff = new Date(now);
+    if (now.getHours() >= CONFIG.cutoffHour) {
+      cutoff.setDate(cutoff.getDate() + 1);
+    }
+    cutoff.setHours(CONFIG.cutoffHour, 0, 0, 0);
+
+    const nextTime = Math.min(midnight.getTime(), cutoff.getTime());
+    const ms = Math.max(1000, nextTime - now.getTime());
+
+    setTimeout(() => {
+      rebuild();
+      scheduleNextRebuild();
+    }, ms);
+  };
+
+  /**
+   * Anima la flecha ondulada que conecta la tarjeta 1 con la tarjeta 2.
+   */
+  const initConnectorArrow = () => {
+    const line = $('#fo-linea');
+    const head = $('#fo-punta');
+    if (!line || !head) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let phase = 0;
+    let last = null;
+    const smoothstep = (a, b, x) => {
+      const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+      return t * t * (3 - 2 * t);
+    };
+
+    const drawFrame = () => {
+      let d = '';
+      for (let i = 0; i <= 90; i++) {
+        const u = i / 90;
+        const y = 12 + u * 158;
+        const env = smoothstep(0, 0.06, u) * (1 - smoothstep(0.88, 1, u));
+        const x = 42 + 4 * env * Math.sin(u * 4.4 * Math.PI * 2 - phase * 3.2);
+        d += (i === 0 ? 'M ' : ' L ') + x.toFixed(2) + ' ' + y.toFixed(2);
+      }
+      line.setAttribute('d', d);
+      const tipY = 174;
+      head.setAttribute(
+        'd',
+        'M 30.5 ' + (tipY - 12.5).toFixed(2) + ' L 42 ' + tipY.toFixed(2) + ' L 53.5 ' + (tipY - 12.5).toFixed(2)
+      );
+    };
+
+    if (prefersReducedMotion) {
+      drawFrame();
+      return;
+    }
+
+    const animate = (ts) => {
+      if (last === null) last = ts;
+      phase += Math.min((ts - last) / 1000, 0.05) * 2.5;
+      last = ts;
+      drawFrame();
+      requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+  };
+
+  /**
+   * Inicializa la aplicación al cargar el DOM.
+   */
+  const init = () => {
+    state.selectedKey = loadSelection();
+    state.dates = buildDates();
+    syncDatesState();
+    renderGrid();
+    bindEvents();
+    scheduleNextRebuild();
+    initConnectorArrow();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>

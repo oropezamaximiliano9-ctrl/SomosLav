@@ -14,10 +14,6 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || localConfig.messagingSenderId,
 };
 
-console.log("[Firebase Init] Config resolved (project/db):", firebaseConfig.projectId, firebaseConfig.firestoreDatabaseId);
-
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-
-console.log("[Firebase Init] Firestore instance initialized.");

@@ -1,45 +1,19 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "motion/react";
-import { 
-  Sparkles, 
-  RefreshCw, 
-  Check, 
-  ArrowRight, 
-  Smartphone, 
-  User, 
-  ShieldAlert, 
-  Package, 
-  Bell, 
-  Truck, 
-  QrCode, 
-  Play, 
-  CheckCircle2, 
-  ChevronRight, 
-  ExternalLink,
-  Layers,
-  HelpCircle
-} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import { RefreshCw, Check, ArrowRight, Smartphone } from "lucide-react";
 import { db } from "../firebase";
 import { doc, getDoc, getDocs, updateDoc, setDoc, deleteDoc, collection, query, where } from "firebase/firestore";
 import { RoleContext } from "../App";
 
 export default function FlowSimulator() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { role, setRole } = useContext(RoleContext);
-  
-  // Tab to switch between Client Perspective vs Associate Ops Perspective
-  const [activeTab, setActiveTab] = useState<"client" | "associate">("client");
+  const { setRole } = useContext(RoleContext);
 
-  // Simulation states
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState("");
-  const [registeredUser, setRegisteredUser] = useState<any>(null);
-  const [bagStatus, setBagStatus] = useState<string>("unassigned");
   const [activeOrderId, setActiveOrderId] = useState<string>("");
-  const [arrivalNotice, setArrivalNotice] = useState<any>(null);
 
   // Fetch initial state of CESTO-001 to sync step correctly on load
   const checkStatus = async () => {
@@ -48,28 +22,7 @@ export default function FlowSimulator() {
       const bagSnap = await getDoc(doc(db, "bags", id));
       if (bagSnap.exists()) {
         const bagData = bagSnap.data() as any;
-        setBagStatus(bagData.status);
         if (bagData.status === "assigned" && bagData.userId) {
-          const userSnap = await getDoc(doc(db, "users", bagData.userId));
-          const userData = userSnap.exists() ? userSnap.data() : null;
-          setRegisteredUser(userData);
-
-          // Check active notices
-          const noticesSnap = await getDocs(collection(db, "arrival_notices"));
-          let latestNotice: any = null;
-          let latestNoticeTime = 0;
-          noticesSnap.forEach((nSnap) => {
-            const nData = nSnap.data();
-            if (nData.bagId === id && nData.status !== "dismissed" && nData.status !== "attended") {
-              const time = nData.timestamp ? new Date(nData.timestamp).getTime() : 0;
-              if (time > latestNoticeTime) {
-                latestNoticeTime = time;
-                latestNotice = { id: nSnap.id, ...nData };
-              }
-            }
-          });
-          setArrivalNotice(latestNotice);
-
           const ordersSnap = await getDocs(collection(db, "orders"));
           let activeOrder: any = null;
           let latestCreatedAt = 0;
@@ -84,7 +37,7 @@ export default function FlowSimulator() {
                   latestCreatedAt = creationTime;
                   activeOrder = data;
                 }
-              } else if (data.status === "completed") {
+              } else {
                 hasCompleted = true;
               }
             }
@@ -92,30 +45,19 @@ export default function FlowSimulator() {
 
           if (activeOrder) {
             setActiveOrderId(activeOrder.id);
-            setCurrentStep(4); // Order is active/confirmed
+            setCurrentStep(4);
+          } else if (hasCompleted) {
+            setActiveOrderId("");
+            setCurrentStep(5);
           } else {
-            if (hasCompleted) {
-              setActiveOrderId("");
-              setCurrentStep(5); // Completed & Delivered
-            } else {
-              setActiveOrderId("");
-              setCurrentStep(3); // Linked but order not confirmed yet
-            }
+            setActiveOrderId("");
+            setCurrentStep(3);
           }
         } else {
           setActiveOrderId("");
-          setArrivalNotice(null);
-          // Check if preregistered user exists in DB by querying the phone
           const q = query(collection(db, "users"), where("phone", "==", "9212393938"));
           const usersSnap = await getDocs(q);
-          if (!usersSnap.empty) {
-            const uData = usersSnap.docs[0].data();
-            setRegisteredUser(uData);
-            setCurrentStep(2); // Registered but bag unassigned
-          } else {
-            setRegisteredUser(null);
-            setCurrentStep(1); // Not registered
-          }
+          setCurrentStep(usersSnap.empty ? 1 : 2);
         }
       }
     } catch (e) {
@@ -125,49 +67,59 @@ export default function FlowSimulator() {
 
   useEffect(() => {
     checkStatus();
-  }, [location.pathname]);
+  }, []);
+
+  const upsertSimulatedUser = async (
+    userData: {
+      name: string;
+      phone: string;
+      deliveryPreference: string;
+      addressColonia: string;
+      addressCalle: string;
+      addressNumero: string;
+      preferredTime: string;
+    },
+    fallbackUserId: string
+  ): Promise<string> => {
+    const usersSnap = await getDocs(query(collection(db, "users"), where("phone", "==", userData.phone)));
+    if (!usersSnap.empty) {
+      const userId = usersSnap.docs[0].id;
+      await updateDoc(doc(db, "users", userId), userData);
+      return userId;
+    }
+    await setDoc(doc(db, "users", fallbackUserId), {
+      id: fallbackUserId,
+      ...userData,
+      credits: 0.0,
+      createdAt: new Date().toISOString()
+    });
+    return fallbackUserId;
+  };
 
   // Setup / Ensure client Jaime is linked to CESTO-001 for immediate testing
   const ensureClientAssigned = async () => {
     setLoading(true);
     setStatusMsg("Preparando cesto asignado a Jaime...");
     try {
-      const phone = "9212393938";
-      const usersQuery = query(collection(db, "users"), where("phone", "==", phone));
-      const usersSnap = await getDocs(usersQuery);
-      let userId: string;
-
-      const userData: any = {
-        name: "Jaime Hernández",
-        phone: phone,
-        deliveryPreference: "24 horas",
-        addressColonia: "Las Palmas",
-        addressCalle: "Paseo de las Palmas",
-        addressNumero: "209",
-        preferredTime: "Mañana (8:00 AM – 10:00 AM)"
-      };
-
-      if (!usersSnap.empty) {
-        userId = usersSnap.docs[0].id;
-        await updateDoc(doc(db, "users", userId), userData);
-      } else {
-        userId = "USR-jaime123";
-        await setDoc(doc(db, "users", userId), {
-          id: userId,
-          ...userData,
-          credits: 0.0,
-          createdAt: new Date().toISOString()
-        });
-      }
+      const userId = await upsertSimulatedUser(
+        {
+          name: "Jaime Hernández",
+          phone: "9212393938",
+          deliveryPreference: "24 horas",
+          addressColonia: "Las Palmas",
+          addressCalle: "Paseo de las Palmas",
+          addressNumero: "209",
+          preferredTime: "Mañana (8:00 AM – 10:00 AM)"
+        },
+        "USR-jaime123"
+      );
 
       await setDoc(doc(db, "bags", "CESTO-001"), {
         id: "CESTO-001",
         status: "assigned",
-        userId: userId
+        userId
       });
 
-      setRegisteredUser(userData);
-      setBagStatus("assigned");
       setCurrentStep(3);
       setStatusMsg("✅ CESTO-001 listo y asignado a Jaime.");
     } catch (e: any) {
@@ -185,7 +137,7 @@ export default function FlowSimulator() {
   };
 
   // Trigger Associate Scan Navigation
-  const openAssociateScanView = async () => {
+  const openAssociateScanView = () => {
     setRole("associate");
     navigate("/cesto/CESTO-001");
   };
@@ -195,35 +147,19 @@ export default function FlowSimulator() {
     setLoading(true);
     setStatusMsg("Pre-registrando a Jaime...");
     try {
-      const phone = "9212393938";
-      const usersQuery = query(collection(db, "users"), where("phone", "==", phone));
-      const usersSnap = await getDocs(usersQuery);
-      let userId;
+      await upsertSimulatedUser(
+        {
+          name: "Jaime Hernández",
+          phone: "9212393938",
+          deliveryPreference: "",
+          addressColonia: "Las Palmas",
+          addressCalle: "Paseo de las Palmas",
+          addressNumero: "209",
+          preferredTime: ""
+        },
+        "USR-" + Math.random().toString(36).substr(2, 9)
+      );
 
-      const userData: any = {
-        name: "Jaime Hernández",
-        phone: phone,
-        deliveryPreference: "",
-        addressColonia: "Las Palmas",
-        addressCalle: "Paseo de las Palmas",
-        addressNumero: "209",
-        preferredTime: ""
-      };
-
-      if (!usersSnap.empty) {
-        userId = usersSnap.docs[0].id;
-        await updateDoc(doc(db, "users", userId), userData);
-      } else {
-        userId = "USR-" + Math.random().toString(36).substr(2, 9);
-        await setDoc(doc(db, "users", userId), {
-          id: userId,
-          ...userData,
-          credits: 0.0,
-          createdAt: new Date().toISOString()
-        });
-      }
-
-      setRegisteredUser(userData);
       setCurrentStep(2);
       setStatusMsg("✅ Jaime Hernández pre-registrado con éxito.");
     } catch (e: any) {
@@ -238,38 +174,20 @@ export default function FlowSimulator() {
     setLoading(true);
     setStatusMsg("Vinculando CESTO-001 a Jaime...");
     try {
-      const bagRef = doc(db, "bags", "CESTO-001");
-      const phone = "9212393938";
-      const usersQuery = query(collection(db, "users"), where("phone", "==", phone));
-      const usersSnap = await getDocs(usersQuery);
-      let userId: string;
+      const userId = await upsertSimulatedUser(
+        {
+          name: "Jaime Hernández",
+          phone: "9212393938",
+          deliveryPreference: "24 horas",
+          addressColonia: "Las Palmas",
+          addressCalle: "Paseo de las Palmas",
+          addressNumero: "209",
+          preferredTime: ""
+        },
+        "USR-jaime123"
+      );
 
-      const userData: any = {
-        name: "Jaime Hernández",
-        phone: phone,
-        deliveryPreference: "24 horas",
-        addressColonia: "Las Palmas",
-        addressCalle: "Paseo de las Palmas",
-        addressNumero: "209",
-        preferredTime: ""
-      };
-
-      if (!usersSnap.empty) {
-        userId = usersSnap.docs[0].id;
-        await updateDoc(doc(db, "users", userId), userData);
-      } else {
-        userId = "USR-jaime123";
-        await setDoc(doc(db, "users", userId), {
-          id: userId,
-          ...userData,
-          credits: 0.0,
-          createdAt: new Date().toISOString()
-        });
-      }
-
-      await setDoc(bagRef, { id: "CESTO-001", status: "assigned", userId });
-      setBagStatus("assigned");
-      setRegisteredUser(userData);
+      await setDoc(doc(db, "bags", "CESTO-001"), { id: "CESTO-001", status: "assigned", userId });
       setCurrentStep(3);
       setStatusMsg("🔗 CESTO-001 asignado con éxito a Jaime.");
     } catch (e: any) {
@@ -334,74 +252,27 @@ export default function FlowSimulator() {
     }
   };
 
-  // Send simulated arrival notice directly
-  const sendSimulatedArrivalNotice = async () => {
-    setLoading(true);
-    try {
-      await ensureClientAssigned();
-      const noticeId = `notice_CESTO-001_${Date.now()}`;
-      const noticeData = {
-        id: noticeId,
-        bagId: "CESTO-001",
-        userId: "USR-jaime123",
-        userName: "Jaime Hernández",
-        userPhone: "9212393938",
-        deliveryPreference: "24 horas",
-        status: "on_the_way",
-        timestamp: new Date().toISOString(),
-        createdAt: new Date().toISOString()
-      };
-      await setDoc(doc(db, "arrival_notices", noticeId), noticeData);
-      setArrivalNotice(noticeData);
-      setStatusMsg(`🔔 Aviso "Voy en camino" emitido para Jaime Hernández.`);
-    } catch (err: any) {
-      setStatusMsg(`❌ Error: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Reset demo back to unassigned
   const resetDemo = async () => {
     setLoading(true);
-    setStatusMsg("Restableciendo base de datos...");
+    setStatusMsg("Reiniciando simulación...");
     try {
-      const userIdsToDelete: string[] = ["USR-simula1", "USR-simula2", "USR-jaime123"];
-      const uq = query(collection(db, "users"), where("phone", "==", "9212393938"));
-      const usnap = await getDocs(uq);
-      usnap.forEach((uDoc) => {
-        userIdsToDelete.push(uDoc.id);
+      const ordersSnap = await getDocs(query(collection(db, "orders"), where("bagId", "==", "CESTO-001")));
+      for (const oSnap of ordersSnap.docs) {
+        await deleteDoc(doc(db, "orders", oSnap.id));
+      }
+
+      const usersSnap = await getDocs(query(collection(db, "users"), where("phone", "==", "9212393938")));
+      for (const uSnap of usersSnap.docs) {
+        await deleteDoc(doc(db, "users", uSnap.id));
+      }
+
+      await setDoc(doc(db, "bags", "CESTO-001"), {
+        id: "CESTO-001",
+        status: "unassigned",
+        userId: null
       });
 
-      // Reset CESTO-001
-      await setDoc(doc(db, "bags", "CESTO-001"), { id: "CESTO-001", status: "unassigned", userId: null });
-
-      // Delete active orders for CESTO-001
-      const ordersSnap = await getDocs(collection(db, "orders"));
-      for (const oDoc of ordersSnap.docs) {
-        const odata = oDoc.data();
-        if (odata.bagId === "CESTO-001") {
-          await deleteDoc(doc(db, "orders", oDoc.id));
-        }
-      }
-
-      // Delete arrival notices
-      const noticesSnap = await getDocs(collection(db, "arrival_notices"));
-      for (const nDoc of noticesSnap.docs) {
-        if (nDoc.data().bagId === "CESTO-001") {
-          await deleteDoc(doc(db, "arrival_notices", nDoc.id));
-        }
-      }
-
-      // Delete temporary / simulator users
-      for (const uid of userIdsToDelete) {
-        await deleteDoc(doc(db, "users", uid));
-      }
-
-      setRegisteredUser(null);
-      setBagStatus("unassigned");
       setActiveOrderId("");
-      setArrivalNotice(null);
       setCurrentStep(1);
       setStatusMsg("🔄 Simulación reiniciada. CESTO-001 sin asignar.");
     } catch (e: any) {
@@ -520,8 +391,8 @@ export default function FlowSimulator() {
 
         {/* Step 4 */}
         <div className="p-3.5 rounded-2xl border border-slate-100 bg-white shadow-2xs flex items-start gap-3">
-          <span className={`w-6 h-6 rounded-full shrink-0 flex items-center justify-center font-bold text-xs border mt-0.5 ${
-            currentStep >= 4 ? "bg-emerald-600 border-emerald-600 text-white font-black" : "bg-slate-100 text-slate-400 border-slate-200"
+          <span className={`w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs border mt-0.5 ${
+            currentStep >= 4 ? "bg-emerald-600 border-emerald-600 text-white font-black" : "bg-slate-100 text-slate-400 border-slate-200 font-bold"
           }`}>
             {currentStep >= 4 ? <Check className="w-3.5 h-3.5" /> : "4"}
           </span>

@@ -2,14 +2,6 @@
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-export interface PushSubscriptionData {
-  endpoint: string;
-  keys: {
-    p256dh: string;
-    auth: string;
-  };
-}
-
 // Register service worker
 export async function registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
   if (!("serviceWorker" in navigator)) {
@@ -18,9 +10,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   }
 
   try {
-    const registration = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
-    console.log("[PWA] Service Worker registered successfully:", registration.scope);
-    return registration;
+    return await navigator.serviceWorker.register("/sw.js", { scope: "/" });
   } catch (error) {
     console.error("[PWA] Service Worker registration failed:", error);
     return null;
@@ -71,7 +61,7 @@ export async function requestNotificationPermissionAndSubscribe(
 }
 
 // Trigger in-browser notification alert for active tab or service worker
-export async function triggerLocalNotification(title: string, body: string, url: string = "/associate-scanner") {
+export async function triggerLocalNotification(title: string, body: string, url: string = "/scanner") {
   if (!("Notification" in window) || Notification.permission !== "granted") return;
 
   try {

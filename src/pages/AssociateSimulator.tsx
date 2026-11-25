@@ -8,7 +8,7 @@ export default function AssociateSimulator() {
   const { role } = useContext(RoleContext);
 
   return (
-    <div className="flex-1 flex flex-col pt-4 animate-in fade-in h-full pb-12 overflow-y-auto select-none">
+    <div className="flex-1 flex flex-col pt-4 h-full pb-12 overflow-y-auto select-none">
       <div className="w-full max-w-md mx-auto px-4 pb-12 mt-4">
         
         {/* Push Notification Panel */}
