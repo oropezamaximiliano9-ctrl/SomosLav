@@ -330,7 +330,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="hero-content">
         <p className="hero-title">
-          Lavado profesional
+          Tu ropa limpia
           <br />a un precio fijo
         </p>
 
