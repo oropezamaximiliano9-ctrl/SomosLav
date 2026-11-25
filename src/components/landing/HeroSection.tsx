@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import canvasLaundryBag from '../../assets/images/IMG_8321.jpg';
+import { DatePickerBottomSheet } from './DatePickerBottomSheet';
 
 const DATE_CONFIG = {
   cutoffHour: 21,
@@ -18,11 +19,6 @@ interface DateItem {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const dateKey = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-
-const isIOSDevice = () =>
-  typeof navigator !== 'undefined' &&
-  (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
 
 const getBaseDays = (now = new Date()) => {
   const today = new Date(now);
@@ -158,11 +154,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   openBottomSheet,
 }) => {
   const navigate = useNavigate();
-  const hiddenPickerRef = useRef<HTMLInputElement>(null);
-  const pickerOpenRef = useRef(false);
-  const pendingPickerDateRef = useRef<Date | null>(null);
 
   const [dateState, setDateState] = useState(computeInitialDateState);
+  const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const { dates, customDate, selectedKey } = dateState;
 
   const rebuildDates = useCallback(() => {
@@ -226,97 +220,39 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   }, [rebuildDates]);
 
   const minCustomDate = getMinCustomDateFrom(dates);
-  const minCustomKey = dateKey(minCustomDate);
   const hasCustom = Boolean(customDate);
   const isCustomSelected = Boolean(customDate && customDate.key === selectedKey);
-  const customValue = customDate ? customDate.key : minCustomKey;
-  const shouldOverlayPicker = !hasCustom || isCustomSelected;
 
   const triggerDateAction = (date: Date) => {
     setPreferredTime(formatPreferredTime(date));
     openBottomSheet();
   };
 
-  const handleSelectQuickDate = (item: DateItem, deferOpen = false) => {
+  const handleSelectQuickDate = (item: DateItem) => {
     setDateState((prev) => ({ ...prev, selectedKey: item.key }));
     saveSelection(item.key);
-    if (deferOpen) {
-      pendingPickerDateRef.current = item.date;
-    } else {
-      triggerDateAction(item.date);
-    }
+    triggerDateAction(item.date);
   };
 
-  const openNativePicker = () => {
-    const picker = hiddenPickerRef.current;
-    if (!picker) return;
-    if (typeof picker.showPicker === 'function') {
-      try {
-        picker.showPicker();
-        return;
-      } catch {}
-    }
-    picker.focus();
-    picker.click();
-  };
-
-  const handlePickerFocus = () => {
-    pickerOpenRef.current = true;
-    pendingPickerDateRef.current = null;
-  };
-
-  const handlePickerBlur = () => {
-    pickerOpenRef.current = false;
-    const pendingDate = pendingPickerDateRef.current;
-    pendingPickerDateRef.current = null;
-    if (pendingDate) {
-      triggerDateAction(pendingDate);
-    }
-  };
-
-  const handleCustomDateChange = (rawValue: string) => {
-    const parsed = parseDateKey(rawValue);
-    if (!parsed) {
-      pendingPickerDateRef.current = null;
-      return;
-    }
-
-    const deferUntilOk = isIOSDevice() && pickerOpenRef.current;
-    const key = dateKey(parsed);
-    const matchingQuick = dates.find((d) => d.key === key);
-
-    if (matchingQuick) {
-      handleSelectQuickDate(matchingQuick, deferUntilOk);
-      return;
-    }
-
-    if (parsed.getTime() < minCustomDate.getTime()) return;
-
-    const formatted = formatDateItem(parsed);
+  const handleConfirmCustomDate = (pickedDate: Date) => {
+    const formatted = formatDateItem(pickedDate);
     setDateState((prev) => ({
       ...prev,
       customDate: formatted,
       selectedKey: formatted.key,
     }));
     saveSelection(formatted.key);
-
-    if (deferUntilOk) {
-      pendingPickerDateRef.current = formatted.date;
-    } else {
-      pendingPickerDateRef.current = null;
-      triggerDateAction(formatted.date);
-    }
+    setIsDateSheetOpen(false);
+    triggerDateAction(formatted.date);
   };
 
-  const handleOtherCardClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if ((e.target as HTMLElement)?.id === 'otherDateOverlay') return;
-
+  const handleOtherCardClick = () => {
     if (customDate && selectedKey !== customDate.key) {
       setDateState((prev) => ({ ...prev, selectedKey: customDate.key }));
       saveSelection(customDate.key);
       triggerDateAction(customDate.date);
     } else {
-      openNativePicker();
+      setIsDateSheetOpen(true);
     }
   };
 
@@ -440,7 +376,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     ? isCustomSelected
                       ? `${customDate.dayNum} ${customDate.monthShort}, tocar para elegir otro día`
                       : `Seleccionar ${customDate.dayNum} ${customDate.monthShort}`
-                    : 'Elegir otro día en el calendario'
+                    : 'Elegir otro día'
                 }
                 onClick={handleOtherCardClick}
               >
@@ -478,43 +414,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <ArrowIcon />
                   </>
                 )}
-
-                {shouldOverlayPicker && (
-                  <input
-                    type="date"
-                    className="native-date-overlay"
-                    id="otherDateOverlay"
-                    min={minCustomKey}
-                    value={customValue}
-                    tabIndex={-1}
-                    aria-hidden="true"
-                    onFocus={handlePickerFocus}
-                    onBlur={handlePickerBlur}
-                    onChange={(e) => handleCustomDateChange(e.target.value)}
-                  />
-                )}
               </button>
             </div>
-
-            <input
-              ref={hiddenPickerRef}
-              type="date"
-              className="sr-date-input"
-              id="hiddenDatePicker"
-              min={minCustomKey}
-              value={customValue}
-              aria-hidden="true"
-              tabIndex={-1}
-              onFocus={handlePickerFocus}
-              onBlur={handlePickerBlur}
-              onChange={(e) => handleCustomDateChange(e.target.value)}
-            />
           </div>
           <p className="date-subtitle">
             <span className="highlight">¿Sin ropa sucia?</span> Pídelo gratis y llénalo después.
           </p>
         </div>
       </div>
+
+      {/* Selector de próximos días hecho a medida */}
+      <DatePickerBottomSheet
+        isOpen={isDateSheetOpen}
+        onClose={() => setIsDateSheetOpen(false)}
+        minDate={minCustomDate}
+        initialSelectedKey={customDate?.key ?? null}
+        onConfirm={handleConfirmCustomDate}
+      />
     </section>
   );
 };

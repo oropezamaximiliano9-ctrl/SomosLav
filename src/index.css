@@ -540,40 +540,6 @@ html, body {
 .date-card-other.selected .edit-hint { display: inline-flex; }
 .date-card-other.selected .date-card-arrow { display: none; }
 
-.native-date-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  z-index: 3;
-}
-
-.native-date-overlay::-webkit-calendar-picker-indicator {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.sr-date-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-  bottom: 0;
-  right: 0;
-}
-
 /* ==========================================================================
    SEGUNDA PANTALLA — TARJETAS EDITORIALES (ESCALADO PROPORCIONAL --u)
    ========================================================================== */
