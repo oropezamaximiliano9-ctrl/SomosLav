@@ -14,7 +14,12 @@ import {
   Check,
 } from 'lucide-react';
 import { ALL_COATZA_COLONIAS, normalizeText } from '../../utils/distance';
-import { dismissKeyboard, useKeyboardSheetOffset } from '../../utils/keyboard';
+import {
+  dismissKeyboard,
+  resetSafariViewportScroll,
+  useBodyScrollLock,
+  useKeyboardSheetOffset,
+} from '../../utils/keyboard';
 
 interface RegistrationBottomSheetProps {
   isOpen: boolean;
@@ -100,8 +105,23 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   const overlayPointerDownRef = useRef(false);
   const kbLayerRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  useKeyboardSheetOffset(isOpen, kbLayerRef, sheetRef);
+  useBodyScrollLock(isOpen);
+  useKeyboardSheetOffset(isOpen, kbLayerRef, sheetRef, contentRef);
+
+  const handleInputBlur = () => {
+    window.setTimeout(() => {
+      const active = document.activeElement;
+      if (
+        !active ||
+        !sheetRef.current?.contains(active) ||
+        (active.tagName !== 'INPUT' && active.tagName !== 'TEXTAREA')
+      ) {
+        resetSafariViewportScroll();
+      }
+    }, 50);
+  };
 
   if (typeof document === 'undefined') return null;
 
@@ -126,7 +146,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
       <div ref={kbLayerRef} className="form-sheet-kb-layer">
         <div
           ref={sheetRef}
-          className="form-bottom-sheet h-auto pt-4 pb-7 px-6"
+          className="form-bottom-sheet registration-bottom-sheet pt-4 pb-7 px-6"
           data-open={isOpen ? 'true' : 'false'}
           id="bottom-sheet-container"
           onClick={(e) => {
@@ -156,16 +176,15 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
           <X className="w-4 h-4" />
         </button>
 
-        {formError && (
-          <div className="mt-2 p-2 bg-red-50 border border-red-100 rounded-xl text-[11px] font-bold flex items-center gap-2 select-none shrink-0 z-20">
-            <Info className="w-4.5 h-4.5 text-red-500 shrink-0" />
-            <span className="leading-tight">{formError}</span>
-          </div>
-        )}
-
-        {/* Form Inner Content Scroller with static height */}
-        <div className="w-full relative mt-3">
-          <div className="form-content-inner w-full flex flex-col">
+        {/* Scrollable inner content area with overscroll-behavior: contain */}
+        <div className="form-sheet-scroll w-full relative mt-3">
+          <div ref={contentRef} className="form-content-inner w-full flex flex-col">
+            {formError && (
+              <div className="mb-2.5 p-2 bg-red-50 border border-red-100 rounded-xl text-[11px] font-bold flex items-center gap-2 select-none shrink-0 z-20">
+                <Info className="w-4.5 h-4.5 text-red-500 shrink-0" />
+                <span className="leading-tight">{formError}</span>
+              </div>
+            )}
             {registered ? (() => {
               const firstName = name.trim().split(/\s+/)[0] || '';
               const digits = phone.replace(/\D/g, '');
@@ -467,13 +486,14 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                   setName(e.target.value);
                                   setFormError(null);
                                 }}
+                                onBlur={handleInputBlur}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
                                     goToStep2(e);
                                   }
                                 }}
-                                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400 select-text"
+                                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-[16px] focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400 select-text"
                               />
                             </div>
                           </div>
@@ -555,14 +575,17 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                   setPhone(digits.slice(0, 10));
                                   setFormError(null);
                                 }}
-                                onBlur={handlePhoneBlur}
+                                onBlur={() => {
+                                  handlePhoneBlur();
+                                  handleInputBlur();
+                                }}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
                                     goToStep3(e);
                                   }
                                 }}
-                                className={`w-full pl-9 pr-4 py-2 rounded-xl outline-none font-semibold text-base focus:ring-2 select-text ${
+                                className={`w-full pl-9 pr-4 py-2 rounded-xl outline-none font-semibold text-[16px] focus:ring-2 select-text ${
                                   isPhoneError
                                     ? 'bg-red-50/30 border border-red-300 text-red-900 focus:border-red-500 focus:ring-red-100'
                                     : 'bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white focus:ring-blue-100 placeholder:text-slate-400'
@@ -629,6 +652,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                   setFormError(null);
                                   setGpsCoords(null);
                                 }}
+                                onBlur={handleInputBlur}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
@@ -636,7 +660,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                     submitStep3AndVerify(e);
                                   }
                                 }}
-                                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-base focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
+                                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-[16px] focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
                                 placeholder="Compartir ubicación"
                               />
                             </div>

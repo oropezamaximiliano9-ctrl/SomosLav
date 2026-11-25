@@ -150,6 +150,7 @@ function AppContent() {
 
   return (
     <div 
+      id="app-scroll-container"
       ref={scrollContainerRef}
       tabIndex={0}
       className={containerClasses + " outline-none"}

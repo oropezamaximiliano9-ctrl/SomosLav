@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, ArrowRight } from 'lucide-react';
+import { useBodyScrollLock } from '../../utils/keyboard';
 
 export interface CustomDateOption {
   date: Date;
@@ -33,6 +34,7 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
   onConfirm,
 }) => {
   const minTimestamp = minDate.getTime();
+  useBodyScrollLock(isOpen);
 
   const upcomingDays = useMemo<CustomDateOption[]>(() => {
     const start = new Date(minTimestamp);

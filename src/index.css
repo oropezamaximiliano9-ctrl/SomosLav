@@ -78,6 +78,15 @@ html, body {
   }
 }
 
+/* Background scroll lock while any bottom sheet is open */
+body.sheet-scroll-locked,
+body.sheet-scroll-locked #root,
+body.sheet-scroll-locked #app-scroll-container {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  touch-action: none !important;
+}
+
 /* Custom High-Performance Bottom Sheet Form Transitions */
 .form-overlay {
   position: fixed;
@@ -87,6 +96,7 @@ html, body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  touch-action: none;
   transition:
     opacity 240ms ease-out,
     visibility 0s linear 240ms;
@@ -99,11 +109,11 @@ html, body {
   pointer-events: auto;
   cursor: pointer;
   transition:
-    opacity 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms cubic-bezier(0.32, 0.72, 0, 1),
     visibility 0s linear 0s;
 }
 
-/* Dedicated always-promoted GPU layer for virtual keyboard tracking (never competes with sheet open/close) */
+/* Dedicated always-promoted GPU layer for virtual keyboard tracking (transition ONLY on transform with Apple curve) */
 .form-sheet-kb-layer {
   position: fixed;
   bottom: 0;
@@ -112,7 +122,7 @@ html, body {
   z-index: 10000;
   pointer-events: none;
   transform: translate3d(0, 0px, 0);
-  transition: transform 250ms cubic-bezier(0.38, 0.7, 0.125, 1);
+  transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1);
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -125,12 +135,12 @@ html, body {
   right: 0;
   z-index: 10000;
   width: 100%;
-  max-width: 440px; /* elegant size */
+  max-width: 440px;
   margin: 0 auto;
   background-color: #ffffff;
   border-top-left-radius: 32px;
   border-top-right-radius: 32px;
-  max-height: 90svh;
+  max-height: 90dvh;
 
   display: flex;
   flex-direction: column;
@@ -141,9 +151,9 @@ html, body {
   visibility: hidden;
   pointer-events: none;
   transition:
-    transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
     opacity 200ms ease-out 40ms,
-    visibility 0s linear 260ms;
+    visibility 0s linear 280ms;
   will-change: transform, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -157,7 +167,28 @@ html, body {
   z-index: auto;
 }
 
-/* Seamless white skirt below the sheet while open so keyboard open/close never flashes a dark gap */
+/* Registration sheet maintains expanded room (75%-90% total height with keyboard) so inputs sit in the upper zone */
+.registration-bottom-sheet {
+  min-height: min(78dvh, 350px);
+  max-height: 90dvh;
+}
+
+/* Scrollable body inside the sheet with strict overscroll containment */
+.form-sheet-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent iOS Safari / Chrome automatic zoom on input focus */
+.form-bottom-sheet input,
+.form-bottom-sheet textarea {
+  font-size: 16px;
+}
+
+/* Seamless white skirt below the sheet while open so rubber-band or keyboard transitions never flash a dark gap */
 .form-bottom-sheet::after {
   content: "";
   position: absolute;
@@ -177,7 +208,7 @@ html, body {
   visibility: visible;
   pointer-events: auto;
   transition:
-    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
     opacity 150ms ease-out,
     visibility 0s linear 0s;
 }
