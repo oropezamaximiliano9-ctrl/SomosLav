@@ -19,6 +19,11 @@ interface DateItem {
 const pad = (n: number) => String(n).padStart(2, '0');
 const dateKey = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
+const isIOSDevice = () =>
+  typeof navigator !== 'undefined' &&
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+
 const getBaseDays = (now = new Date()) => {
   const today = new Date(now);
   today.setHours(0, 0, 0, 0);
@@ -154,6 +159,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const navigate = useNavigate();
   const hiddenPickerRef = useRef<HTMLInputElement>(null);
+  const pickerOpenRef = useRef(false);
+  const pendingPickerDateRef = useRef<Date | null>(null);
 
   const [dateState, setDateState] = useState(computeInitialDateState);
   const { dates, customDate, selectedKey } = dateState;
@@ -230,10 +237,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     openBottomSheet();
   };
 
-  const handleSelectQuickDate = (item: DateItem) => {
+  const handleSelectQuickDate = (item: DateItem, deferOpen = false) => {
     setDateState((prev) => ({ ...prev, selectedKey: item.key }));
     saveSelection(item.key);
-    triggerDateAction(item.date);
+    if (deferOpen) {
+      pendingPickerDateRef.current = item.date;
+    } else {
+      triggerDateAction(item.date);
+    }
   };
 
   const openNativePicker = () => {
@@ -249,15 +260,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     picker.click();
   };
 
+  const handlePickerFocus = () => {
+    pickerOpenRef.current = true;
+    pendingPickerDateRef.current = null;
+  };
+
+  const handlePickerBlur = () => {
+    pickerOpenRef.current = false;
+    const pendingDate = pendingPickerDateRef.current;
+    pendingPickerDateRef.current = null;
+    if (pendingDate) {
+      triggerDateAction(pendingDate);
+    }
+  };
+
   const handleCustomDateChange = (rawValue: string) => {
     const parsed = parseDateKey(rawValue);
-    if (!parsed) return;
+    if (!parsed) {
+      pendingPickerDateRef.current = null;
+      return;
+    }
 
+    const deferUntilOk = isIOSDevice() && pickerOpenRef.current;
     const key = dateKey(parsed);
     const matchingQuick = dates.find((d) => d.key === key);
 
     if (matchingQuick) {
-      handleSelectQuickDate(matchingQuick);
+      handleSelectQuickDate(matchingQuick, deferUntilOk);
       return;
     }
 
@@ -270,7 +299,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       selectedKey: formatted.key,
     }));
     saveSelection(formatted.key);
-    triggerDateAction(formatted.date);
+
+    if (deferUntilOk) {
+      pendingPickerDateRef.current = formatted.date;
+    } else {
+      pendingPickerDateRef.current = null;
+      triggerDateAction(formatted.date);
+    }
   };
 
   const handleOtherCardClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -453,6 +488,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     value={customValue}
                     tabIndex={-1}
                     aria-hidden="true"
+                    onFocus={handlePickerFocus}
+                    onBlur={handlePickerBlur}
                     onChange={(e) => handleCustomDateChange(e.target.value)}
                   />
                 )}
@@ -468,6 +505,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               value={customValue}
               aria-hidden="true"
               tabIndex={-1}
+              onFocus={handlePickerFocus}
+              onBlur={handlePickerBlur}
               onChange={(e) => handleCustomDateChange(e.target.value)}
             />
           </div>
