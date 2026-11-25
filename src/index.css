@@ -82,9 +82,7 @@ html, body {
 .form-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background-color: rgba(15, 23, 42, 0.48);
   z-index: 9999;
   opacity: 0;
   visibility: hidden;
@@ -101,8 +99,23 @@ html, body {
   pointer-events: auto;
   cursor: pointer;
   transition:
-    opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms cubic-bezier(0.22, 1, 0.36, 1),
     visibility 0s linear 0s;
+}
+
+/* Dedicated always-promoted GPU layer for virtual keyboard tracking (never competes with sheet open/close) */
+.form-sheet-kb-layer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  pointer-events: none;
+  transform: translate3d(0, 0px, 0);
+  transition: transform 250ms cubic-bezier(0.38, 0.7, 0.125, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .form-bottom-sheet {
@@ -128,12 +141,20 @@ html, body {
   visibility: hidden;
   pointer-events: none;
   transition:
-    transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
-    opacity 220ms ease-out 40ms,
-    visibility 0s linear 280ms;
+    transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 200ms ease-out 40ms,
+    visibility 0s linear 260ms;
   will-change: transform, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+.form-sheet-kb-layer > .form-bottom-sheet {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  z-index: auto;
 }
 
 /* Seamless white skirt below the sheet while open so keyboard open/close never flashes a dark gap */
@@ -156,8 +177,8 @@ html, body {
   visibility: visible;
   pointer-events: auto;
   transition:
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 160ms ease-out,
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 150ms ease-out,
     visibility 0s linear 0s;
 }
 
@@ -168,6 +189,64 @@ html, body {
 
 .form-content-inner {
   opacity: 1;
+}
+
+/* Pure CSS compositor-only emoji animations (zero main-thread JS contention during keyboard open) */
+@keyframes sheet-emoji-wave {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  12% { transform: rotate(18deg); }
+  24% { transform: rotate(-10deg); }
+  36% { transform: rotate(18deg); }
+  48% { transform: rotate(-6deg); }
+}
+
+@keyframes sheet-emoji-grin {
+  0%, 60%, 100% { transform: scale(1) rotate(0deg); }
+  12% { transform: scale(1.18) rotate(6deg); }
+  24% { transform: scale(0.95) rotate(-4deg); }
+  36% { transform: scale(1.08) rotate(2deg); }
+}
+
+@keyframes sheet-emoji-ring {
+  0%, 55%, 100% { transform: rotate(0deg); }
+  10%, 30% { transform: rotate(-12deg); }
+  20%, 40% { transform: rotate(12deg); }
+}
+
+@keyframes sheet-emoji-bounce {
+  0%, 55%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-5px); }
+}
+
+.animate-sheet-wave {
+  display: inline-block;
+  transform-origin: bottom right;
+  animation: sheet-emoji-wave 2.2s ease-in-out infinite;
+}
+
+.animate-sheet-grin {
+  display: inline-block;
+  transform-origin: center;
+  animation: sheet-emoji-grin 2.2s ease-in-out infinite;
+}
+
+.animate-sheet-ring {
+  display: inline-block;
+  animation: sheet-emoji-ring 2.2s ease-in-out infinite;
+}
+
+.animate-sheet-bounce {
+  display: inline-block;
+  animation: sheet-emoji-bounce 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sheet-wave,
+  .animate-sheet-grin,
+  .animate-sheet-ring,
+  .animate-sheet-bounce {
+    animation: none;
+  }
 }
 
 /* ==========================================================================

@@ -98,9 +98,10 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   sliderHeight,
 }) => {
   const overlayPointerDownRef = useRef(false);
+  const kbLayerRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
 
-  useKeyboardSheetOffset(isOpen, sheetRef);
+  useKeyboardSheetOffset(isOpen, kbLayerRef, sheetRef);
 
   if (typeof document === 'undefined') return null;
 
@@ -122,22 +123,23 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
         }}
       />
 
-      <div
-        ref={sheetRef}
-        className="form-bottom-sheet h-auto pt-4 pb-7 px-6"
-        data-open={isOpen ? 'true' : 'false'}
-        id="bottom-sheet-container"
-        onClick={(e) => {
-          e.stopPropagation();
-          const target = e.target as HTMLElement | null;
-          if (
-            target &&
-            !target.closest('input, textarea, button, a, label, [role="button"], [role="radio"]')
-          ) {
-            dismissKeyboard();
-          }
-        }}
-      >
+      <div ref={kbLayerRef} className="form-sheet-kb-layer">
+        <div
+          ref={sheetRef}
+          className="form-bottom-sheet h-auto pt-4 pb-7 px-6"
+          data-open={isOpen ? 'true' : 'false'}
+          id="bottom-sheet-container"
+          onClick={(e) => {
+            e.stopPropagation();
+            const target = e.target as HTMLElement | null;
+            if (
+              target &&
+              !target.closest('input, textarea, button, a, label, [role="button"], [role="radio"]')
+            ) {
+              dismissKeyboard();
+            }
+          }}
+        >
         {/* Visual drag indicator */}
         <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
 
@@ -398,61 +400,20 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                   <h2 className="text-[19px] font-semibold text-slate-800 tracking-tight leading-snug flex items-center gap-1.5">
                     {formStep === 1 && (
                       <span className="inline-flex items-center gap-1">
-                        <motion.span
-                          key={`wave-${isOpen}`}
-                          className="inline-block origin-bottom-right select-none"
-                          animate={{ rotate: [0, 18, -10, 18, -6, 0, 0] }}
-                          transition={{
-                            duration: 2.2,
-                            times: [0, 0.12, 0.24, 0.36, 0.48, 0.6, 1],
-                            ease: 'easeInOut',
-                            repeat: Infinity,
-                          }}
-                        >
-                          👋
-                        </motion.span>
-                        <motion.span
-                          key={`grin-${isOpen}`}
-                          className="inline-block origin-center select-none"
-                          animate={{
-                            scale: [1, 1.2, 0.95, 1.1, 1, 1],
-                            rotate: [0, 6, -4, 2, 0, 0],
-                          }}
-                          transition={{
-                            duration: 2.2,
-                            times: [0, 0.12, 0.24, 0.36, 0.48, 0.6, 1],
-                            ease: 'easeInOut',
-                            repeat: Infinity,
-                          }}
-                        >
-                          😁
-                        </motion.span>
+                        <span className="animate-sheet-wave select-none">👋</span>
+                        <span className="animate-sheet-grin select-none">😁</span>
                         <span>¿Cuál es tu nombre?</span>
                       </span>
                     )}
                     {formStep === 2 && (
                       <span className="inline-flex items-center gap-1.5">
-                        <motion.span
-                          key={`phone-${formStep}`}
-                          className="inline-block"
-                          animate={{ rotate: [0, -12, 12, -12, 12, 0] }}
-                          transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }}
-                        >
-                          📱
-                        </motion.span>
+                        <span className="animate-sheet-ring select-none">📱</span>
                         <span>¿Tu número de teléfono?</span>
                       </span>
                     )}
                     {formStep === 3 && (
                       <span className="inline-flex items-center gap-1.5">
-                        <motion.span
-                          key={`pin-${formStep}`}
-                          className="inline-block"
-                          animate={{ y: [0, -6, 0] }}
-                          transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.8, ease: 'easeInOut' }}
-                        >
-                          📍
-                        </motion.span>
+                        <span className="animate-sheet-bounce select-none">📍</span>
                         <span>¿Dónde te lo entregamos?</span>
                       </span>
                     )}
@@ -741,6 +702,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
             )}
           </div>
         </div>
+      </div>
       </div>
     </>,
     document.body

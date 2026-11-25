@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, type RefObject } from "react";
+import { useEffect, type RefObject } from "react";
 
 /**
  * Global Keyboard Dismissal Utility
@@ -61,49 +61,77 @@ function isTopLevelWindow(): boolean {
   }
 }
 
-// Remember the exact measured iOS keyboard height once observed in this top-level session
+// Remember the exact measured iOS keyboard height across opens and reloads (per screen & orientation)
 let cachedIosKeyboardHeight: number | null = null;
 
+function getIosKbStorageKey(): string {
+  const isLandscape = window.innerWidth > window.innerHeight;
+  return `ios_kb_h_${window.screen.width}x${window.screen.height}_${isLandscape ? "L" : "P"}`;
+}
+
+function getEstimatedIosKeyboardHeight(): number {
+  if (cachedIosKeyboardHeight !== null) return cachedIosKeyboardHeight;
+  try {
+    const stored = window.localStorage.getItem(getIosKbStorageKey());
+    if (stored) {
+      const parsed = Number(stored);
+      if (Number.isFinite(parsed) && parsed >= 140 && parsed <= 460) {
+        cachedIosKeyboardHeight = parsed;
+        return parsed;
+      }
+    }
+  } catch {
+    // Ignore storage errors in private mode
+  }
+  const isLandscape = window.innerWidth > window.innerHeight;
+  if (isLandscape) return 185;
+  const screenH = Math.max(window.screen.height, window.screen.width);
+  if (screenH >= 890) return 346;
+  if (screenH >= 800) return 336;
+  return 260;
+}
+
+function saveMeasuredIosKeyboardHeight(height: number) {
+  if (!Number.isFinite(height) || height < 140 || height > 460) return;
+  cachedIosKeyboardHeight = height;
+  try {
+    window.localStorage.setItem(getIosKbStorageKey(), String(height));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
 /**
- * Tracks the mobile virtual keyboard via window.visualViewport and writes
- * concrete `translate3d(0, -Xpx, 0)` transforms directly on the bottom sheet
- * element (avoiding WebKit's intermittent transition-skip bug with CSS custom
- * properties inside `calc()` inside `transform`).
- *
- * On top-level iOS browsers (production iPhone Chrome / Safari, never inside
- * iframes), when the user directly taps an input field, pre-lifts conservatively
- * on frame 0 so even the very first keyboard open rises smoothly in lockstep
- * with the iOS keyboard before WKWebView's delayed visualViewport.resize fires.
+ * Tracks the mobile virtual keyboard via window.visualViewport and drives a
+ * dedicated always-promoted GPU wrapper (`kbLayerRef`) with concrete
+ * `translate3d(0, -Xpx, 0)` values, completely decoupled from the inner
+ * sheet's open/close animation.
  */
 export function useKeyboardSheetOffset(
   isOpen: boolean,
+  kbLayerRef: RefObject<HTMLDivElement | null>,
   sheetRef: RefObject<HTMLDivElement | null>
 ) {
-  // Synchronously clear inline transform before paint when closing so the CSS
-  // closed-state transform (`translate3d(0, calc(100% + 24px), 0)`) transitions
-  // smoothly in a single unbroken sweep from the current keyboard position.
-  useLayoutEffect(() => {
-    const el = sheetRef.current;
-    if (!el || isOpen) return;
-    el.style.transform = "";
-  }, [isOpen, sheetRef]);
-
   useEffect(() => {
-    const el = sheetRef.current;
-    if (!el || typeof window === "undefined") return;
+    const kbLayer = kbLayerRef.current;
+    const sheet = sheetRef.current;
+    if (!kbLayer || !sheet || typeof window === "undefined") return;
 
     if (!isOpen) {
+      // Wait for the inner sheet's 260ms slide+fade exit to finish before silently
+      // resetting the outer keyboard wrapper so closing never double-animates.
       const cleanupTimer = window.setTimeout(() => {
+        kbLayer.style.transform = "translate3d(0, 0px, 0)";
         if (window.scrollY !== 0 || window.scrollX !== 0) {
           window.scrollTo(0, 0);
         }
-      }, 320);
+      }, 280);
       return () => window.clearTimeout(cleanupTimer);
     }
 
     const vv = window.visualViewport;
     if (!vv) {
-      el.style.transform = "";
+      kbLayer.style.transform = "translate3d(0, 0px, 0)";
       return;
     }
 
@@ -119,13 +147,16 @@ export function useKeyboardSheetOffset(
     let dismissingUntil = 0;
     let lastDirectInputTapAt = 0;
 
+    // Ensure concrete baseline transform is always present on the GPU wrapper
+    kbLayer.style.transform = "translate3d(0, 0px, 0)";
+
     const getClampedOffset = (desiredOffset: number, viewportHeight: number, offsetTop: number) => {
       const rawOffset = Math.max(0, Math.round(desiredOffset));
       const maxSafeOffset = Math.max(
         0,
-        Math.round(window.innerHeight - el.offsetHeight - offsetTop - 12)
+        Math.round(window.innerHeight - sheet.offsetHeight - offsetTop - 12)
       );
-      return viewportHeight < el.offsetHeight + 12 ? Math.min(rawOffset, maxSafeOffset) : rawOffset;
+      return viewportHeight < sheet.offsetHeight + 12 ? Math.min(rawOffset, maxSafeOffset) : rawOffset;
     };
 
     const applyOffset = (nextOffset: number, force = false) => {
@@ -137,9 +168,7 @@ export function useKeyboardSheetOffset(
 
       if (isMeaningfulChange && clamped !== lastOffset) {
         lastOffset = clamped;
-        // Write concrete transform value (or clear to fall back to CSS translate3d(0, 0px, 0))
-        // so WebKit/iOS Chrome reliably runs the GPU CSS transition every single time.
-        el.style.transform = clamped > 0 ? `translate3d(0, ${-clamped}px, 0)` : "";
+        kbLayer.style.transform = `translate3d(0, ${-clamped}px, 0)`;
       }
     };
 
@@ -158,7 +187,7 @@ export function useKeyboardSheetOffset(
 
       if (isKeyboardOpen) {
         if (canPreLiftIOS) {
-          cachedIosKeyboardHeight = keyboardHeight;
+          saveMeasuredIosKeyboardHeight(keyboardHeight);
         }
         if (preLiftVerifyTimer !== null) {
           window.clearTimeout(preLiftVerifyTimer);
@@ -167,7 +196,6 @@ export function useKeyboardSheetOffset(
         const nextOffset = getClampedOffset(keyboardHeight - vv.offsetTop, vv.height, vv.offsetTop);
         applyOffset(nextOffset);
       } else {
-        // Don't cancel an active direct-tap pre-lift before iOS finishes firing visualViewport.resize
         if (canPreLiftIOS && preLiftVerifyTimer !== null) {
           return;
         }
@@ -202,12 +230,11 @@ export function useKeyboardSheetOffset(
 
       const isDirectUserTap = Date.now() - lastDirectInputTapAt < 450;
 
-      // On top-level iPhone Chrome/Safari, when the user directly taps an input
-      // while the keyboard is closed, lift immediately on frame 0 so even the
-      // very first keyboard open rises smoothly alongside the iOS keyboard.
+      // On top-level iPhone Chrome/Safari, lift immediately on frame 0 when the
+      // user directly taps an input so even the very first keyboard open rises
+      // in lockstep with the native iOS keyboard before WKWebView's late resize.
       if (canPreLiftIOS && isDirectUserTap && lastOffset === 0) {
-        const isLandscape = window.innerWidth > window.innerHeight;
-        const estimatedHeight = cachedIosKeyboardHeight ?? (isLandscape ? 180 : 275);
+        const estimatedHeight = getEstimatedIosKeyboardHeight();
         const estimatedVvHeight = Math.max(200, window.innerHeight - estimatedHeight);
         applyOffset(
           getClampedOffset(estimatedHeight - vv.offsetTop, estimatedVvHeight, vv.offsetTop),
@@ -221,13 +248,12 @@ export function useKeyboardSheetOffset(
           if (actualKb <= 80) {
             applyOffset(0, true);
           } else {
-            cachedIosKeyboardHeight = actualKb;
+            saveMeasuredIosKeyboardHeight(actualKb);
             applyOffset(getClampedOffset(actualKb - vv.offsetTop, vv.height, vv.offsetTop));
           }
         }, 450);
       }
 
-      // Immediately sync and re-check after iOS keyboard animation checkpoints
       scheduleUpdate();
       if (focusRecheck1 !== null) window.clearTimeout(focusRecheck1);
       if (focusRecheck2 !== null) window.clearTimeout(focusRecheck2);
@@ -241,14 +267,13 @@ export function useKeyboardSheetOffset(
       blurCheckTimer = window.setTimeout(() => {
         blurCheckTimer = null;
         const active = document.activeElement;
-        if (isTextInputElement(active) && el.contains(active)) return;
+        if (isTextInputElement(active) && sheet.contains(active)) return;
 
         if (preLiftVerifyTimer !== null) {
           window.clearTimeout(preLiftVerifyTimer);
           preLiftVerifyTimer = null;
         }
 
-        // Only lower immediately if a real keyboard offset was actually active
         if (lastOffset > 0) {
           dismissingUntil = Date.now() + 340;
           applyOffset(0, true);
@@ -257,10 +282,10 @@ export function useKeyboardSheetOffset(
     };
 
     updateFromViewport();
-    el.addEventListener("touchstart", handleDirectInputTap, { passive: true });
-    el.addEventListener("pointerdown", handleDirectInputTap, { passive: true });
-    el.addEventListener("focusin", handleFocusIn);
-    el.addEventListener("focusout", handleFocusOut);
+    sheet.addEventListener("touchstart", handleDirectInputTap, { passive: true });
+    sheet.addEventListener("pointerdown", handleDirectInputTap, { passive: true });
+    sheet.addEventListener("focusin", handleFocusIn);
+    sheet.addEventListener("focusout", handleFocusOut);
     vv.addEventListener("resize", scheduleUpdate);
     vv.addEventListener("scroll", scheduleUpdate);
     window.addEventListener("resize", scheduleUpdate);
@@ -271,13 +296,13 @@ export function useKeyboardSheetOffset(
       if (focusRecheck1 !== null) window.clearTimeout(focusRecheck1);
       if (focusRecheck2 !== null) window.clearTimeout(focusRecheck2);
       if (preLiftVerifyTimer !== null) window.clearTimeout(preLiftVerifyTimer);
-      el.removeEventListener("touchstart", handleDirectInputTap);
-      el.removeEventListener("pointerdown", handleDirectInputTap);
-      el.removeEventListener("focusin", handleFocusIn);
-      el.removeEventListener("focusout", handleFocusOut);
+      sheet.removeEventListener("touchstart", handleDirectInputTap);
+      sheet.removeEventListener("pointerdown", handleDirectInputTap);
+      sheet.removeEventListener("focusin", handleFocusIn);
+      sheet.removeEventListener("focusout", handleFocusOut);
       vv.removeEventListener("resize", scheduleUpdate);
       vv.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [isOpen, sheetRef]);
+  }, [isOpen, kbLayerRef, sheetRef]);
 }
