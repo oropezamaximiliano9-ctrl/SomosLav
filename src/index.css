@@ -91,6 +91,8 @@ body.sheet-scroll-locked #app-scroll-container {
 .form-overlay {
   position: fixed;
   inset: 0;
+  overflow: hidden;
+  clip-path: inset(0);
   background-color: rgba(15, 23, 42, 0.48);
   z-index: 9999;
   opacity: 0;
@@ -99,7 +101,7 @@ body.sheet-scroll-locked #app-scroll-container {
   touch-action: none;
   transition:
     opacity 240ms ease-out,
-    visibility 0s linear 240ms;
+    visibility 0s linear 260ms;
   will-change: opacity;
 }
 
@@ -113,42 +115,28 @@ body.sheet-scroll-locked #app-scroll-container {
     visibility 0s linear 0s;
 }
 
-/* Dedicated always-promoted GPU layer for virtual keyboard tracking */
-.form-sheet-kb-layer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10000;
-  pointer-events: none;
-  transform: translate3d(0, 0px, 0);
-  transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
+/* Compact Bottom Sheet anchored to bottom: 0 with invisible 60vh lower white extension */
 .form-bottom-sheet {
   position: fixed;
-  bottom: 0;
   left: 0;
   right: 0;
+  bottom: 0;
   z-index: 10000;
   width: 100%;
   max-width: 440px;
   margin: 0 auto;
-  background-color: #ffffff;
-  border-top-left-radius: 32px;
-  border-top-right-radius: 32px;
   height: auto;
-  max-height: 90dvh;
-  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  max-height: 90svh;
+  background-color: #ffffff;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  overflow: visible;
+  cursor: default;
 
   display: flex;
   flex-direction: column;
-  overflow: visible;
   overscroll-behavior: contain;
-  transform: translate3d(0, calc(100% + 24px), 0);
+  transform: translate3d(0, 100%, 0);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -161,19 +149,25 @@ body.sheet-scroll-locked #app-scroll-container {
   -webkit-backface-visibility: hidden;
 }
 
-.form-sheet-kb-layer > .form-bottom-sheet {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  right: auto;
-  z-index: auto;
+/* Invisible white lower skirt below bottom: 0 so iOS Safari keyboard lift never reveals a gap */
+.form-bottom-sheet::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 2px);
+  height: 60vh;
+  background-color: #ffffff;
+  pointer-events: none;
 }
 
-/* Scrollable body inside the sheet with strict overscroll containment */
+/* Scrollable body inside the sheet with normal bottom padding + safe-area */
 .form-sheet-scroll {
   flex: 1 1 auto;
   min-height: 0;
+  max-height: calc(90svh - 32px);
   overflow-y: auto;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
@@ -184,22 +178,8 @@ body.sheet-scroll-locked #app-scroll-container {
   font-size: 16px;
 }
 
-/* Subtle white skirt below the sheet while open so rubber-band transitions never flash a dark gap */
-.form-bottom-sheet::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% - 2px);
-  height: 56px;
-  background-color: #ffffff;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 100ms ease-out;
-}
-
 .form-bottom-sheet[data-open="true"] {
-  transform: translate3d(0, 0px, 0);
+  transform: translate3d(0, 0, 0);
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -207,11 +187,6 @@ body.sheet-scroll-locked #app-scroll-container {
     transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
     opacity 150ms ease-out,
     visibility 0s linear 0s;
-}
-
-.form-bottom-sheet[data-open="true"]::after {
-  opacity: 1;
-  transition: opacity 0s linear 0s;
 }
 
 .form-content-inner {
@@ -420,7 +395,7 @@ body.sheet-scroll-locked #app-scroll-container {
   align-items: center;
   justify-content: center;
   gap: 0 calc(8 * var(--u));
-  font-size: calc(20 * var(--u));
+  font-size: calc(19 * var(--u));
   font-weight: 400;
   color: white;
   letter-spacing: 0.01em;

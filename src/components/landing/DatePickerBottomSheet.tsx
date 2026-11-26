@@ -107,16 +107,16 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
           onClose();
         }}
         aria-hidden={!isOpen}
-      />
-
-      <div
-        className="form-bottom-sheet h-auto pt-4 pb-5 px-6"
-        data-open={isOpen ? 'true' : 'false'}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Elegir día de entrega del cesto"
-        aria-hidden={!isOpen}
       >
+        <div
+          className="form-bottom-sheet bg-white pt-4 px-6"
+          data-open={isOpen ? 'true' : 'false'}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Elegir día de entrega del cesto"
+          aria-hidden={!isOpen}
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Drag handle */}
         <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
 
@@ -130,7 +130,10 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
           <X className="w-4 h-4" />
         </button>
 
-        <div className="form-content-inner w-full flex flex-col mt-1.5">
+        <div
+          className="form-content-inner w-full flex flex-col mt-1.5"
+          style={{ paddingBottom: 'calc(20px + env(safe-area-inset-bottom))' }}
+        >
           {/* Header */}
           <div className="pr-7 mb-2.5 select-none">
             <h2 className="text-[19px] font-semibold text-slate-800 tracking-tight leading-snug font-geist">
@@ -180,6 +183,7 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
             <span className="font-geist">Continuar</span>
             <ArrowRight className="w-4 h-4 shrink-0" />
           </button>
+        </div>
         </div>
       </div>
     </>,

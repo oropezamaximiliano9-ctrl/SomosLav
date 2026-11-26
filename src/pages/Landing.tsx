@@ -356,13 +356,13 @@ export default function Landing() {
     }
 
     setFormStep(2);
-    calleInputRef.current?.focus({ preventScroll: true });
     if (viewportRef.current) {
       viewportRef.current.scrollLeft = 0;
     }
-    requestAnimationFrame(() => {
+    window.setTimeout(() => {
+      calleInputRef.current?.focus({ preventScroll: true });
       if (viewportRef.current) viewportRef.current.scrollLeft = 0;
-    });
+    }, 310);
   };
 
   const dbPreregister = async (distanceKmValue: number) => {
@@ -423,7 +423,7 @@ export default function Landing() {
     if (!trimmedPhone || trimmedPhone.length !== 10 || /[a-zA-Z]/i.test(trimmedPhone)) {
       setFormError('Por favor verifica tu número de teléfono.');
       setFormStep(1);
-      setTimeout(() => phoneInputRef.current?.focus({ preventScroll: true }), 150);
+      window.setTimeout(() => phoneInputRef.current?.focus({ preventScroll: true }), 310);
       return;
     }
 

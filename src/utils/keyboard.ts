@@ -1,4 +1,4 @@
-import { useEffect, type RefObject } from "react";
+import { useEffect } from "react";
 
 /**
  * Global Keyboard & Viewport Utilities for iOS Safari / Chrome & Android Chrome.
@@ -48,6 +48,7 @@ export function dismissKeyboard() {
  */
 let bodyScrollLockCount = 0;
 let savedScrollY = 0;
+let cleanupViewportGuard: (() => void) | null = null;
 
 export function useBodyScrollLock(isOpen: boolean) {
   useEffect(() => {
@@ -62,12 +63,31 @@ export function useBodyScrollLock(isOpen: boolean) {
       document.body.style.width = "100%";
       document.body.style.overflow = "hidden";
       document.body.classList.add("sheet-scroll-locked");
+
+      const vv = window.visualViewport;
+      if (vv) {
+        const preventViewportPush = () => {
+          if (vv.offsetTop > 0) {
+            window.scrollTo(0, 0);
+          }
+        };
+        vv.addEventListener("scroll", preventViewportPush);
+        vv.addEventListener("resize", preventViewportPush);
+        cleanupViewportGuard = () => {
+          vv.removeEventListener("scroll", preventViewportPush);
+          vv.removeEventListener("resize", preventViewportPush);
+        };
+      }
     }
     bodyScrollLockCount += 1;
 
     return () => {
       bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
       if (bodyScrollLockCount === 0) {
+        if (cleanupViewportGuard) {
+          cleanupViewportGuard();
+          cleanupViewportGuard = null;
+        }
         document.body.classList.remove("sheet-scroll-locked");
         document.body.style.position = "";
         document.body.style.top = "";
@@ -79,61 +99,4 @@ export function useBodyScrollLock(isOpen: boolean) {
       }
     };
   }, [isOpen]);
-}
-
-/**
- * Single source of truth for mobile virtual keyboard offset via window.visualViewport.
- * Listens cleanly to visualViewport "resize" & "scroll" with requestAnimationFrame
- * and updates GPU translate3d on kbLayer + maxHeight on sheet.
- */
-export function useKeyboardSheetOffset(
-  isOpen: boolean,
-  kbLayerRef: RefObject<HTMLDivElement | null>,
-  sheetRef: RefObject<HTMLDivElement | null>
-) {
-  useEffect(() => {
-    const kbLayer = kbLayerRef.current;
-    const sheet = sheetRef.current;
-    if (!kbLayer || !sheet || typeof window === "undefined") return;
-
-    if (!isOpen) {
-      const resetTimer = window.setTimeout(() => {
-        kbLayer.style.transform = "translate3d(0, 0px, 0)";
-        sheet.style.maxHeight = "";
-      }, 280);
-      return () => window.clearTimeout(resetTimer);
-    }
-
-    const vv = window.visualViewport;
-    if (!vv) {
-      kbLayer.style.transform = "translate3d(0, 0px, 0)";
-      return;
-    }
-
-    let rafId: number | null = null;
-
-    const update = () => {
-      rafId = null;
-      const offset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
-      const finalOffset = offset < 50 ? 0 : offset;
-
-      kbLayer.style.transform = `translate3d(0, ${-finalOffset}px, 0)`;
-      sheet.style.maxHeight = `${Math.max(220, Math.round(vv.height - 16))}px`;
-    };
-
-    const scheduleUpdate = () => {
-      if (rafId !== null) window.cancelAnimationFrame(rafId);
-      rafId = window.requestAnimationFrame(update);
-    };
-
-    update();
-    vv.addEventListener("resize", scheduleUpdate);
-    vv.addEventListener("scroll", scheduleUpdate);
-
-    return () => {
-      if (rafId !== null) window.cancelAnimationFrame(rafId);
-      vv.removeEventListener("resize", scheduleUpdate);
-      vv.removeEventListener("scroll", scheduleUpdate);
-    };
-  }, [isOpen, kbLayerRef, sheetRef]);
 }

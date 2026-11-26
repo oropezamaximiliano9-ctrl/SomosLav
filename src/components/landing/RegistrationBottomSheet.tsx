@@ -13,11 +13,7 @@ import {
   Check,
 } from 'lucide-react';
 import { ALL_COATZA_COLONIAS, normalizeText } from '../../utils/distance';
-import {
-  dismissKeyboard,
-  useBodyScrollLock,
-  useKeyboardSheetOffset,
-} from '../../utils/keyboard';
+import { dismissKeyboard, useBodyScrollLock } from '../../utils/keyboard';
 
 interface RegistrationBottomSheetProps {
   isOpen: boolean;
@@ -93,21 +89,20 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   sliderHeight,
 }) => {
   const overlayPointerDownRef = useRef(false);
-  const kbLayerRef = useRef<HTMLDivElement>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
 
   useBodyScrollLock(isOpen);
-  useKeyboardSheetOffset(isOpen, kbLayerRef, sheetRef);
 
   if (typeof document === 'undefined') return null;
 
   return createPortal(
     <>
-      {/* Bottom Sheet sliding panel modal - High Performance pure CSS */}
+      {/* Bottom Sheet backdrop with overflow: hidden + sliding compact panel */}
       <div
         className="form-overlay"
         data-open={isOpen ? 'true' : 'false'}
-        onMouseDown={(e) => e.preventDefault()}
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) e.preventDefault();
+        }}
         onPointerDown={(e) => {
           overlayPointerDownRef.current = e.target === e.currentTarget;
         }}
@@ -117,25 +112,22 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
           onClose();
           dismissKeyboard();
         }}
-      />
-
-      <div ref={kbLayerRef} className="form-sheet-kb-layer">
+      >
         <div
-          ref={sheetRef}
-          className="form-bottom-sheet pt-4 px-6"
+          className="form-bottom-sheet bg-white pt-4 px-6"
           data-open={isOpen ? 'true' : 'false'}
           id="bottom-sheet-container"
-          onClick={(e) => {
-            e.stopPropagation();
-            const target = e.target as HTMLElement | null;
-            if (
-              target &&
-              !target.closest('input, textarea, button, a, label, [role="button"], [role="radio"]')
-            ) {
-              dismissKeyboard();
-            }
-          }}
-        >
+        onClick={(e) => {
+          e.stopPropagation();
+          const target = e.target as HTMLElement | null;
+          if (
+            target &&
+            !target.closest('input, textarea, button, a, label, [role="button"], [role="radio"]')
+          ) {
+            dismissKeyboard();
+          }
+        }}
+      >
         {/* Visual drag indicator */}
         <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
 
@@ -368,11 +360,12 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                         onClick={() => {
                           setFormError(null);
                           setFormStep(step as 1 | 2);
-                          requestAnimationFrame(() => {
+                          if (viewportRef.current) viewportRef.current.scrollLeft = 0;
+                          window.setTimeout(() => {
                             if (step === 1) phoneInputRef.current?.focus({ preventScroll: true });
                             else if (step === 2) calleInputRef.current?.focus({ preventScroll: true });
                             if (viewportRef.current) viewportRef.current.scrollLeft = 0;
-                          });
+                          }, 310);
                         }}
                         className="h-5 flex-1 relative group focus:outline-none pointer-events-auto cursor-pointer flex items-center"
                         title={`Ir al Paso ${step}`}
@@ -642,7 +635,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
             )}
           </div>
         </div>
-      </div>
+        </div>
       </div>
     </>,
     document.body
