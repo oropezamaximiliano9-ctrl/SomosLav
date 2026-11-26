@@ -88,9 +88,31 @@ export const FeatureCardsSection: React.FC<FeatureCardsSectionProps> = ({
         onPointerUp={handleNavbarPointerUpOrLeave}
         onPointerLeave={handleNavbarPointerUpOrLeave}
         onPointerCancel={handleNavbarPointerUpOrLeave}
-        onClick={handleNavbarClick}
+        onClick={() => {
+          const container =
+            document.getElementById('app-scroll-container') ?? document.querySelector('.overflow-y-auto');
+          const scrollTop = container ? container.scrollTop : window.scrollY;
+          if (scrollTop < 40) {
+            const target = document.getElementById('content-stack-wrapper');
+            if (target && container && container.scrollHeight > container.clientHeight) {
+              const containerRect = container.getBoundingClientRect();
+              const targetRect = target.getBoundingClientRect();
+              container.scrollTo({
+                top: container.scrollTop + (targetRect.top - containerRect.top),
+                behavior: 'smooth',
+              });
+              return;
+            }
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              return;
+            }
+          }
+          handleNavbarClick();
+        }}
         onContextMenu={(e) => e.preventDefault()}
       >
+        <span className="sheet-peek-handle" aria-hidden="true" />
         {(role === 'associate' || role === 'admin') && (
           <div className="max-w-sm w-full mx-auto px-4 h-full relative flex items-center">
             <button

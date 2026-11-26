@@ -484,8 +484,8 @@ body.sheet-scroll-locked #app-scroll-container {
   position: relative;
   z-index: 10;
   padding: 0 calc(16 * var(--u));
-  padding-bottom: calc(6 * var(--u));
-  padding-bottom: calc(6 * var(--u) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(28 * var(--u));
+  padding-bottom: calc(28 * var(--u) + env(safe-area-inset-bottom, 0px));
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -683,10 +683,14 @@ body.sheet-scroll-locked #app-scroll-container {
   position: relative;
   z-index: 10;
   width: 100%;
+  margin-top: calc(-20 * var(--u));
+  margin-top: calc(-20 * var(--u) - env(safe-area-inset-bottom, 0px));
   background: #FFFCEF;
   border-top-left-radius: calc(20 * var(--u));
   border-top-right-radius: calc(20 * var(--u));
-  box-shadow: 0 calc(-24 * var(--u)) calc(48 * var(--u)) calc(-16 * var(--u)) rgba(42, 30, 18, 0.30);
+  box-shadow:
+    0 calc(-8 * var(--u)) calc(24 * var(--u)) rgba(20, 14, 8, 0.22),
+    0 calc(-1 * var(--u)) 0 rgba(255, 255, 255, 0.7);
   min-height: calc(100vh + 8 * var(--u));
   min-height: calc(100svh + 8 * var(--u));
 }
@@ -702,6 +706,18 @@ body.sheet-scroll-locked #app-scroll-container {
   border-top-right-radius: calc(20 * var(--u));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+
+.sheet-peek-handle {
+  position: absolute;
+  top: calc(8 * var(--u));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(38 * var(--u));
+  height: calc(4 * var(--u));
+  border-radius: 999px;
+  background: rgba(10, 15, 35, 0.18);
+  pointer-events: none;
 }
 
 .section-colecciones {
