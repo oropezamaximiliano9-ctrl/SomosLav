@@ -484,8 +484,8 @@ body.sheet-scroll-locked #app-scroll-container {
   position: relative;
   z-index: 10;
   padding: 0 calc(16 * var(--u));
-  padding-bottom: calc(28 * var(--u));
-  padding-bottom: calc(28 * var(--u) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(21 * var(--u));
+  padding-bottom: calc(21 * var(--u) + env(safe-area-inset-bottom, 0px));
   width: 100%;
   display: flex;
   flex-direction: column;
