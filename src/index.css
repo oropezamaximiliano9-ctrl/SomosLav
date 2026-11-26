@@ -788,7 +788,7 @@ body.sheet-scroll-locked #app-scroll-container {
 .card-tray {
   width: 100%;
   margin-top: calc(20 * var(--u));
-  padding: calc(12 * var(--u)) calc(14 * var(--u));
+  padding: calc(13 * var(--u)) calc(16 * var(--u));
   border-radius: calc(14 * var(--u));
   background: #F7F4EC;
   border: 1px solid rgba(10, 15, 35, 0.05);
@@ -798,13 +798,18 @@ body.sheet-scroll-locked #app-scroll-container {
   align-items: center;
 }
 
+.card-tray--single {
+  grid-template-columns: auto;
+  justify-content: center;
+}
+
 .card-tray-item {
   display: inline-flex;
   align-items: center;
-  gap: calc(8 * var(--u));
+  gap: calc(9 * var(--u));
   font-family: "Geist", sans-serif;
-  font-size: calc(12.5 * var(--u));
-  font-weight: 600;
+  font-size: calc(18 * var(--u));
+  font-weight: 500;
   color: #0A0F23;
   min-width: 0;
 }
@@ -817,8 +822,8 @@ body.sheet-scroll-locked #app-scroll-container {
 
 /* Palomitas limpias sin círculo, en tinta oscura #0A0F23 */
 .card-tray-item svg {
-  width: calc(16 * var(--u));
-  height: calc(16 * var(--u));
+  width: calc(21 * var(--u));
+  height: calc(21 * var(--u));
   color: #0A0F23;
   flex-shrink: 0;
 }

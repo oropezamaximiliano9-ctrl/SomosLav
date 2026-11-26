@@ -117,12 +117,10 @@ export const FeatureCardsSection: React.FC<FeatureCardsSectionProps> = ({
           <p className="subtitle-desc">
             Si cabe en el cesto, se lava al mismo precio. No importa el peso ni la cantidad.
           </p>
-          <div className="card-tray">
+          <div className="card-tray card-tray--single">
             <span className="card-tray-item">
               <CheckmarkIcon />
-            </span>
-            <span className="card-tray-item">
-              <CheckmarkIcon />
+              <span>Incluye secado y doblado</span>
             </span>
           </div>
         </article>
@@ -155,12 +153,10 @@ export const FeatureCardsSection: React.FC<FeatureCardsSectionProps> = ({
             <span className="word-blue">Sin salir</span> de casa
           </h2>
           <p className="subtitle-desc">Pasamos por tu ropa sucia y te la devolvemos limpia en 24 horas.</p>
-          <div className="card-tray">
+          <div className="card-tray card-tray--single">
             <span className="card-tray-item">
               <CheckmarkIcon />
-            </span>
-            <span className="card-tray-item">
-              <CheckmarkIcon />
+              <span>Servicio a domicilio gratis</span>
             </span>
           </div>
         </article>
