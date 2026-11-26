@@ -13,12 +13,12 @@
 :root {
   --base-w: 390;
   --base-h: 680;
-  --u: min(calc(100vw / var(--base-w)), calc(100vh / var(--base-h)), 1.15px);
+  --u: min(calc(100vw / var(--base-w)), calc(var(--app-stable-height, 100vh) / var(--base-h)), 1.15px);
 }
 
 @supports (height: 100svh) {
   :root {
-    --u: min(calc(100vw / var(--base-w)), calc(100svh / var(--base-h)), 1.15px);
+    --u: min(calc(100vw / var(--base-w)), calc(var(--app-stable-height, 100svh) / var(--base-h)), 1.15px);
   }
 }
 
@@ -250,10 +250,8 @@ body.sheet-scroll-locked #app-scroll-container {
   position: sticky;
   top: 0;
   width: 100%;
-  height: 100vh;
-  height: 100svh;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: var(--app-stable-height, 100svh);
+  min-height: var(--app-stable-height, 100svh);
   flex-shrink: 0;
   overflow: hidden;
   display: flex;

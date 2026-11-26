@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, createContext, useContext } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Landing from './pages/Landing';
 import BagFlow from './pages/BagFlow';
@@ -45,7 +45,36 @@ function useGlobalKeyboardDismiss() {
   }, []);
 }
 
+function useStableViewportHeight() {
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+    let lastWidth = window.innerWidth;
+    const applyStableHeight = () => {
+      document.documentElement.style.setProperty(
+        '--app-stable-height',
+        `${window.innerHeight}px`
+      );
+    };
+
+    applyStableHeight();
+
+    const handleResize = () => {
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        applyStableHeight();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+}
+
 function AppContent() {
+  useStableViewportHeight();
   useGlobalKeyboardDismiss();
   const { role, setRole } = useContext(RoleContext);
   const navigate = useNavigate();
