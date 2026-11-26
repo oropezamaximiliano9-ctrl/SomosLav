@@ -29,7 +29,7 @@ function useGlobalKeyboardDismiss() {
         if (!target || activeEl.contains(target)) return;
         if (
           target.closest(
-            'button, a, label, input, textarea, select, [role="button"], [role="radio"], .form-bottom-sheet, .form-overlay'
+            'button, a, label, input, textarea, select, [role="button"], [role="radio"], .form-bottom-sheet, .form-overlay, [data-vaul-drawer], [data-vaul-overlay]'
           )
         ) {
           return;
@@ -83,7 +83,10 @@ function AppContent() {
     const handleWindowWheel = (e: WheelEvent) => {
       const container = scrollContainerRef.current;
       if (!container) return;
-      if (e.target instanceof Element && e.target.closest('.form-bottom-sheet')) {
+      if (
+        e.target instanceof Element &&
+        e.target.closest('.form-bottom-sheet, [data-vaul-drawer], [data-vaul-overlay]')
+      ) {
         return;
       }
       if (!container.contains(e.target as Node)) {

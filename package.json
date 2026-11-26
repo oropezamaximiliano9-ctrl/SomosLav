@@ -25,7 +25,8 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
-    "react-router-dom": "^7.15.0"
+    "react-router-dom": "^7.15.0",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

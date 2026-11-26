@@ -87,10 +87,10 @@ body.sheet-scroll-locked #app-scroll-container {
   touch-action: none !important;
 }
 
-/* Independent backdrop covering any iOS Safari rubber-band bounce */
+/* Overlay & compact Bottom Sheet styles (used by DatePickerBottomSheet) */
 .form-overlay {
   position: fixed;
-  inset: -100px;
+  inset: 0;
   background-color: rgba(15, 23, 42, 0.48);
   z-index: 9999;
   opacity: 0;
@@ -113,36 +113,6 @@ body.sheet-scroll-locked #app-scroll-container {
     visibility 0s linear 0s;
 }
 
-/* Layer 1: Anchored to top: 0 with 0ms transition to absorb Safari vv.offsetTop cleanly */
-.form-sheet-viewport-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 0;
-  z-index: 10000;
-  overflow: visible;
-  pointer-events: none;
-  transition: none;
-  will-change: transform;
-}
-
-/* Layer 2: Child of viewportLayer positioning the exact visible bottom edge (vv.height) */
-.form-sheet-kb-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 0;
-  overflow: visible;
-  pointer-events: none;
-  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Layer 3: Compact Bottom Sheet anchored to bottom: 0 with invisible 60vh lower white extension */
 .form-bottom-sheet {
   position: fixed;
   left: 0;
@@ -157,7 +127,7 @@ body.sheet-scroll-locked #app-scroll-container {
   background-color: #ffffff;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  overflow: visible;
+  overflow: hidden;
   cursor: default;
 
   display: flex;
@@ -176,43 +146,6 @@ body.sheet-scroll-locked #app-scroll-container {
   -webkit-backface-visibility: hidden;
 }
 
-.form-sheet-kb-layer > .form-bottom-sheet {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: auto;
-}
-
-/* Invisible white lower skirt below bottom: 0 so iOS Safari keyboard lift never reveals a gap */
-.form-bottom-sheet::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% - 2px);
-  height: 60vh;
-  background-color: #ffffff;
-  pointer-events: none;
-}
-
-/* Scrollable body inside the sheet with normal bottom padding + safe-area */
-.form-sheet-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  max-height: calc(90svh - 32px);
-  overflow-y: auto;
-  padding-bottom: calc(24px + env(safe-area-inset-bottom));
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Prevent iOS Safari / Chrome automatic zoom on input focus */
-.form-bottom-sheet input,
-.form-bottom-sheet textarea {
-  font-size: 16px;
-}
-
 .form-bottom-sheet[data-open="true"] {
   transform: translate3d(0, 0, 0);
   opacity: 1;
@@ -222,6 +155,14 @@ body.sheet-scroll-locked #app-scroll-container {
     transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
     opacity 150ms ease-out,
     visibility 0s linear 0s;
+}
+
+/* Prevent iOS Safari / Chrome automatic zoom on input focus inside drawers */
+[data-vaul-drawer] input,
+[data-vaul-drawer] textarea,
+.form-bottom-sheet input,
+.form-bottom-sheet textarea {
+  font-size: 16px;
 }
 
 .form-content-inner {

@@ -260,18 +260,29 @@ export default function Landing() {
 
   useEffect(() => {
     if (!isBottomSheetOpen) return;
-    const activeRef = formStep === 1 ? step1Ref : step2Ref;
-    if (activeRef?.current) {
+    let observer: ResizeObserver | null = null;
+    let rafId = 0;
+
+    const attachObserver = () => {
+      const activeRef = formStep === 1 ? step1Ref : step2Ref;
+      const el = activeRef?.current;
+      if (!el) {
+        rafId = window.requestAnimationFrame(attachObserver);
+        return;
+      }
       const handleResize = () => {
-        if (activeRef.current) {
-          setSliderHeight(activeRef.current.offsetHeight);
-        }
+        setSliderHeight(el.offsetHeight);
       };
       handleResize();
-      const observer = new ResizeObserver(handleResize);
-      observer.observe(activeRef.current);
-      return () => observer.disconnect();
-    }
+      observer = new ResizeObserver(handleResize);
+      observer.observe(el);
+    };
+
+    attachObserver();
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      if (observer) observer.disconnect();
+    };
   }, [formStep, isBottomSheetOpen, registered]);
 
   useEffect(() => {
