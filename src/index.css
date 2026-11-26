@@ -354,7 +354,7 @@ body.sheet-scroll-locked #app-scroll-container {
 }
 
 .hero-subtitle {
-  font-size: calc(20 * var(--u));
+  font-size: calc(21 * var(--u));
   font-weight: 400;
   color: white;
   line-height: 1.22;
@@ -420,7 +420,7 @@ body.sheet-scroll-locked #app-scroll-container {
   align-items: center;
   justify-content: center;
   gap: 0 calc(8 * var(--u));
-  font-size: calc(19 * var(--u));
+  font-size: calc(20 * var(--u));
   font-weight: 400;
   color: white;
   letter-spacing: 0.01em;
