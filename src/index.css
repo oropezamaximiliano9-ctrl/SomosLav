@@ -113,7 +113,7 @@ body.sheet-scroll-locked #app-scroll-container {
     visibility 0s linear 0s;
 }
 
-/* Dedicated always-promoted GPU layer for virtual keyboard tracking (transition ONLY on transform with Apple curve) */
+/* Dedicated always-promoted GPU layer for virtual keyboard tracking */
 .form-sheet-kb-layer {
   position: fixed;
   bottom: 0;
@@ -122,7 +122,7 @@ body.sheet-scroll-locked #app-scroll-container {
   z-index: 10000;
   pointer-events: none;
   transform: translate3d(0, 0px, 0);
-  transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1);
+  transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -140,7 +140,9 @@ body.sheet-scroll-locked #app-scroll-container {
   background-color: #ffffff;
   border-top-left-radius: 32px;
   border-top-right-radius: 32px;
+  height: auto;
   max-height: 90dvh;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
 
   display: flex;
   flex-direction: column;
@@ -151,9 +153,9 @@ body.sheet-scroll-locked #app-scroll-container {
   visibility: hidden;
   pointer-events: none;
   transition:
-    transform 280ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
     opacity 200ms ease-out 40ms,
-    visibility 0s linear 280ms;
+    visibility 0s linear 260ms;
   will-change: transform, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -165,12 +167,6 @@ body.sheet-scroll-locked #app-scroll-container {
   left: auto;
   right: auto;
   z-index: auto;
-}
-
-/* Registration sheet maintains expanded room (75%-90% total height with keyboard) so inputs sit in the upper zone */
-.registration-bottom-sheet {
-  min-height: min(78dvh, 350px);
-  max-height: 90dvh;
 }
 
 /* Scrollable body inside the sheet with strict overscroll containment */

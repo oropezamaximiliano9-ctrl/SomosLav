@@ -16,7 +16,6 @@ import {
 import { ALL_COATZA_COLONIAS, normalizeText } from '../../utils/distance';
 import {
   dismissKeyboard,
-  resetSafariViewportScroll,
   useBodyScrollLock,
   useKeyboardSheetOffset,
 } from '../../utils/keyboard';
@@ -105,23 +104,9 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   const overlayPointerDownRef = useRef(false);
   const kbLayerRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   useBodyScrollLock(isOpen);
-  useKeyboardSheetOffset(isOpen, kbLayerRef, sheetRef, contentRef);
-
-  const handleInputBlur = () => {
-    window.setTimeout(() => {
-      const active = document.activeElement;
-      if (
-        !active ||
-        !sheetRef.current?.contains(active) ||
-        (active.tagName !== 'INPUT' && active.tagName !== 'TEXTAREA')
-      ) {
-        resetSafariViewportScroll();
-      }
-    }, 50);
-  };
+  useKeyboardSheetOffset(isOpen, kbLayerRef, sheetRef);
 
   if (typeof document === 'undefined') return null;
 
@@ -146,7 +131,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
       <div ref={kbLayerRef} className="form-sheet-kb-layer">
         <div
           ref={sheetRef}
-          className="form-bottom-sheet registration-bottom-sheet pt-4 pb-7 px-6"
+          className="form-bottom-sheet pt-4 px-6"
           data-open={isOpen ? 'true' : 'false'}
           id="bottom-sheet-container"
           onClick={(e) => {
@@ -178,7 +163,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
 
         {/* Scrollable inner content area with overscroll-behavior: contain */}
         <div className="form-sheet-scroll w-full relative mt-3">
-          <div ref={contentRef} className="form-content-inner w-full flex flex-col">
+          <div className="form-content-inner w-full flex flex-col">
             {formError && (
               <div className="mb-2.5 p-2 bg-red-50 border border-red-100 rounded-xl text-[11px] font-bold flex items-center gap-2 select-none shrink-0 z-20">
                 <Info className="w-4.5 h-4.5 text-red-500 shrink-0" />
@@ -486,7 +471,6 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                   setName(e.target.value);
                                   setFormError(null);
                                 }}
-                                onBlur={handleInputBlur}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
@@ -575,10 +559,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                   setPhone(digits.slice(0, 10));
                                   setFormError(null);
                                 }}
-                                onBlur={() => {
-                                  handlePhoneBlur();
-                                  handleInputBlur();
-                                }}
+                                onBlur={handlePhoneBlur}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
@@ -652,7 +633,6 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                   setFormError(null);
                                   setGpsCoords(null);
                                 }}
-                                onBlur={handleInputBlur}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
