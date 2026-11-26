@@ -93,7 +93,8 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
-      repositionInputs={true}
+      repositionInputs={false}
+      fixed={true}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[60] bg-black/50" />
