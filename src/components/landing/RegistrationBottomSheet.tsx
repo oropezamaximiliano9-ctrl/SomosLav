@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Drawer } from 'vaul';
 import { motion } from 'motion/react';
 import {
@@ -87,20 +87,30 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   step2Ref,
   sliderHeight,
 }) => {
+  const isIOSSafari = useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    const ua = navigator.userAgent;
+    const isIOS =
+      /iP(ad|hone|od)/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isOtherIOSBrowser = /CriOS|FxiOS|OPiOS|EdgiOS/i.test(ua);
+    return isIOS && /WebKit/i.test(ua) && !isOtherIOSBrowser;
+  }, []);
+
   return (
     <Drawer.Root
       open={isOpen}
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
-      repositionInputs={false}
-      fixed={true}
+      repositionInputs={!isIOSSafari}
+      fixed={isIOSSafari}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[60] bg-black/50" />
         <Drawer.Content
           id="bottom-sheet-container"
-          className="fixed inset-x-0 bottom-0 z-[70] mx-auto flex h-auto max-h-[90dvh] w-full max-w-[440px] flex-col rounded-t-3xl bg-white pt-4 outline-none"
+          className="fixed inset-x-0 bottom-0 z-[70] mx-auto flex h-auto max-h-[90svh] w-full max-w-[440px] flex-col rounded-t-3xl bg-white outline-none"
         >
           {/* Accessible title & description required by Vaul/Radix Dialog */}
           <Drawer.Title className="sr-only">
@@ -116,24 +126,25 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
             Ingresa tu WhatsApp y dirección para coordinar la entrega gratuita de tu cesto.
           </Drawer.Description>
 
-          {/* Drag handle */}
-          <div className="mx-auto mb-1 h-1 w-12 shrink-0 rounded-full bg-slate-200" aria-hidden="true" />
+          <div className="relative flex min-h-0 flex-1 flex-col pt-4">
+            {/* Drag handle */}
+            <div className="mx-auto mb-1 h-1 w-12 shrink-0 rounded-full bg-slate-200" aria-hidden="true" />
 
-          {/* Close Button X on top-right */}
-          <button
-            type="button"
-            aria-label="Cerrar"
-            onClick={onClose}
-            className="absolute right-4 top-4 z-20 cursor-pointer rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-50"
-          >
-            <X className="h-4 w-4" />
-          </button>
+            {/* Close Button X on top-right */}
+            <button
+              type="button"
+              aria-label="Cerrar"
+              onClick={onClose}
+              className="absolute right-4 top-4 z-20 cursor-pointer rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-50"
+            >
+              <X className="h-4 w-4" />
+            </button>
 
-          {/* Scrollable inner content area ONLY (not Drawer.Content) */}
-          <div
-            className="relative mt-3 min-h-0 w-full flex-1 overflow-y-auto overscroll-contain px-6"
-            style={{ paddingBottom: 'calc(24px + env(safe-area-inset-bottom))' }}
-          >
+            {/* Scrollable inner content area ONLY (not Drawer.Content) */}
+            <div
+              className="relative mt-3 min-h-0 w-full flex-1 overflow-y-auto overscroll-contain px-6"
+              style={{ paddingBottom: 'calc(24px + env(safe-area-inset-bottom))' }}
+            >
             <div className="form-content-inner flex w-full flex-col">
               {formError && (
                 <div className="z-20 mb-2.5 flex shrink-0 select-none items-center gap-2 rounded-xl border border-red-100 bg-red-50 p-2 text-[11px] font-bold">
@@ -642,6 +653,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                 </motion.div>
               )}
             </div>
+          </div>
           </div>
         </Drawer.Content>
       </Drawer.Portal>
