@@ -115,6 +115,21 @@ body.sheet-scroll-locked #app-scroll-container {
     visibility 0s linear 0s;
 }
 
+/* Dedicated intermediate GPU layer for virtual keyboard lift only */
+.form-sheet-kb-layer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  pointer-events: none;
+  transform: translate3d(0, 0px, 0);
+  transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 /* Compact Bottom Sheet anchored to bottom: 0 with invisible 60vh lower white extension */
 .form-bottom-sheet {
   position: fixed;
@@ -136,7 +151,7 @@ body.sheet-scroll-locked #app-scroll-container {
   display: flex;
   flex-direction: column;
   overscroll-behavior: contain;
-  transform: translate3d(0, 100%, 0);
+  transform: translate3d(0, calc(100% + 24px), 0);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -147,6 +162,14 @@ body.sheet-scroll-locked #app-scroll-container {
   will-change: transform, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+.form-sheet-kb-layer > .form-bottom-sheet {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  z-index: auto;
 }
 
 /* Invisible white lower skirt below bottom: 0 so iOS Safari keyboard lift never reveals a gap */

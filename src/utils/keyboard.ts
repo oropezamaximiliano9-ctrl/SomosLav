@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type RefObject } from "react";
 
 /**
  * Global Keyboard & Viewport Utilities for iOS Safari / Chrome & Android Chrome.
@@ -99,4 +99,66 @@ export function useBodyScrollLock(isOpen: boolean) {
       }
     };
   }, [isOpen]);
+}
+
+/**
+ * Lifts only kbLayer above the iOS/Android virtual keyboard via window.visualViewport
+ * using requestAnimationFrame, and constrains the inner scroll container's maxHeight.
+ * Resets kbLayer cleanly without transition 300ms after closing.
+ */
+export function useKeyboardSheetOffset(
+  isOpen: boolean,
+  kbLayerRef: RefObject<HTMLDivElement | null>,
+  scrollRef: RefObject<HTMLDivElement | null>
+) {
+  useEffect(() => {
+    const kbLayer = kbLayerRef.current;
+    const scrollEl = scrollRef.current;
+    if (!kbLayer || !scrollEl || typeof window === "undefined") return;
+
+    if (!isOpen) {
+      const resetTimer = window.setTimeout(() => {
+        kbLayer.style.transition = "none";
+        kbLayer.style.transform = "translate3d(0, 0px, 0)";
+        scrollEl.style.maxHeight = "";
+        void kbLayer.offsetHeight;
+        kbLayer.style.transition = "";
+      }, 300);
+      return () => window.clearTimeout(resetTimer);
+    }
+
+    kbLayer.style.transition = "";
+
+    const vv = window.visualViewport;
+    if (!vv) {
+      kbLayer.style.transform = "translate3d(0, 0px, 0)";
+      return;
+    }
+
+    let rafId: number | null = null;
+
+    const update = () => {
+      rafId = null;
+      const rawOffset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+      const keyboardOffset = rawOffset > 60 ? rawOffset : 0;
+
+      kbLayer.style.transform = `translate3d(0, ${-keyboardOffset}px, 0)`;
+      scrollEl.style.maxHeight = `${Math.max(200, Math.round(vv.height - 24))}px`;
+    };
+
+    const scheduleUpdate = () => {
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+      rafId = window.requestAnimationFrame(update);
+    };
+
+    update();
+    vv.addEventListener("resize", scheduleUpdate);
+    vv.addEventListener("scroll", scheduleUpdate);
+
+    return () => {
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+      vv.removeEventListener("resize", scheduleUpdate);
+      vv.removeEventListener("scroll", scheduleUpdate);
+    };
+  }, [isOpen, kbLayerRef, scrollRef]);
 }

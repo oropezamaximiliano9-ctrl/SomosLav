@@ -13,7 +13,11 @@ import {
   Check,
 } from 'lucide-react';
 import { ALL_COATZA_COLONIAS, normalizeText } from '../../utils/distance';
-import { dismissKeyboard, useBodyScrollLock } from '../../utils/keyboard';
+import {
+  dismissKeyboard,
+  useBodyScrollLock,
+  useKeyboardSheetOffset,
+} from '../../utils/keyboard';
 
 interface RegistrationBottomSheetProps {
   isOpen: boolean;
@@ -89,14 +93,17 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   sliderHeight,
 }) => {
   const overlayPointerDownRef = useRef(false);
+  const kbLayerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useBodyScrollLock(isOpen);
+  useKeyboardSheetOffset(isOpen, kbLayerRef, scrollRef);
 
   if (typeof document === 'undefined') return null;
 
   return createPortal(
     <>
-      {/* Bottom Sheet backdrop with overflow: hidden + sliding compact panel */}
+      {/* Bottom Sheet backdrop with overflow: hidden + kbLayer + compact sliding panel */}
       <div
         className="form-overlay"
         data-open={isOpen ? 'true' : 'false'}
@@ -113,39 +120,40 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
           dismissKeyboard();
         }}
       >
-        <div
-          className="form-bottom-sheet bg-white pt-4 px-6"
-          data-open={isOpen ? 'true' : 'false'}
-          id="bottom-sheet-container"
-        onClick={(e) => {
-          e.stopPropagation();
-          const target = e.target as HTMLElement | null;
-          if (
-            target &&
-            !target.closest('input, textarea, button, a, label, [role="button"], [role="radio"]')
-          ) {
-            dismissKeyboard();
-          }
-        }}
-      >
-        {/* Visual drag indicator */}
-        <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
+        <div ref={kbLayerRef} className="form-sheet-kb-layer">
+          <div
+            className="form-bottom-sheet bg-white pt-4 px-6"
+            data-open={isOpen ? 'true' : 'false'}
+            id="bottom-sheet-container"
+            onClick={(e) => {
+              e.stopPropagation();
+              const target = e.target as HTMLElement | null;
+              if (
+                target &&
+                !target.closest('input, textarea, button, a, label, [role="button"], [role="radio"]')
+              ) {
+                dismissKeyboard();
+              }
+            }}
+          >
+            {/* Visual drag indicator */}
+            <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
 
-        {/* Close Button X on top-right */}
-        <button
-          type="button"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => {
-            onClose();
-            dismissKeyboard();
-          }}
-          className="absolute right-4 top-4 p-1.5 text-slate-400 hover:bg-slate-50 transition-colors rounded-full pointer-events-auto cursor-pointer z-20"
-        >
-          <X className="w-4 h-4" />
-        </button>
+            {/* Close Button X on top-right */}
+            <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                onClose();
+                dismissKeyboard();
+              }}
+              className="absolute right-4 top-4 p-1.5 text-slate-400 hover:bg-slate-50 transition-colors rounded-full pointer-events-auto cursor-pointer z-20"
+            >
+              <X className="w-4 h-4" />
+            </button>
 
-        {/* Scrollable inner content area with overscroll-behavior: contain */}
-        <div className="form-sheet-scroll w-full relative mt-3">
+            {/* Scrollable inner content area with overscroll-behavior: contain */}
+            <div ref={scrollRef} className="form-sheet-scroll w-full relative mt-3">
           <div className="form-content-inner w-full flex flex-col">
             {formError && (
               <div className="mb-2.5 p-2 bg-red-50 border border-red-100 rounded-xl text-[11px] font-bold flex items-center gap-2 select-none shrink-0 z-20">
@@ -633,8 +641,9 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                 </div>
               </motion.div>
             )}
+              </div>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </>,
