@@ -354,7 +354,7 @@ body.sheet-scroll-locked #app-scroll-container {
 }
 
 .hero-subtitle {
-  font-size: calc(19 * var(--u));
+  font-size: calc(20 * var(--u));
   font-weight: 400;
   color: white;
   line-height: 1.22;
@@ -369,7 +369,7 @@ body.sheet-scroll-locked #app-scroll-container {
 }
 
 .hero-price {
-  font-size: calc(19 * var(--u));
+  font-size: calc(20 * var(--u));
   font-weight: 500;
   color: white;
   line-height: 1.22;
