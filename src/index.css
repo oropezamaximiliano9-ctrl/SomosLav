@@ -184,14 +184,14 @@ body.sheet-scroll-locked #app-scroll-container {
   font-size: 16px;
 }
 
-/* Seamless white skirt below the sheet while open so rubber-band or keyboard transitions never flash a dark gap */
+/* Subtle white skirt below the sheet while open so rubber-band transitions never flash a dark gap */
 .form-bottom-sheet::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   top: calc(100% - 2px);
-  height: 420px;
+  height: 56px;
   background-color: #ffffff;
   pointer-events: none;
   opacity: 0;
@@ -349,7 +349,7 @@ body.sheet-scroll-locked #app-scroll-container {
   color: white;
   line-height: 1.09;
   letter-spacing: -0.04em;
-  margin-bottom: calc(20 * var(--u));
+  margin-bottom: calc(5 * var(--u));
   font-family: "Inter", sans-serif;
 }
 

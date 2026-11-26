@@ -8,7 +8,6 @@ import {
   MapPin,
   CheckCircle,
   Loader2,
-  User,
   ArrowRight,
   Phone,
   Check,
@@ -27,7 +26,6 @@ interface RegistrationBottomSheetProps {
   setFormError: (err: string | null) => void;
   registered: boolean;
   name: string;
-  setName: (name: string) => void;
   phone: string;
   setPhone: (phone: string) => void;
   addressCalle: string;
@@ -35,16 +33,15 @@ interface RegistrationBottomSheetProps {
   addressColonia: string;
   setAddressColonia: (col: string) => void;
   preferredTime?: string;
-  formStep: 1 | 2 | 3 | 'verifying';
-  setFormStep: (step: 1 | 2 | 3 | 'verifying') => void;
+  formStep: 1 | 2 | 'verifying';
+  setFormStep: (step: 1 | 2 | 'verifying') => void;
   verificationProgress: number;
   calculatedDistance: number;
   loading: boolean;
   isPhoneError: boolean;
   handlePhoneBlur: () => void;
   goToStep2: (e: React.FormEvent) => void;
-  goToStep3: (e: React.FormEvent) => void;
-  submitStep3AndVerify: (e: React.FormEvent) => void;
+  submitStep2AndVerify: (e: React.FormEvent) => void;
   gpsAutofillLoading: boolean;
   gpsAutofillError: string | null;
   handleAddressInputClick: () => void;
@@ -52,12 +49,10 @@ interface RegistrationBottomSheetProps {
   setShowColoniaSuggestions: (show: boolean) => void;
   setGpsCoords: (coords: { lat: number; lon: number } | null) => void;
   viewportRef: React.RefObject<HTMLDivElement | null>;
-  nameInputRef: React.RefObject<HTMLInputElement | null>;
   phoneInputRef: React.RefObject<HTMLInputElement | null>;
   calleInputRef: React.RefObject<HTMLInputElement | null>;
   step1Ref: React.RefObject<HTMLDivElement | null>;
   step2Ref: React.RefObject<HTMLDivElement | null>;
-  step3Ref: React.RefObject<HTMLDivElement | null>;
   sliderHeight: number | string;
 }
 
@@ -68,7 +63,6 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   setFormError,
   registered,
   name,
-  setName,
   phone,
   setPhone,
   addressCalle,
@@ -84,8 +78,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   isPhoneError,
   handlePhoneBlur,
   goToStep2,
-  goToStep3,
-  submitStep3AndVerify,
+  submitStep2AndVerify,
   gpsAutofillLoading,
   gpsAutofillError,
   handleAddressInputClick,
@@ -93,12 +86,10 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   setShowColoniaSuggestions,
   setGpsCoords,
   viewportRef,
-  nameInputRef,
   phoneInputRef,
   calleInputRef,
   step1Ref,
   step2Ref,
-  step3Ref,
   sliderHeight,
 }) => {
   const overlayPointerDownRef = useRef(false);
@@ -368,7 +359,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
               >
                 {/* Segmented Progress Indicator */}
                 <div className="flex gap-2 shrink-0 justify-center mb-1">
-                  {[1, 2, 3].map((step) => {
+                  {[1, 2].map((step) => {
                     const isActive = step <= formStep;
                     return (
                       <button
@@ -376,11 +367,10 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                         type="button"
                         onClick={() => {
                           setFormError(null);
-                          setFormStep(step as 1 | 2 | 3);
+                          setFormStep(step as 1 | 2);
                           requestAnimationFrame(() => {
-                            if (step === 1) nameInputRef.current?.focus({ preventScroll: true });
-                            else if (step === 2) phoneInputRef.current?.focus({ preventScroll: true });
-                            else if (step === 3) calleInputRef.current?.focus({ preventScroll: true });
+                            if (step === 1) phoneInputRef.current?.focus({ preventScroll: true });
+                            else if (step === 2) calleInputRef.current?.focus({ preventScroll: true });
                             if (viewportRef.current) viewportRef.current.scrollLeft = 0;
                           });
                         }}
@@ -401,21 +391,15 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
 
                 {/* Static Title/Subtitle block */}
                 <div className="pt-2 pb-1 shrink-0 select-none">
-                  <h2 className="text-[19px] font-semibold text-slate-800 tracking-tight leading-snug flex items-center gap-1.5">
+                  <h2 className="h-7 text-[18px] sm:text-[19px] font-semibold text-slate-800 tracking-tight leading-none flex items-center gap-1.5 whitespace-nowrap">
                     {formStep === 1 && (
                       <span className="inline-flex items-center gap-1">
                         <span className="animate-sheet-wave select-none">👋</span>
                         <span className="animate-sheet-grin select-none">😁</span>
-                        <span>¿Cuál es tu nombre?</span>
+                        <span>¿Cuál es tu número?</span>
                       </span>
                     )}
                     {formStep === 2 && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <span className="animate-sheet-ring select-none">📱</span>
-                        <span>¿Tu número de teléfono?</span>
-                      </span>
-                    )}
-                    {formStep === 3 && (
                       <span className="inline-flex items-center gap-1.5">
                         <span className="animate-sheet-bounce select-none">📍</span>
                         <span>¿Dónde te lo entregamos?</span>
@@ -437,14 +421,13 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                   }}
                 >
                   <div
-                    className="w-full flex transform-gpu"
+                    className="w-full flex items-start transform-gpu"
                     style={{
-                      transform:
-                        formStep === 2 ? 'translateX(-100%)' : formStep === 3 ? 'translateX(-200%)' : 'translateX(0%)',
+                      transform: formStep === 2 ? 'translateX(-100%)' : 'translateX(0%)',
                       transition: 'transform 300ms cubic-bezier(0.32, 0.94, 0.6, 1)',
                     }}
                   >
-                    {/* Paso 1: Nombre Completo */}
+                    {/* Paso 1: Teléfono */}
                     <div
                       ref={step1Ref}
                       className={`w-full shrink-0 px-0.5 transition-opacity duration-200 ${
@@ -455,63 +438,12 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                       <form noValidate onSubmit={goToStep2} className="space-y-4 flex flex-col">
                         <div className="space-y-3">
                           <div className="space-y-1">
-                            <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5 select-none">
-                              Nombre Completo
-                            </label>
-                            <div className="relative">
-                              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                              <input
-                                ref={nameInputRef}
-                                type="text"
-                                required
-                                autoComplete="name"
-                                tabIndex={formStep === 1 ? 0 : -1}
-                                value={name}
-                                onChange={(e) => {
-                                  setName(e.target.value);
-                                  setFormError(null);
-                                }}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    goToStep2(e);
-                                  }
-                                }}
-                                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-[16px] focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400 select-text"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <button
-                          type="submit"
-                          tabIndex={formStep === 1 ? 0 : -1}
-                          onMouseDown={(e) => e.preventDefault()}
-                          className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer select-none"
-                        >
-                          <span className="font-geist">Continuar</span>
-                          <ArrowRight className="w-4 h-4" />
-                        </button>
-                      </form>
-                    </div>
-
-                    {/* Paso 2: Teléfono */}
-                    <div
-                      ref={step2Ref}
-                      className={`w-full shrink-0 px-0.5 transition-opacity duration-200 ${
-                        formStep !== 2 ? 'pointer-events-none opacity-40 select-none' : 'opacity-100'
-                      }`}
-                      aria-hidden={formStep !== 2}
-                    >
-                      <form noValidate onSubmit={goToStep3} className="space-y-4 flex flex-col">
-                        <div className="space-y-3">
-                          <div className="space-y-1">
-                            <div className="flex justify-between items-center ml-0.5 select-none">
-                              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+                            <div className="flex justify-between items-center h-4 ml-0.5 select-none">
+                              <label className="block text-[11px] leading-none font-semibold text-gray-400 uppercase tracking-wider">
                                 WhatsApp
                               </label>
                               <span
-                                className={`text-[11px] font-semibold tracking-wider transition-colors font-geist ${
+                                className={`text-[11px] leading-none font-semibold tracking-wider transition-colors font-geist ${
                                   phone.length === 10
                                     ? 'text-emerald-600 font-bold'
                                     : phone.length > 10
@@ -534,7 +466,7 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                 inputMode="tel"
                                 required
                                 autoComplete="tel-national"
-                                tabIndex={formStep === 2 ? 0 : -1}
+                                tabIndex={formStep === 1 ? 0 : -1}
                                 value={phone}
                                 onChange={(e) => {
                                   const trimmed = e.target.value.trim();
@@ -563,10 +495,10 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
-                                    goToStep3(e);
+                                    goToStep2(e);
                                   }
                                 }}
-                                className={`w-full pl-9 pr-4 py-2 rounded-xl outline-none font-semibold text-[16px] focus:ring-2 select-text ${
+                                className={`w-full h-[42px] pl-9 pr-4 rounded-xl outline-none font-semibold text-[16px] leading-normal focus:ring-2 select-text ${
                                   isPhoneError
                                     ? 'bg-red-50/30 border border-red-300 text-red-900 focus:border-red-500 focus:ring-red-100'
                                     : 'bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white focus:ring-blue-100 placeholder:text-slate-400'
@@ -578,9 +510,9 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
 
                         <button
                           type="submit"
-                          tabIndex={formStep === 2 ? 0 : -1}
+                          tabIndex={formStep === 1 ? 0 : -1}
                           onMouseDown={(e) => e.preventDefault()}
-                          className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer select-none"
+                          className="w-full h-[42px] rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer select-none"
                         >
                           <span className="font-geist">Continuar</span>
                           <ArrowRight className="w-4 h-4" />
@@ -588,15 +520,15 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                       </form>
                     </div>
 
-                    {/* Paso 3: Dirección */}
+                    {/* Paso 2: Dirección */}
                     <div
-                      ref={step3Ref}
+                      ref={step2Ref}
                       className={`w-full shrink-0 px-0.5 transition-opacity duration-200 ${
-                        formStep !== 3 ? 'pointer-events-none opacity-40 select-none' : 'opacity-100'
+                        formStep !== 2 ? 'pointer-events-none opacity-40 select-none' : 'opacity-100'
                       }`}
-                      aria-hidden={formStep !== 3}
+                      aria-hidden={formStep !== 2}
                     >
-                      <form noValidate onSubmit={submitStep3AndVerify} className="space-y-4 flex flex-col">
+                      <form noValidate onSubmit={submitStep2AndVerify} className="space-y-4 flex flex-col">
                         {gpsAutofillError && (
                           <p className="text-red-500 text-[11px] font-bold text-center leading-tight bg-red-50 border border-red-100 py-1.5 px-3 rounded-lg select-none">
                             {gpsAutofillError}
@@ -605,9 +537,11 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
 
                         <div className="space-y-3">
                           <div className="space-y-1 relative">
-                            <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider ml-0.5">
-                              Dirección
-                            </label>
+                            <div className="flex justify-between items-center h-4 ml-0.5 select-none">
+                              <label className="block text-[11px] leading-none font-semibold text-gray-400 uppercase tracking-wider">
+                                Dirección
+                              </label>
+                            </div>
                             <div className="relative">
                               {gpsAutofillLoading ? (
                                 <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600 animate-spin pointer-events-none" />
@@ -619,7 +553,9 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                 type="text"
                                 required
                                 autoComplete="street-address"
-                                tabIndex={formStep === 3 ? 0 : -1}
+                                autoCorrect="off"
+                                spellCheck={false}
+                                tabIndex={formStep === 2 ? 0 : -1}
                                 value={addressCalle}
                                 onClick={handleAddressInputClick}
                                 onFocus={() => {
@@ -637,10 +573,10 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                                   if (e.key === 'Enter') {
                                     e.preventDefault();
                                     setShowColoniaSuggestions(false);
-                                    submitStep3AndVerify(e);
+                                    submitStep2AndVerify(e);
                                   }
                                 }}
-                                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-[16px] focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
+                                className="w-full h-[42px] pl-9 pr-4 bg-slate-50 border border-slate-200 text-slate-800 focus:border-[#0f55d8] focus:bg-white rounded-xl outline-none font-semibold text-[16px] leading-normal focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
                                 placeholder="Compartir ubicación"
                               />
                             </div>
@@ -686,8 +622,8 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
                         <button
                           type="submit"
                           disabled={loading}
-                          tabIndex={formStep === 3 ? 0 : -1}
-                          className="w-full py-2 rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 select-none"
+                          tabIndex={formStep === 2 ? 0 : -1}
+                          className="w-full h-[42px] rounded-xl bg-[#0f55d8] hover:bg-[#0d4bc0] text-white font-extrabold text-base flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 select-none"
                         >
                           {loading ? (
                             <Loader2 className="w-4 h-4 animate-spin" />

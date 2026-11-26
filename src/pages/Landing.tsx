@@ -69,7 +69,7 @@ export default function Landing() {
 
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(() => localStorage.getItem('user_registered') === 'true');
-  const [formStep, setFormStep] = useState<1 | 2 | 3 | 'verifying'>(1);
+  const [formStep, setFormStep] = useState<1 | 2 | 'verifying'>(1);
   const [verificationProgress, setVerificationProgress] = useState(0);
   const [calculatedDistance, setCalculatedDistance] = useState<number>(() =>
     getColoniaDistance(addressColonia || '')
@@ -252,17 +252,15 @@ export default function Landing() {
 
   // Input & slider refs
   const viewportRef = useRef<HTMLDivElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
   const phoneInputRef = useRef<HTMLInputElement>(null);
   const calleInputRef = useRef<HTMLInputElement>(null);
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
-  const step3Ref = useRef<HTMLDivElement>(null);
   const [sliderHeight, setSliderHeight] = useState<number | string>('auto');
 
   useEffect(() => {
     if (!isBottomSheetOpen) return;
-    const activeRef = formStep === 1 ? step1Ref : formStep === 2 ? step2Ref : step3Ref;
+    const activeRef = formStep === 1 ? step1Ref : step2Ref;
     if (activeRef?.current) {
       const handleResize = () => {
         if (activeRef.current) {
@@ -292,11 +290,9 @@ export default function Landing() {
   const openBottomSheet = () => {
     setIsBottomSheetOpen(true);
     setRegistered(false);
+    setGpsAutofillError(null);
 
     if (phone.trim().length === 10) {
-      if (!name.trim()) setFormStep(1);
-      else setFormStep(3);
-    } else if (name.trim().length > 0) {
       setFormStep(2);
     } else {
       setFormStep(1);
@@ -338,26 +334,7 @@ export default function Landing() {
   const goToStep2 = (e: FormEvent) => {
     e.preventDefault();
     setFormError(null);
-
-    if (!name.trim()) {
-      setFormError('Por favor ingresa tu nombre completo.');
-      nameInputRef.current?.focus({ preventScroll: true });
-      return;
-    }
-
-    setFormStep(2);
-    phoneInputRef.current?.focus({ preventScroll: true });
-    if (viewportRef.current) {
-      viewportRef.current.scrollLeft = 0;
-    }
-    requestAnimationFrame(() => {
-      if (viewportRef.current) viewportRef.current.scrollLeft = 0;
-    });
-  };
-
-  const goToStep3 = (e: FormEvent) => {
-    e.preventDefault();
-    setFormError(null);
+    setGpsAutofillError(null);
 
     const trimmedPhone = phone.trim();
     if (!trimmedPhone) {
@@ -378,7 +355,7 @@ export default function Landing() {
       return;
     }
 
-    setFormStep(3);
+    setFormStep(2);
     calleInputRef.current?.focus({ preventScroll: true });
     if (viewportRef.current) {
       viewportRef.current.scrollLeft = 0;
@@ -398,6 +375,7 @@ export default function Landing() {
       userId = docSnap.id;
       const existingUser = docSnap.data();
 
+      const resolvedName = name || existingUser.name || '';
       const pref = deliveryPreference || existingUser.deliveryPreference || '';
       const col = addressColonia || existingUser.addressColonia || null;
       const calle = addressCalle || existingUser.addressCalle || null;
@@ -407,7 +385,7 @@ export default function Landing() {
       if (distKm) localStorage.setItem('user_distance_km', String(distKm));
 
       await updateDoc(doc(db, 'users', userId), {
-        name,
+        name: resolvedName,
         deliveryPreference: pref,
         addressColonia: col,
         addressCalle: calle,
@@ -422,7 +400,7 @@ export default function Landing() {
 
       await setDoc(doc(db, 'users', userId), {
         id: userId,
-        name,
+        name: name || '',
         phone: phone.trim(),
         deliveryPreference,
         addressColonia: addressColonia || null,
@@ -437,21 +415,14 @@ export default function Landing() {
     }
   };
 
-  const submitStep3AndVerify = async (e: FormEvent) => {
+  const submitStep2AndVerify = async (e: FormEvent) => {
     e.preventDefault();
     setFormError(null);
-
-    if (!name.trim()) {
-      setFormError('Por favor ingresa tu nombre en el paso 1.');
-      setFormStep(1);
-      setTimeout(() => nameInputRef.current?.focus({ preventScroll: true }), 150);
-      return;
-    }
 
     const trimmedPhone = phone.trim();
     if (!trimmedPhone || trimmedPhone.length !== 10 || /[a-zA-Z]/i.test(trimmedPhone)) {
       setFormError('Por favor verifica tu número de teléfono.');
-      setFormStep(2);
+      setFormStep(1);
       setTimeout(() => phoneInputRef.current?.focus({ preventScroll: true }), 150);
       return;
     }
@@ -545,7 +516,6 @@ export default function Landing() {
         setFormError={setFormError}
         registered={registered}
         name={name}
-        setName={setName}
         phone={phone}
         setPhone={setPhone}
         addressCalle={addressCalle}
@@ -561,8 +531,7 @@ export default function Landing() {
         isPhoneError={isPhoneError}
         handlePhoneBlur={handlePhoneBlur}
         goToStep2={goToStep2}
-        goToStep3={goToStep3}
-        submitStep3AndVerify={submitStep3AndVerify}
+        submitStep2AndVerify={submitStep2AndVerify}
         gpsAutofillLoading={gpsAutofillLoading}
         gpsAutofillError={gpsAutofillError}
         handleAddressInputClick={handleAddressInputClick}
@@ -570,12 +539,10 @@ export default function Landing() {
         setShowColoniaSuggestions={setShowColoniaSuggestions}
         setGpsCoords={setGpsCoords}
         viewportRef={viewportRef}
-        nameInputRef={nameInputRef}
         phoneInputRef={phoneInputRef}
         calleInputRef={calleInputRef}
         step1Ref={step1Ref}
         step2Ref={step2Ref}
-        step3Ref={step3Ref}
         sliderHeight={sliderHeight}
       />
     </div>
