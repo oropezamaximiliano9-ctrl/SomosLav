@@ -325,7 +325,7 @@ body.sheet-scroll-locked #app-scroll-container {
   top: 0;
   left: 0;
   right: 0;
-  height: calc(333 * var(--u));
+  height: calc(328 * var(--u));
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.30) 50%, rgba(0, 0, 0, 0) 100%);
   pointer-events: none;
 }
@@ -336,7 +336,7 @@ body.sheet-scroll-locked #app-scroll-container {
   width: 100%;
   max-width: calc(384 * var(--u));
   margin: 0 auto;
-  padding: calc(48 * var(--u) + env(safe-area-inset-top, 0px)) calc(16 * var(--u)) calc(4 * var(--u));
+  padding: calc(43 * var(--u) + env(safe-area-inset-top, 0px)) calc(16 * var(--u)) calc(4 * var(--u));
   display: flex;
   flex-direction: column;
   align-items: center;
