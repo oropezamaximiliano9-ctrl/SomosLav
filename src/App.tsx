@@ -133,7 +133,9 @@ function AppContent() {
     'overflow-x-hidden',
     'bg-[#FFFCEF]',
     'touch-pan-y',
-    isLandingPage ? 'h-full overflow-y-auto overscroll-y-contain' : 'min-h-full overflow-y-auto'
+    isLandingPage
+      ? 'h-[100svh] min-h-[100svh] overflow-y-auto overscroll-y-contain'
+      : 'min-h-[100svh] overflow-y-auto'
   ].join(' ');
 
   const headerClasses =

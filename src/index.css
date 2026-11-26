@@ -32,7 +32,8 @@ html, body {
   font-family: var(--font-sans);
   background-color: #FFFCEF !important;
   color: #1a1a1a;
-  height: 100%;
+  height: 100svh;
+  min-height: 100svh;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -41,7 +42,8 @@ html, body {
 }
 
 #root {
-  height: 100%;
+  height: 100svh;
+  min-height: 100svh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -249,7 +251,7 @@ body.sheet-scroll-locked #app-scroll-container {
   top: 0;
   width: 100%;
   height: 100vh;
-  height: 100dvh;
+  height: 100svh;
   min-height: 100vh;
   min-height: 100svh;
   flex-shrink: 0;

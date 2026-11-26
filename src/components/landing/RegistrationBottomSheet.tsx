@@ -87,14 +87,13 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   step2Ref,
   sliderHeight,
 }) => {
-  const isIOSSafari = useMemo(() => {
+  const isIOS = useMemo(() => {
     if (typeof navigator === 'undefined') return false;
     const ua = navigator.userAgent;
-    const isIOS =
+    return (
       /iP(ad|hone|od)/.test(ua) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isOtherIOSBrowser = /CriOS|FxiOS|OPiOS|EdgiOS/i.test(ua);
-    return isIOS && /WebKit/i.test(ua) && !isOtherIOSBrowser;
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    );
   }, []);
 
   return (
@@ -103,8 +102,8 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
-      repositionInputs={!isIOSSafari}
-      fixed={isIOSSafari}
+      repositionInputs={!isIOS}
+      fixed={isIOS}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[60] bg-black/50" />
