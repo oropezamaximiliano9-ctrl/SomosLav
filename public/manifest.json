@@ -4,8 +4,8 @@
   "description": "Sistema de gestión y recepción de cestos inteligentes SOMOS",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fdf0d5",
-  "theme_color": "#fdf0d5",
+  "background_color": "#FFFCEF",
+  "theme_color": "#FFFCEF",
   "orientation": "portrait-primary",
   "icons": [
     {

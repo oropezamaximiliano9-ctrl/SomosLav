@@ -128,13 +128,13 @@ function AppContent() {
     'flex',
     'flex-col',
     'overflow-x-hidden',
-    'bg-[#fdf0d5]',
+    'bg-[#FFFCEF]',
     'touch-pan-y',
     isLandingPage ? 'h-full overflow-y-auto overscroll-y-contain' : 'min-h-full overflow-y-auto'
   ].join(' ');
 
   const headerClasses =
-    'sticky top-0 w-full z-50 transition-all duration-200 select-none bg-[#fdf0d5] text-gray-900 shadow-sm';
+    'sticky top-0 w-full z-50 transition-all duration-200 select-none bg-[#FFFCEF] text-gray-900 shadow-sm';
 
   const innerNavClasses =
     'max-w-sm mx-auto px-4 h-[34px] relative flex items-center justify-center space-x-1.5';

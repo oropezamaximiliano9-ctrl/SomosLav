@@ -30,7 +30,7 @@
 
 html, body {
   font-family: var(--font-sans);
-  background-color: #FDF0D5 !important;
+  background-color: #FFFCEF !important;
   color: #1a1a1a;
   height: 100%;
   margin: 0;
@@ -283,7 +283,7 @@ body.sheet-scroll-locked #app-scroll-container {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #FDF0D5;
+  background-color: #FFFCEF;
   color: #1a1a1a;
   letter-spacing: -0.02em;
 }
