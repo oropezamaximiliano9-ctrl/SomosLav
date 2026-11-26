@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Drawer } from 'vaul';
 import { motion } from 'motion/react';
 import {
@@ -96,21 +96,111 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
     );
   }, []);
 
-  return (
-    <Drawer.Root
-      open={isOpen}
-      onOpenChange={(open) => {
-        if (!open) onClose();
-      }}
-      repositionInputs={!isIOS}
-      fixed={isIOS}
+  const isIOSChrome = useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    return /CriOS/i.test(navigator.userAgent);
+  }, []);
+
+  const chromeKbWrapperRef = useRef<HTMLDivElement>(null);
+  const [chromeMaxHeight, setChromeMaxHeight] = useState<string>('90svh');
+
+  useEffect(() => {
+    if (!isIOSChrome || !isOpen || typeof window === 'undefined') return;
+
+    let cleanup: (() => void) | null = null;
+    let attachRafId = 0;
+
+    const init = () => {
+      const wrapper = chromeKbWrapperRef.current;
+      if (!wrapper) {
+        attachRafId = window.requestAnimationFrame(init);
+        return;
+      }
+
+      const stableCssH = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--app-stable-height')
+      );
+      let baseHeight =
+        !document.activeElement || !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
+          ? window.innerHeight
+          : Number.isFinite(stableCssH) && stableCssH > 0
+          ? stableCssH
+          : window.innerHeight;
+
+      wrapper.style.transition = 'none';
+      wrapper.style.height = `${baseHeight}px`;
+      wrapper.style.transform = 'translate3d(0, 0px, 0)';
+      void wrapper.offsetHeight;
+      wrapper.style.transition = '';
+      setChromeMaxHeight(`${Math.round(baseHeight * 0.9)}px`);
+
+      let settleTimer: number | null = null;
+
+      const handleViewportChange = () => {
+        const vv = window.visualViewport;
+        const visibleHeight = vv ? vv.height : window.innerHeight;
+        const visibleBottom = vv ? Math.round(vv.offsetTop + vv.height) : window.innerHeight;
+        const kbOffset = Math.max(0, baseHeight - visibleBottom);
+
+        if (kbOffset < 80) {
+          wrapper.style.transform = 'translate3d(0, 0px, 0)';
+          setChromeMaxHeight(`${Math.round(baseHeight * 0.9)}px`);
+
+          if (settleTimer !== null) {
+            window.clearTimeout(settleTimer);
+          }
+          settleTimer = window.setTimeout(() => {
+            settleTimer = null;
+            baseHeight = window.innerHeight;
+            wrapper.style.height = `${baseHeight}px`;
+          }, 280);
+        } else {
+          if (settleTimer !== null) {
+            window.clearTimeout(settleTimer);
+            settleTimer = null;
+          }
+          wrapper.style.transform = `translate3d(0, ${-kbOffset}px, 0)`;
+          setChromeMaxHeight(`${Math.max(240, Math.round(visibleHeight - 20))}px`);
+        }
+      };
+
+      const vv = window.visualViewport;
+      if (vv) {
+        vv.addEventListener('resize', handleViewportChange);
+        vv.addEventListener('scroll', handleViewportChange);
+      }
+      window.addEventListener('resize', handleViewportChange);
+
+      cleanup = () => {
+        if (settleTimer !== null) {
+          window.clearTimeout(settleTimer);
+        }
+        if (vv) {
+          vv.removeEventListener('resize', handleViewportChange);
+          vv.removeEventListener('scroll', handleViewportChange);
+        }
+        window.removeEventListener('resize', handleViewportChange);
+      };
+    };
+
+    init();
+
+    return () => {
+      if (attachRafId) window.cancelAnimationFrame(attachRafId);
+      if (cleanup) cleanup();
+    };
+  }, [isIOSChrome, isOpen]);
+
+  const drawerContent = (
+    <Drawer.Content
+      id="bottom-sheet-container"
+      className={
+        isIOSChrome
+          ? 'pointer-events-auto fixed inset-x-0 bottom-0 z-[70] mx-auto flex h-auto w-full max-w-[440px] flex-col rounded-t-3xl bg-white outline-none'
+          : 'fixed inset-x-0 bottom-0 z-[70] mx-auto flex h-auto max-h-[90svh] w-full max-w-[440px] flex-col rounded-t-3xl bg-white outline-none'
+      }
+      style={isIOSChrome ? { maxHeight: chromeMaxHeight } : undefined}
     >
-      <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-[60] bg-black/50" />
-        <Drawer.Content
-          id="bottom-sheet-container"
-          className="fixed inset-x-0 bottom-0 z-[70] mx-auto flex h-auto max-h-[90svh] w-full max-w-[440px] flex-col rounded-t-3xl bg-white outline-none"
-        >
           {/* Accessible title & description required by Vaul/Radix Dialog */}
           <Drawer.Title className="sr-only">
             {registered
@@ -654,7 +744,30 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
             </div>
           </div>
           </div>
-        </Drawer.Content>
+    </Drawer.Content>
+  );
+
+  return (
+    <Drawer.Root
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+      repositionInputs={!isIOS}
+      fixed={isIOS}
+    >
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-[60] bg-black/50" />
+        {isIOSChrome ? (
+          <div
+            ref={chromeKbWrapperRef}
+            className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[var(--app-stable-height,100svh)] transition-transform duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform"
+          >
+            {drawerContent}
+          </div>
+        ) : (
+          drawerContent
+        )}
       </Drawer.Portal>
     </Drawer.Root>
   );
