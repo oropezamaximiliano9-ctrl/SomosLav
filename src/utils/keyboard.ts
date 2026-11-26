@@ -1,4 +1,4 @@
-import { useEffect, type RefObject } from "react";
+import { useEffect, useLayoutEffect, type RefObject } from "react";
 
 /**
  * Global Keyboard & Viewport Utilities for iOS Safari / Chrome & Android Chrome.
@@ -48,7 +48,6 @@ export function dismissKeyboard() {
  */
 let bodyScrollLockCount = 0;
 let savedScrollY = 0;
-let cleanupViewportGuard: (() => void) | null = null;
 
 export function useBodyScrollLock(isOpen: boolean) {
   useEffect(() => {
@@ -63,31 +62,12 @@ export function useBodyScrollLock(isOpen: boolean) {
       document.body.style.width = "100%";
       document.body.style.overflow = "hidden";
       document.body.classList.add("sheet-scroll-locked");
-
-      const vv = window.visualViewport;
-      if (vv) {
-        const preventViewportPush = () => {
-          if (vv.offsetTop > 0) {
-            window.scrollTo(0, 0);
-          }
-        };
-        vv.addEventListener("scroll", preventViewportPush);
-        vv.addEventListener("resize", preventViewportPush);
-        cleanupViewportGuard = () => {
-          vv.removeEventListener("scroll", preventViewportPush);
-          vv.removeEventListener("resize", preventViewportPush);
-        };
-      }
     }
     bodyScrollLockCount += 1;
 
     return () => {
       bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
       if (bodyScrollLockCount === 0) {
-        if (cleanupViewportGuard) {
-          cleanupViewportGuard();
-          cleanupViewportGuard = null;
-        }
         document.body.classList.remove("sheet-scroll-locked");
         document.body.style.position = "";
         document.body.style.top = "";
@@ -102,63 +82,128 @@ export function useBodyScrollLock(isOpen: boolean) {
 }
 
 /**
- * Lifts only kbLayer above the iOS/Android virtual keyboard via window.visualViewport
- * using requestAnimationFrame, and constrains the inner scroll container's maxHeight.
- * Resets kbLayer cleanly without transition 300ms after closing.
+ * 3-layer top-anchored visualViewport synchronization for iOS Safari & Android Chrome:
+ * - viewportLayer (fixed top: 0, transition: none): tracks vv.offsetTop instantaneously (0ms)
+ * - kbLayer (absolute top: 0, 220ms transition): tracks vv.height smoothly
+ * - scrollEl: caps maxHeight to Math.max(200, height - 24) so close button never goes under status bar
+ * - focusin/focusout on sheet triggers a 600ms rAF sync loop to capture Safari viewport shifts in 16ms
+ * - focusout checks after 40ms if focus left all inputs in sheet and resets ghost offsetTop via scrollTo(0, 0)
  */
-export function useKeyboardSheetOffset(
+export function useKeyboardSheetViewport(
   isOpen: boolean,
+  viewportLayerRef: RefObject<HTMLDivElement | null>,
   kbLayerRef: RefObject<HTMLDivElement | null>,
+  sheetRef: RefObject<HTMLDivElement | null>,
   scrollRef: RefObject<HTMLDivElement | null>
 ) {
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (!isOpen || typeof window === "undefined") return;
+    const viewportLayer = viewportLayerRef.current;
     const kbLayer = kbLayerRef.current;
     const scrollEl = scrollRef.current;
-    if (!kbLayer || !scrollEl || typeof window === "undefined") return;
+    if (!viewportLayer || !kbLayer || !scrollEl) return;
 
-    if (!isOpen) {
-      const resetTimer = window.setTimeout(() => {
-        kbLayer.style.transition = "none";
-        kbLayer.style.transform = "translate3d(0, 0px, 0)";
-        scrollEl.style.maxHeight = "";
-        void kbLayer.offsetHeight;
-        kbLayer.style.transition = "";
-      }, 300);
-      return () => window.clearTimeout(resetTimer);
-    }
-
-    kbLayer.style.transition = "";
+    kbLayer.style.transition = "none";
 
     const vv = window.visualViewport;
-    if (!vv) {
-      kbLayer.style.transform = "translate3d(0, 0px, 0)";
-      return;
-    }
+    const offsetTop = vv ? Math.round(vv.offsetTop) : 0;
+    const height = vv ? Math.round(vv.height) : window.innerHeight;
+
+    viewportLayer.style.transform = `translate3d(0, ${offsetTop}px, 0)`;
+    kbLayer.style.transform = `translate3d(0, ${height}px, 0)`;
+    scrollEl.style.maxHeight = `${Math.max(200, height - 24)}px`;
+
+    void kbLayer.offsetHeight;
+    kbLayer.style.transition = "";
+  }, [isOpen, viewportLayerRef, kbLayerRef, scrollRef]);
+
+  useEffect(() => {
+    if (!isOpen || typeof window === "undefined") return;
+    const viewportLayer = viewportLayerRef.current;
+    const kbLayer = kbLayerRef.current;
+    const sheet = sheetRef.current;
+    const scrollEl = scrollRef.current;
+    if (!viewportLayer || !kbLayer || !sheet || !scrollEl) return;
+
+    const syncViewport = () => {
+      const vv = window.visualViewport;
+      const offsetTop = vv ? Math.round(vv.offsetTop) : 0;
+      const height = vv ? Math.round(vv.height) : window.innerHeight;
+
+      viewportLayer.style.transform = `translate3d(0, ${offsetTop}px, 0)`;
+      kbLayer.style.transform = `translate3d(0, ${height}px, 0)`;
+      scrollEl.style.maxHeight = `${Math.max(200, height - 24)}px`;
+    };
 
     let rafId: number | null = null;
+    let focusoutTimer: number | null = null;
 
-    const update = () => {
-      rafId = null;
-      const rawOffset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
-      const keyboardOffset = rawOffset > 60 ? rawOffset : 0;
-
-      kbLayer.style.transform = `translate3d(0, ${-keyboardOffset}px, 0)`;
-      scrollEl.style.maxHeight = `${Math.max(200, Math.round(vv.height - 24))}px`;
+    const stopRafLoop = () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
     };
 
-    const scheduleUpdate = () => {
-      if (rafId !== null) window.cancelAnimationFrame(rafId);
-      rafId = window.requestAnimationFrame(update);
+    const startRafSyncLoop = () => {
+      stopRafLoop();
+      const startTime = performance.now();
+      const tick = (now: number) => {
+        syncViewport();
+        if (now - startTime < 600) {
+          rafId = window.requestAnimationFrame(tick);
+        } else {
+          rafId = null;
+        }
+      };
+      rafId = window.requestAnimationFrame(tick);
     };
 
-    update();
-    vv.addEventListener("resize", scheduleUpdate);
-    vv.addEventListener("scroll", scheduleUpdate);
+    const handleFocusIn = () => {
+      if (focusoutTimer !== null) {
+        window.clearTimeout(focusoutTimer);
+        focusoutTimer = null;
+      }
+      startRafSyncLoop();
+    };
+
+    const handleFocusOut = () => {
+      startRafSyncLoop();
+      if (focusoutTimer !== null) {
+        window.clearTimeout(focusoutTimer);
+      }
+      focusoutTimer = window.setTimeout(() => {
+        focusoutTimer = null;
+        const active = document.activeElement;
+        const focusRemainsInSheet = Boolean(
+          active && sheet.contains(active) && isTextInputElement(active)
+        );
+        if (!focusRemainsInSheet && window.visualViewport && window.visualViewport.offsetTop > 0) {
+          window.scrollTo(0, 0);
+          syncViewport();
+        }
+      }, 40);
+    };
+
+    const vv = window.visualViewport;
+    if (vv) {
+      vv.addEventListener("resize", syncViewport);
+      vv.addEventListener("scroll", syncViewport);
+    }
+    sheet.addEventListener("focusin", handleFocusIn);
+    sheet.addEventListener("focusout", handleFocusOut);
 
     return () => {
-      if (rafId !== null) window.cancelAnimationFrame(rafId);
-      vv.removeEventListener("resize", scheduleUpdate);
-      vv.removeEventListener("scroll", scheduleUpdate);
+      stopRafLoop();
+      if (focusoutTimer !== null) {
+        window.clearTimeout(focusoutTimer);
+      }
+      if (vv) {
+        vv.removeEventListener("resize", syncViewport);
+        vv.removeEventListener("scroll", syncViewport);
+      }
+      sheet.removeEventListener("focusin", handleFocusIn);
+      sheet.removeEventListener("focusout", handleFocusOut);
     };
-  }, [isOpen, kbLayerRef, scrollRef]);
+  }, [isOpen, viewportLayerRef, kbLayerRef, sheetRef, scrollRef]);
 }

@@ -87,12 +87,10 @@ body.sheet-scroll-locked #app-scroll-container {
   touch-action: none !important;
 }
 
-/* Custom High-Performance Bottom Sheet Form Transitions */
+/* Independent backdrop covering any iOS Safari rubber-band bounce */
 .form-overlay {
   position: fixed;
-  inset: 0;
-  overflow: hidden;
-  clip-path: inset(0);
+  inset: -100px;
   background-color: rgba(15, 23, 42, 0.48);
   z-index: 9999;
   opacity: 0;
@@ -115,22 +113,36 @@ body.sheet-scroll-locked #app-scroll-container {
     visibility 0s linear 0s;
 }
 
-/* Dedicated intermediate GPU layer for virtual keyboard lift only */
-.form-sheet-kb-layer {
+/* Layer 1: Anchored to top: 0 with 0ms transition to absorb Safari vv.offsetTop cleanly */
+.form-sheet-viewport-layer {
   position: fixed;
+  top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  height: 0;
   z-index: 10000;
+  overflow: visible;
   pointer-events: none;
-  transform: translate3d(0, 0px, 0);
-  transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  transition: none;
+  will-change: transform;
+}
+
+/* Layer 2: Child of viewportLayer positioning the exact visible bottom edge (vv.height) */
+.form-sheet-kb-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-/* Compact Bottom Sheet anchored to bottom: 0 with invisible 60vh lower white extension */
+/* Layer 3: Compact Bottom Sheet anchored to bottom: 0 with invisible 60vh lower white extension */
 .form-bottom-sheet {
   position: fixed;
   left: 0;
@@ -165,10 +177,10 @@ body.sheet-scroll-locked #app-scroll-container {
 }
 
 .form-sheet-kb-layer > .form-bottom-sheet {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  right: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: auto;
 }
 

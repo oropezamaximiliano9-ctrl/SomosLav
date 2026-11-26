@@ -107,16 +107,17 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
           onClose();
         }}
         aria-hidden={!isOpen}
+      />
+
+      <div
+        className="form-bottom-sheet bg-white pt-4 px-6"
+        data-open={isOpen ? 'true' : 'false'}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Elegir día de entrega del cesto"
+        aria-hidden={!isOpen}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="form-bottom-sheet bg-white pt-4 px-6"
-          data-open={isOpen ? 'true' : 'false'}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Elegir día de entrega del cesto"
-          aria-hidden={!isOpen}
-          onClick={(e) => e.stopPropagation()}
-        >
         {/* Drag handle */}
         <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-1 shrink-0" />
 
@@ -183,7 +184,6 @@ export const DatePickerBottomSheet: React.FC<DatePickerBottomSheetProps> = ({
             <span className="font-geist">Continuar</span>
             <ArrowRight className="w-4 h-4 shrink-0" />
           </button>
-        </div>
         </div>
       </div>
     </>,

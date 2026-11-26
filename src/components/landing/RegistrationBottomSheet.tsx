@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import {
@@ -16,7 +16,7 @@ import { ALL_COATZA_COLONIAS, normalizeText } from '../../utils/distance';
 import {
   dismissKeyboard,
   useBodyScrollLock,
-  useKeyboardSheetOffset,
+  useKeyboardSheetViewport,
 } from '../../utils/keyboard';
 
 interface RegistrationBottomSheetProps {
@@ -93,23 +93,57 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
   sliderHeight,
 }) => {
   const overlayPointerDownRef = useRef(false);
+  const viewportLayerRef = useRef<HTMLDivElement>(null);
   const kbLayerRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  useBodyScrollLock(isOpen);
-  useKeyboardSheetOffset(isOpen, kbLayerRef, scrollRef);
+  const [isClosing, setIsClosing] = useState(false);
+  const [isEntered, setIsEntered] = useState(false);
+  const prevOpenRef = useRef(isOpen);
 
-  if (typeof document === 'undefined') return null;
+  if (prevOpenRef.current && !isOpen && !isClosing) {
+    setIsClosing(true);
+  }
+  prevOpenRef.current = isOpen;
+
+  const isMounted = isOpen || isClosing;
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsClosing(false);
+      let raf2 = 0;
+      const raf1 = window.requestAnimationFrame(() => {
+        raf2 = window.requestAnimationFrame(() => {
+          setIsEntered(true);
+        });
+      });
+      return () => {
+        window.cancelAnimationFrame(raf1);
+        window.cancelAnimationFrame(raf2);
+      };
+    }
+
+    setIsEntered(false);
+    if (!isClosing) return;
+    const unmountTimer = window.setTimeout(() => {
+      setIsClosing(false);
+    }, 300);
+    return () => window.clearTimeout(unmountTimer);
+  }, [isOpen, isClosing]);
+
+  useBodyScrollLock(isOpen);
+  useKeyboardSheetViewport(isOpen, viewportLayerRef, kbLayerRef, sheetRef, scrollRef);
+
+  if (typeof document === 'undefined' || !isMounted) return null;
 
   return createPortal(
     <>
-      {/* Bottom Sheet backdrop with overflow: hidden + kbLayer + compact sliding panel */}
+      {/* Independent sibling backdrop covering Safari bounce */}
       <div
         className="form-overlay"
-        data-open={isOpen ? 'true' : 'false'}
-        onMouseDown={(e) => {
-          if (e.target === e.currentTarget) e.preventDefault();
-        }}
+        data-open={isEntered ? 'true' : 'false'}
+        onMouseDown={(e) => e.preventDefault()}
         onPointerDown={(e) => {
           overlayPointerDownRef.current = e.target === e.currentTarget;
         }}
@@ -119,11 +153,15 @@ export const RegistrationBottomSheet: React.FC<RegistrationBottomSheetProps> = (
           onClose();
           dismissKeyboard();
         }}
-      >
+      />
+
+      {/* Layer 1: viewportLayer (0ms vv.offsetTop tracking) -> Layer 2: kbLayer (220ms vv.height) -> Layer 3: sheet */}
+      <div ref={viewportLayerRef} className="form-sheet-viewport-layer">
         <div ref={kbLayerRef} className="form-sheet-kb-layer">
           <div
+            ref={sheetRef}
             className="form-bottom-sheet bg-white pt-4 px-6"
-            data-open={isOpen ? 'true' : 'false'}
+            data-open={isEntered ? 'true' : 'false'}
             id="bottom-sheet-container"
             onClick={(e) => {
               e.stopPropagation();
