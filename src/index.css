@@ -420,7 +420,7 @@ body.sheet-scroll-locked #app-scroll-container {
   align-items: center;
   justify-content: center;
   gap: 0 calc(8 * var(--u));
-  font-size: calc(14.5 * var(--u));
+  font-size: calc(18 * var(--u));
   font-weight: 500;
   color: white;
   letter-spacing: 0.01em;
