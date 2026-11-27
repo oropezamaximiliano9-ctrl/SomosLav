@@ -49,55 +49,143 @@ function useStableViewportHeight() {
   useLayoutEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
+    const mountTime = Date.now();
     let lastWidth = window.innerWidth;
+    let lastValidHeight = 0;
     let rafId = 0;
+    const timers: number[] = [];
 
-    const applyStableHeight = () => {
-      if (window.innerHeight > 0) {
-        document.documentElement.style.setProperty(
-          '--app-stable-height',
-          `${window.innerHeight}px`
-        );
+    const isInputOrDrawerActive = () => {
+      const active = document.activeElement;
+      if (
+        active &&
+        (active.tagName === 'INPUT' ||
+          active.tagName === 'TEXTAREA' ||
+          active.getAttribute('contenteditable') === 'true')
+      ) {
         return true;
       }
-      return false;
+      return Boolean(
+        document.querySelector('[data-vaul-drawer], .form-bottom-sheet[data-open="true"]')
+      );
     };
 
-    if (!applyStableHeight()) {
-      const retry = () => {
-        if (applyStableHeight()) {
-          lastWidth = window.innerWidth;
-        } else {
-          rafId = window.requestAnimationFrame(retry);
+    const getSaneHeight = (): number | null => {
+      const ih = window.innerHeight;
+      const iw = window.innerWidth;
+      if (!ih || ih <= 0 || !iw || iw <= 0) return null;
+
+      const vv = window.visualViewport;
+      if (vv && vv.scale && Math.abs(vv.scale - 1) > 0.08) {
+        return null;
+      }
+
+      // Reject transient pre-viewport-meta heights on iOS/mobile (e.g. WKWebView 980px fallback producing ~1700px height)
+      const maxScreenDim = Math.max(window.screen?.width || 0, window.screen?.height || 0);
+      if (navigator.maxTouchPoints > 0 && maxScreenDim > 0 && ih > maxScreenDim + 20) {
+        return null;
+      }
+
+      // If visualViewport is much shorter than innerHeight, a keyboard is currently open
+      if (vv && ih - vv.height > 150) {
+        return null;
+      }
+
+      const measured = vv ? Math.min(ih, Math.round(vv.height)) : ih;
+      return measured > 0 ? Math.round(measured) : null;
+    };
+
+    const applyHeight = (h: number) => {
+      lastValidHeight = h;
+      lastWidth = window.innerWidth;
+      document.documentElement.style.setProperty('--app-stable-height', `${h}px`);
+    };
+
+    const syncViewportHeight = (forceUpdate = false) => {
+      if (isInputOrDrawerActive()) return false;
+
+      const saneH = getSaneHeight();
+      if (saneH === null) {
+        // Never leave a bogus height frozen on :root; CSS falls back cleanly to 100svh
+        if (lastValidHeight === 0) {
+          document.documentElement.style.removeProperty('--app-stable-height');
         }
+        return false;
+      }
+
+      const widthChanged = Math.abs(window.innerWidth - lastWidth) > 2;
+      const isInitialSettle = Date.now() - mountTime < 1500;
+
+      if (lastValidHeight === 0 || forceUpdate || widthChanged) {
+        applyHeight(saneH);
+        return true;
+      }
+
+      // Allow initial WKWebView/Chrome toolbar settle or growth after URL-bar keyboard closes,
+      // while NEVER shrinking for a keyboard after initial boot
+      if (saneH > lastValidHeight || (isInitialSettle && saneH !== lastValidHeight)) {
+        applyHeight(saneH);
+        return true;
+      }
+
+      return true;
+    };
+
+    if (!syncViewportHeight(true)) {
+      let attempts = 0;
+      const retry = () => {
+        attempts += 1;
+        if (syncViewportHeight(true) || attempts >= 60) {
+          return;
+        }
+        rafId = window.requestAnimationFrame(retry);
       };
       rafId = window.requestAnimationFrame(retry);
     }
 
+    // Catch silent iOS WKWebView / Chrome iOS viewport settle that may not fire window.resize
+    for (const delay of [100, 300, 700, 1200]) {
+      timers.push(window.setTimeout(() => syncViewportHeight(false), delay));
+    }
+
     const handleResize = () => {
-      if (window.innerWidth !== lastWidth) {
-        lastWidth = window.innerWidth;
-        applyStableHeight();
-      }
+      syncViewportHeight(false);
+    };
+
+    const handleOrientationChange = () => {
+      timers.push(window.setTimeout(() => syncViewportHeight(true), 150));
+      timers.push(window.setTimeout(() => syncViewportHeight(true), 400));
     };
 
     const handlePageShow = (e: PageTransitionEvent) => {
-      if (!e.persisted) return;
-      const active = document.activeElement;
-      const isInputFocused =
-        active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
-      if (!isInputFocused) {
-        lastWidth = window.innerWidth;
-        applyStableHeight();
+      if (e.persisted) {
+        syncViewportHeight(true);
       }
     };
 
+    const handleLoad = () => {
+      syncViewportHeight(false);
+    };
+
+    const vv = window.visualViewport;
     window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
     window.addEventListener('pageshow', handlePageShow);
+    window.addEventListener('load', handleLoad);
+    if (vv) {
+      vv.addEventListener('resize', handleResize);
+    }
+
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
+      timers.forEach((id) => window.clearTimeout(id));
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
       window.removeEventListener('pageshow', handlePageShow);
+      window.removeEventListener('load', handleLoad);
+      if (vv) {
+        vv.removeEventListener('resize', handleResize);
+      }
     };
   }, []);
 }
