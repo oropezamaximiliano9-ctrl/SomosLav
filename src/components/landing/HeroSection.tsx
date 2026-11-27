@@ -327,10 +327,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       {/* Etiqueta flotante de capacidad anclada proporcionalmente */}
       <div className="hero-badge">
-        <span className="hero-badge-main">Entran</span>
-        <span className="hero-badge-sub">
-          <span className="font-normal">hasta</span> 5 kg
-        </span>
+        <span className="hero-badge-main">Cabe toda tu ropa</span>
+        <span className="hero-badge-sub">de la semana</span>
       </div>
 
       {/* Cápsula inferior con selector de fechas */}
