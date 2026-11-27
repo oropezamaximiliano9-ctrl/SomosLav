@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import canvasLaundryBag from '../../assets/images/IMG_8321.jpg';
+import heroCestoCentrado from '../../assets/images/hero_cesto_centrado_1795726480462.jpg';
 import { DatePickerBottomSheet } from './DatePickerBottomSheet';
 
 const DATE_CONFIG = {
@@ -260,14 +260,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <section className="hero">
       <img
         className="hero-bg"
-        src="https://i.ibb.co/cc81GSmJ/IMG-9746.jpg"
+        src={heroCestoCentrado}
         alt="Cesto de lavandería Somos"
         fetchPriority="high"
         decoding="async"
-        onError={(e) => {
-          e.currentTarget.onerror = null;
-          e.currentTarget.src = canvasLaundryBag;
-        }}
       />
       <div className="hero-gradient" />
 
