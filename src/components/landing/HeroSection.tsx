@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import heroCestoCentrado from '../../assets/images/hero_cesto_centrado_1795726480462.jpg';
+import heroCestoCentrado from '../../assets/images/hero_cesto_centrado.webp';
 import { DatePickerBottomSheet } from './DatePickerBottomSheet';
 
 const DATE_CONFIG = {
@@ -262,6 +262,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         className="hero-bg"
         src={heroCestoCentrado}
         alt="Cesto de lavandería Somos"
+        width={768}
+        height={1376}
         fetchPriority="high"
         decoding="async"
       />

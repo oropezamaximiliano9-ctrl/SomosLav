@@ -50,14 +50,29 @@ function useStableViewportHeight() {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
     let lastWidth = window.innerWidth;
+    let rafId = 0;
+
     const applyStableHeight = () => {
-      document.documentElement.style.setProperty(
-        '--app-stable-height',
-        `${window.innerHeight}px`
-      );
+      if (window.innerHeight > 0) {
+        document.documentElement.style.setProperty(
+          '--app-stable-height',
+          `${window.innerHeight}px`
+        );
+        return true;
+      }
+      return false;
     };
 
-    applyStableHeight();
+    if (!applyStableHeight()) {
+      const retry = () => {
+        if (applyStableHeight()) {
+          lastWidth = window.innerWidth;
+        } else {
+          rafId = window.requestAnimationFrame(retry);
+        }
+      };
+      rafId = window.requestAnimationFrame(retry);
+    }
 
     const handleResize = () => {
       if (window.innerWidth !== lastWidth) {
@@ -66,9 +81,23 @@ function useStableViewportHeight() {
       }
     };
 
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      const active = document.activeElement;
+      const isInputFocused =
+        active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+      if (!isInputFocused) {
+        lastWidth = window.innerWidth;
+        applyStableHeight();
+      }
+    };
+
     window.addEventListener('resize', handleResize);
+    window.addEventListener('pageshow', handlePageShow);
     return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('pageshow', handlePageShow);
     };
   }, []);
 }
