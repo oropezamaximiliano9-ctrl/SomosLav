@@ -300,7 +300,7 @@ body.sheet-scroll-locked #app-scroll-container {
   color: white;
   line-height: 1.09;
   letter-spacing: -0.04em;
-  margin-bottom: calc(12 * var(--u));
+  margin-bottom: calc(18 * var(--u));
   font-family: "Inter", sans-serif;
 }
 
