@@ -163,8 +163,8 @@ function AppContent() {
     'bg-[#FFFCEF]',
     'touch-pan-y',
     isLandingPage
-      ? 'h-[100svh] min-h-[100svh] overflow-y-auto overscroll-y-contain'
-      : 'min-h-[100svh] overflow-y-auto'
+      ? 'h-[var(--app-stable-height,100svh)] min-h-[var(--app-stable-height,100svh)] overflow-y-auto overscroll-y-contain'
+      : 'min-h-[var(--app-stable-height,100svh)] overflow-y-auto'
   ].join(' ');
 
   const headerClasses =
